@@ -1,0 +1,4 @@
+# Customized settings for mythbackend
+
+#MYTHTV_HOME=/var/lib/mythtv
+#OPTIONS=

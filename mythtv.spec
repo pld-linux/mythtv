@@ -1,6 +1,7 @@
 # TODO
 # - CFLAGS doesn't get passed
 # - bconds broken?
+# - mythtv user
 #
 # Specfile for MythTV
 #
@@ -8,10 +9,6 @@
 #  building an rpm by hand on the machine it will be used on, I encourage you
 #  to use "--with cpu_autodetect" to let mythtv decide for you.
 #
-
-# The name of the DVB driver package (used in a couple of places,
-# so it's not hard-coded in the spec itself)
-%define linuxtv_dvb_package linuxtv-dvb-1.1.1
 
 # Set up some custom-build parameters
 %bcond_with	lirc	# lirc
@@ -21,11 +18,10 @@
 %bcond_with arts # arts
 %bcond_with xvmc # xvmc
 %bcond_with cpu_autodetect # enable cpu autodetection at compile time
-
 Name:		mythtv
 Version:	0.17
 #define _snap 20050326
-Release:	0.2
+Release:	0.3
 Summary:	A personal video recorder (PVR) application.
 Group:		Applications/Multimedia
 License:	GPL v2
@@ -35,7 +31,6 @@ Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
-Source12:	http://linuxtv.org/download/dvb/%{linuxtv_dvb_package}.tar.bz2
 Patch0:		%{name}-configure.patch
 # Source12-md5:	6dd599f24b7abecd1e32c203eaa7fa8a
 ExclusiveArch:	i386 i686 athlon x86_64
@@ -50,6 +45,7 @@ BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	mysql-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	sed >= 4.0
+BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_lirc:BuildRequires:	lirc-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
@@ -176,31 +172,22 @@ This package contains only the setup software for configuring the
 mythtv backend.
 
 %prep
-%setup -q -a 12
+%setup -q
 %patch0 -p1
 
 %build
 export QTDIR="%{_prefix}"
-#export QMAKESPEC="linux-g++"
-
-# Initialize the options string
-OPTS=""
-
-
-# Finally, actually configure
+export QMAKESPEC="linux-g++"
+export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 
 # BTW: this is not autoconf configure
 %configure \
     --compile-type=%{?debug:debug}%{!?debug:release} \
     --disable-audio-jack \
-    --enable-dvb \
-    --dvb-path=%{_builddir}/%{name}-%{version}/%{linuxtv_dvb_package}/linux/include \
+    --enable-dvb --dvb-path=%{_includedir} \
 %if %{with cpu_autodetect}
-    %ifarch i386
+    %ifarch i386 i686
 		--cpu=i386 --tune=pentium4 --enable-mmx \
-    %endif
-    %ifarch i686
-        --cpu=i686 --tune=pentium4 --enable-mmx \
     %endif
     %ifarch athlon
         --arch=athlon \
@@ -226,10 +213,12 @@ OPTS=""
 sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
 
 # MythTV doesn't support parallel builds
-qmake -o Makefile mythtv.pro \
-    QMAKE_CXX="%{__cxx}" \
-    QMAKE_LINK="%{__cxx}" \
-    QMAKE_CXXFLAGS_RELEASE="%{rpmcflags}"
+#qmake -o Makefile mythtv.pro \
+#    QMAKE_CXX="%{__cxx}" \
+#    QMAKE_LINK="%{__cxx}" \
+#    QMAKE_CXXFLAGS_RELEASE="%{rpmcflags}"
+
+qmake mythtv.pro
 
 %{__make} qmake
 
@@ -240,6 +229,7 @@ find contrib -type f | xargs -r chmod a-x
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT
 
+export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
@@ -294,7 +284,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files backend
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/mythbackend # MISSING
+%attr(755,root,root) %{_bindir}/mythbackend
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(-,mythtv,mythtv) %dir /var/lib/mythtv
@@ -311,7 +301,7 @@ rm -rf $RPM_BUILD_ROOT
 %files frontend
 %defattr(644,root,root,755)
 %{_datadir}/mythtv/*.xml
-#%attr(755,root,root) %{_bindir}/mythfrontend # MISSING
+%attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythtv
 %attr(755,root,root) %{_bindir}/mythepg
 %attr(755,root,root) %{_bindir}/mythprogfind

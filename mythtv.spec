@@ -10,9 +10,6 @@
 # so it's not hard-coded in the spec itself)
 %define linuxtv_dvb_package linuxtv-dvb-1.1.1
 
-# Compile type:  debug or release
-%define compile_type debug
-
 # Set up some custom-build parameters
 %bcond_with	lirc
 %bcond_without alsa
@@ -32,10 +29,11 @@ License:	GPL v2
 URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	c996dc690d36e946396fc5cd4b715e3b
-Source1:	mythbackend.sysconfig.in
-Source2:	mythbackend.init.in
-Source3:	mythbackend.logrotate.in
+Source1:	mythbackend.sysconfig
+Source2:	mythbackend.init
+Source3:	mythbackend.logrotate
 Source12:	http://linuxtv.org/download/dvb/%{linuxtv_dvb_package}.tar.bz2
+Patch0:		%{name}-configure.patch
 # Source12-md5:	6dd599f24b7abecd1e32c203eaa7fa8a
 ExclusiveArch:	i386 i686 athlon x86_64
 BuildRequires:	gcc-c++
@@ -175,121 +173,79 @@ mythtv backend.
 
 %prep
 %setup -q -a 12
-
-# Install these files that MythTV doesn't include,
-# and update them with the paths set by rpmbuild.
-%if 0
-cp -a %{SOURCE1} %{SOURCE2} %{SOURCE3} .
-for file in mythbackend.init \
-            mythbackend.sysconfig \
-            mythbackend.logrotate; do
-  sed -e's|@logdir@|%{_localstatedir}/log|g' \
-      -e's|@rundir@|%{_rundir}|g' \
-      -e's|@sysconfigdir@|%{_sysconfdir}|g' \
-      -e's|@initdir@|%{_initrddir}|g' \
-      -e's|@bindir@|%{_bindir}|g' \
-      -e's|@sbindir@|%{_sbindir}|g' \
-      -e's|@subsysdir@|%{_subsysdir}|g' \
-      -e's|@varlibdir@|/var/lib|g' \
-      -e's|@varcachedir@|%{_varcachedir}|g' \
-      -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
-  < $file.in > $file
-done
-%endif
+%patch0 -p1
 
 %build
 export QTDIR="%{_prefix}"
+#export QMAKESPEC="linux-g++"
 
 # Initialize the options string
 OPTS=""
 
-# Tune for the various processor types?
-%if %{with cpu_autodetect}
-    %ifarch i386
-        OPTS="$OPTS --cpu=i386 --tune=pentium4 --enable-mmx"
-    %endif
-    %ifarch i686
-        OPTS="$OPTS --cpu=i686 --tune=pentium4 --enable-mmx"
-    %endif
-    %ifarch athlon
-        OPTS="$OPTS --arch=athlon"
-    %endif
-    %ifarch x86_64
-        OPTS="$OPTS --arch=x86_64"
-    %endif
-%endif
-
-# Enable arts support (or make sure it's disabled)
-%if %{with arts}
-    OPTS="$OPTS --enable-audio-arts"
-%else
-    OPTS="$OPTS --disable-audio-arts"
-%endif
-
-# Enable alsa support (or make sure it's disabled)
-%if %{with alsa}
-    OPTS="$OPTS --enable-audio-alsa"
-%else
-    OPTS="$OPTS --disable-audio-alsa"
-%endif
-
-# Enable oss support (or make sure it's disabled)
-%if %{with oss}
-    OPTS="$OPTS --enable-audio-oss"
-%else
-    OPTS="$OPTS --disable-audio-oss"
-%endif
-
-# Enable xvmc support (or make sure it's disabled)
-%if %{with xvmc}
-    OPTS="$OPTS --enable-xvmc --enable-xvmc-vld"
-%else
-    OPTS="$OPTS --disable-xvmc --disable-xvmc-vld"
-%endif
-
-# Enable opengl-vsync support (or make sure it's disabled)
-%if %{with opengl_vsync}
-    OPTS="$OPTS --enable-opengl-vsync"
-%else
-    OPTS="$OPTS --disable-opengl-vsync"
-%endif
-
-# Enable lirc support (or make sure it's disabled)
-%if %{with lirc}
-    OPTS="$OPTS --enable-lirc"
-%else
-    OPTS="$OPTS --disable-lirc"
-%endif
-
 
 # Finally, actually configure
 
+# BTW: this is not autoconf configure
 %configure \
-    --compile-type=%{compile_type} \
-    --disable-audio-jack           \
-    --enable-dvb                   \
-    --dvb-path=%{_builddir}/%{name}-%{version}/%{linuxtv_dvb_package}/linux/include/ \
-    $OPTS
-#  --disable-joystick-menu  \
-#  --disable-firewire       \
-#  --disable-ivtv           \
-#  --enable-dvb-eit         \
+    --compile-type=%{?debug:debug}%{!?debug:release} \
+    --disable-audio-jack \
+    --enable-dvb \
+    --dvb-path=%{_builddir}/%{name}-%{version}/%{linuxtv_dvb_package}/linux/include \
+%if %{with cpu_autodetect}
+    %ifarch i386
+		--cpu=i386 --tune=pentium4 --enable-mmx \
+    %endif
+    %ifarch i686
+        --cpu=i686 --tune=pentium4 --enable-mmx \
+    %endif
+    %ifarch athlon
+        --arch=athlon \
+    %endif
+    %ifarch x86_64
+        --arch=x86_64 \
+    %endif
+%endif
+	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
+	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
+	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
+	--%{?with_opengl_vsync:en}%{!?with_openvl_vsync:dis}able-opengl-vsync \
+	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
+	%{?with_xvmc:--enable-xvmc --enable-xvmc-vld} \
+	%{!?with_xvmc:--disable-xvmc --disable-xvmc-vld} \
+#  --disable-joystick-menu \
+#  --disable-firewire \
+#  --disable-ivtv \
+#  --enable-dvb-eit \
+
+#sed -i -e 's:OPTFLAGS=.*:OPTFLAGS=%{rpmcflags} -Wno-switch:g' config.mak
 
 # MythTV doesn't support parallel builds
-qmake mythtv.pro
-%{__make} %{?_smp_mflags}
+qmake -o Makefile mythtv.pro \
+    QMAKE_CXX="%{__cxx}" \
+    QMAKE_LINK="%{__cxx}" \
+    QMAKE_CXXFLAGS_RELEASE="%{rpmcflags}"
+
+%{__make} qmake
 
 # We don't want rpm to add perl requirements to anything in contrib
 find contrib -type f | xargs -r chmod a-x
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT
+
+%{__make} install \
+	INSTALL_ROOT=$RPM_BUILD_ROOT
+
+mv $RPM_BUILD_ROOT{/usr/local/bin,%{_bindir}}
+mv $RPM_BUILD_ROOT{/usr/local/include,%{_includedir}}
+mv $RPM_BUILD_ROOT{/usr/local/share,%{_datadir}}
+mv $RPM_BUILD_ROOT{/usr/local/lib,%{_libdir}}
 
 # Install the files that we added on top of mythtv's own stuff
-install -pD mythbackend.init       $RPM_BUILD_ROOT%{_initrddir}/mythbackend
-install -pD mythbackend.sysconfig  $RPM_BUILD_ROOT%{_sysconfdir}/mythbackend
-install -pD mythbackend.logrotate  $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
+install -pD %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/mythbackend
+install -pD %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
+install -pD %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 
 # Desktop entries
 #mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -310,7 +266,7 @@ install -d $RPM_BUILD_ROOT/var/lib/cache/mythtv
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log/mythtv
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -d $RPM_BUILD_ROOT%{_initrddir}
-install -d $RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 
 # Create the plugins directory, so rpm can know mythtv owns it
 install -d $RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
@@ -337,24 +293,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mythbackend
+#%attr(755,root,root) %{_bindir}/mythbackend # MISSING
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(-,mythtv,mythtv) %dir /var/lib/mythtv
 %attr(-,mythtv,mythtv) %dir /var/lib/cache/mythtv
 %{_initrddir}/mythbackend
-%config %{_sysconfdir}/mythbackend
+%config %{_sysconfdir}/sysconfig/mythbackend
 %config /etc/logrotate.d/mythbackend
 %attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 
 %files setup
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mythtv-setup
+#%attr(755,root,root) %{_bindir}/mythtv-setup MISSING
 
 %files frontend
 %defattr(644,root,root,755)
 %{_datadir}/mythtv/*.xml
-%attr(755,root,root) %{_bindir}/mythfrontend
+#%attr(755,root,root) %{_bindir}/mythfrontend # MISSING
 %attr(755,root,root) %{_bindir}/mythtv
 %attr(755,root,root) %{_bindir}/mythepg
 %attr(755,root,root) %{_bindir}/mythprogfind

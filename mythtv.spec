@@ -1,3 +1,6 @@
+# TODO
+# - CFLAGS doesn't get passed
+# - bconds broken?
 #
 # Specfile for MythTV
 #
@@ -11,12 +14,12 @@
 %define linuxtv_dvb_package linuxtv-dvb-1.1.1
 
 # Set up some custom-build parameters
-%bcond_with	lirc
-%bcond_without alsa
-%bcond_without oss
-%bcond_with opengl_vsync
-%bcond_with arts
-%bcond_with xvmc
+%bcond_with	lirc	# lirc
+%bcond_without alsa	# alsa
+%bcond_without oss # oss
+%bcond_with opengl_vsync # opengl vsync
+%bcond_with arts # arts
+%bcond_with xvmc # xvmc
 %bcond_with cpu_autodetect # enable cpu autodetection at compile time
 
 Name:		mythtv

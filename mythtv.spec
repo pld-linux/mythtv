@@ -46,21 +46,12 @@ BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	mysql-devel
 BuildRequires:	desktop-file-utils
-%if %{with alsa}
-BuildRequires:	alsa-lib-devel
-%endif
-%if %{with lirc}
-BuildRequires:	lirc-devel
-%endif
-%if %{with arts}
-BuildRequires:	arts-devel >= 13:0.9.5
-%endif
-%if %{with xvmc}
-BuildRequires:	nvidia-graphics-devel
-%endif
-%if %{with opengl_vsync}
-BuildRequires:	nvidia-graphics-devel
-%endif
+BuildRequires:	sed >= 4.0
+%{?with_alsa:BuildRequires:	alsa-lib-devel}
+%{?with_lirc:BuildRequires:	lirc-devel}
+%{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
+%{?with_xvmc:BuildRequires:	nvidia-graphics-devel}
+%{?with_opengl_vsync:BuildRequires:	nvidia-graphics-devel}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -228,6 +219,8 @@ OPTS=""
 #  --enable-dvb-eit \
 
 #sed -i -e 's:OPTFLAGS=.*:OPTFLAGS=%{rpmcflags} -Wno-switch:g' config.mak
+# dunno. the configure doesn't take --prefix...
+sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
 
 # MythTV doesn't support parallel builds
 qmake -o Makefile mythtv.pro \
@@ -246,11 +239,6 @@ install -d $RPM_BUILD_ROOT
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
-
-mv $RPM_BUILD_ROOT{/usr/local/bin,%{_bindir}}
-mv $RPM_BUILD_ROOT{/usr/local/include,%{_includedir}}
-mv $RPM_BUILD_ROOT{/usr/local/share,%{_datadir}}
-mv $RPM_BUILD_ROOT{/usr/local/lib,%{_libdir}}
 
 # Install the files that we added on top of mythtv's own stuff
 install -pD %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/mythbackend

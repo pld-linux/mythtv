@@ -22,7 +22,7 @@
 Name:		mythtv
 Version:	0.17
 #define _snap 20050326
-Release:	0.1
+Release:	0.2
 Summary:	A personal video recorder (PVR) application.
 Group:		Applications/Multimedia
 License:	GPL v2
@@ -36,6 +36,8 @@ Source12:	http://linuxtv.org/download/dvb/%{linuxtv_dvb_package}.tar.bz2
 Patch0:		%{name}-configure.patch
 # Source12-md5:	6dd599f24b7abecd1e32c203eaa7fa8a
 ExclusiveArch:	i386 i686 athlon x86_64
+Requires(post):	/sbin/ldconfig
+Requires(postun):	/sbin/ldconfig
 BuildRequires:	gcc-c++
 BuildRequires:	XFree86-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
@@ -56,9 +58,9 @@ BuildRequires:	arts-devel >= 13:0.9.5
 %if %{with xvmc}
 BuildRequires:	nvidia-graphics-devel
 %endif
-#%if %{with opengl_vsync}
-#BuildRequires: nvidia-graphics-devel
-#%endif
+%if %{with opengl_vsync}
+BuildRequires:	nvidia-graphics-devel
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -79,7 +81,7 @@ Summary:	Library providing mythtv support.
 Group:		Libraries
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
-Requires:	qt >= 6:
+Requires:	qt >= 6:3.2.1-4
 Requires:	qt-plugin-mysql >= 6:3.2.1-4
 
 %description -n libmyth
@@ -109,6 +111,14 @@ BuildRequires:	arts-devel >= 13:0.9.5
 %description -n libmyth-devel
 This package contains the header files and libraries for developing
 add-ons for mythtv.
+
+%package -n libmyth-static
+Summary:	Static libmyth library
+Group:		Development/Libraries
+Requires:	lib%{name}-devel = %{version}-%{release}
+
+%description -n libmyth-static
+Static libmyth library.
 
 %package themes
 Summary:	Base themes for mythtv's frontend.
@@ -330,11 +340,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libmyth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/*.so.*
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
 
 %files -n libmyth-devel
 %defattr(644,root,root,755)
 %{_includedir}/*
 %attr(755,root,root) %{_libdir}/*.so
-%{_libdir}/*.a
 %{_datadir}/mythtv/build/settings.pro
+
+%files -n libmyth-static
+%defattr(644,root,root,755)
+%{_libdir}/lib*.a

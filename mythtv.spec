@@ -14,63 +14,58 @@
 %define compile_type debug
 
 # Set up some custom-build parameters
-%define with_lirc          %{?_without_lirc: 0}%{!?_without_lirc: 1}
-%define with_alsa          %{?_without_alsa: 0}%{!?_without_alsa: 1}
-%define with_oss           %{?_without_oss: 0}%{!?_without_oss: 1}
-%define with_opengl_vsync  %{?_with_opengl_vsync: 1}%{!?_with_opengl_vsync: 0}
-%define with_arts          %{?_with_arts: 1}%{!?_with_arts: 0}
-%define with_xvmc          %{?_with_xvmc: 1}%{!?_with_xvmc: 0}
+%bcond_with	lirc
+%bcond_without alsa
+%bcond_without oss
+%bcond_with opengl_vsync
+%bcond_with arts
+%bcond_with xvmc
+%bcond_with cpu_autodetect # enable cpu autodetection at compile time
 
-Name:           mythtv
-Version: 0.18
-Release: 0.20050326.snapshot
-Summary:        A personal video recorder (PVR) application.
-
-Group:          Applications/Multimedia
-License:        GPL2
-URL:            http://www.mythtv.org/
-
-Source0:        %{name}-%{version}.tar.bz2
-Source1:        mythbackend.sysconfig.in
-Source2:        mythbackend.init.in
-Source3:        mythbackend.logrotate.in
-Source12:       http://linuxtv.org/download/dvb/%{linuxtv_dvb_package}.tar.bz2
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-ExclusiveArch:  i386 i686 athlon x86_64
-
-BuildRequires:  gcc-c++
-BuildRequires:  XFree86-devel
-BuildRequires:  freetype-devel >= 2
-BuildRequires:  lame-devel
-BuildRequires:  qt-devel >= 3
-BuildRequires:  mysql-devel
-BuildRequires:  desktop-file-utils
-
-%if %{with_alsa}
-BuildRequires:  alsa-lib-devel
+Name:		mythtv
+Version:	0.17
+#define _snap 20050326
+Release:	0.1
+Summary:	A personal video recorder (PVR) application.
+Group:		Applications/Multimedia
+License:	GPL v2
+URL:		http://www.mythtv.org/
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	c996dc690d36e946396fc5cd4b715e3b
+Source1:	mythbackend.sysconfig.in
+Source2:	mythbackend.init.in
+Source3:	mythbackend.logrotate.in
+Source12:	http://linuxtv.org/download/dvb/%{linuxtv_dvb_package}.tar.bz2
+# Source12-md5:	6dd599f24b7abecd1e32c203eaa7fa8a
+ExclusiveArch:	i386 i686 athlon x86_64
+BuildRequires:	gcc-c++
+BuildRequires:	XFree86-devel
+BuildRequires:	freetype-devel >= 1:2.0.0
+BuildRequires:	lame-libs-devel
+BuildRequires:	qt-devel >= 6:3.2.1-4
+BuildRequires:	qmake >= 6:3.2.1-4
+BuildRequires:	mysql-devel
+BuildRequires:	desktop-file-utils
+%if %{with alsa}
+BuildRequires:	alsa-lib-devel
 %endif
-
-%if %{with_lirc}
-BuildRequires:  lirc-lib-devel
+%if %{with lirc}
+BuildRequires:	lirc-devel
 %endif
-
-%if %{with_arts}
-BuildRequires:  arts-devel
+%if %{with arts}
+BuildRequires:	arts-devel >= 13:0.9.5
 %endif
-
-%if %{with_xvmc}
-BuildRequires: nvidia-graphics-devel
+%if %{with xvmc}
+BuildRequires:	nvidia-graphics-devel
 %endif
-
-#%if %{with_opengl_vsync}
+#%if %{with opengl_vsync}
 #BuildRequires: nvidia-graphics-devel
 #%endif
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-MythTV implements the following PVR features, and more, with a
-unified graphical interface:
+MythTV implements the following PVR features, and more, with a unified
+graphical interface:
 
  - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
  - Video compression using RTjpeg or MPEG-4
@@ -82,35 +77,35 @@ unified graphical interface:
  - Basic video editing
 
 %package -n libmyth
-Summary:        Library providing mythtv support.
-Group:          System Environment/Libraries
-Requires:       freetype >= 2
-Requires:       lame
-Requires:       qt >= 3
-Requires:       qt-MySQL
+Summary:	Library providing mythtv support.
+Group:		Libraries
+Requires:	freetype >= 1:2.0.0
+Requires:	lame
+Requires:	qt >= 6:
+Requires:	qt-plugin-mysql >= 6:3.2.1-4
 
 %description -n libmyth
-Common library code for MythTV and add-on modules (development)
-MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+Common library code for MythTV and add-on modules (development) MythTV
+provides a unified graphical interface for recording and viewing
+television programs. Refer to the mythtv package for more information.
 
 %package -n libmyth-devel
-Summary:        Development files for libmyth.
-Group:          Development/Libraries
-Requires:       libmyth = %{version}
-BuildRequires:  freetype-devel >= 2
-BuildRequires:  lame-devel
-BuildRequires:  qt-devel >= 3
-BuildRequires:  mysql-devel
-BuildRequires:  directfb-devel
-%if %{with_alsa}
-BuildRequires:  alsa-lib-devel
+Summary:	Development files for libmyth.
+Group:		Development/Libraries
+Requires:	libmyth = %{version}-%{release}
+BuildRequires:	freetype-devel >= 1:2.0.0
+BuildRequires:	lame-libs-devel
+BuildRequires:	qt-devel >= 6:3.2.1-4
+BuildRequires:	mysql-devel
+BuildRequires:	DirectFB-devel
+%if %{with alsa}
+BuildRequires:	alsa-lib-devel
 %endif
-%if %{with_lirc}
-BuildRequires:  lirc-lib-devel
+%if %{with lirc}
+BuildRequires:	lirc-devel
 %endif
-%if %{with_arts}
-BuildRequires:  arts-devel
+%if %{with arts}
+BuildRequires:	arts-devel >= 13:0.9.5
 %endif
 
 %description -n libmyth-devel
@@ -118,58 +113,62 @@ This package contains the header files and libraries for developing
 add-ons for mythtv.
 
 %package themes
-Summary:        Base themes for mythtv's frontend.
-Group:          Applications/Multimedia
-Obsoletes:      mythtv-theme-Titivillus
+Summary:	Base themes for mythtv's frontend.
+Group:		Applications/Multimedia
+Obsoletes:	mythtv-theme-Titivillus
 
 %description themes
-MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+MythTV provides a unified graphical interface for recording and
+viewing television programs. Refer to the mythtv package for more
+information.
 
 This package contains only the base themes used by the frontend and
 mythtvsetup.
 
 %package frontend
-Summary:        Client component of mythtv (a PVR).
-Group:          Applications/Multimedia
-Requires:       mythtv = %{version}
-Requires:       mythtv-themes = %{version}
-Provides:       mythtv-frontend-api = %(echo %{version} | awk -F. '{print $1 "." $2}')
+Summary:	Client component of mythtv (a PVR).
+Group:		Applications/Multimedia
+Requires:	mythtv = %{version}-%{release}
+Requires:	mythtv-themes = %{version}-%{release}
+Provides:	mythtv-frontend-api = %(echo %{version} | cut -d. -f1,2)
 
 %description frontend
-MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+MythTV provides a unified graphical interface for recording and
+viewing television programs. Refer to the mythtv package for more
+information.
 
 This package contains only the client software, which provides a
-front-end for playback and configuration.  It requires access to a
+front-end for playback and configuration. It requires access to a
 mythtv-backend installation, either on the same system or one
 reachable via the network.
 
 %package backend
-Summary:        Server component of mythtv (a PVR).
-Group: A        pplications/Multimedia
-Conflicts:      xmltv-grabbers < 0.5.34
-Requires:       mythtv = %{version}
+Summary:	Server component of mythtv (a PVR).
+Group:		Applications/Multimedia
+Conflicts:	xmltv-grabbers < 0.5.34
+Requires:	mythtv = %{version}-%{release}
 
 %description backend
-MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+MythTV provides a unified graphical interface for recording and
+viewing television programs. Refer to the mythtv package for more
+information.
 
 This package contains only the server software, which provides video
-and audio capture and encoding services.  In order to be useful, it
+and audio capture and encoding services. In order to be useful, it
 requires a mythtv-frontend installation, either on the same system or
 one reachable via the network.
 
 %package setup
-Summary:        Setup the mythtv backend.
-Group:          Applications/Multimedia
-Requires:       mythtv-backend = %{version}
-Requires:       mythtv-themes = %{version}
-Provides:       mythtvsetup
+Summary:	Setup the mythtv backend.
+Group:		Applications/Multimedia
+Requires:	mythtv-backend = %{version}-%{release}
+Requires:	mythtv-themes = %{version}-%{release}
+Provides:	mythtvsetup
 
 %description setup
-MythTV provides a unified graphical interface for recording and viewing
-television programs.  Refer to the mythtv package for more information.
+MythTV provides a unified graphical interface for recording and
+viewing television programs. Refer to the mythtv package for more
+information.
 
 This package contains only the setup software for configuring the
 mythtv backend.
@@ -179,31 +178,33 @@ mythtv backend.
 
 # Install these files that MythTV doesn't include,
 # and update them with the paths set by rpmbuild.
+%if 0
 cp -a %{SOURCE1} %{SOURCE2} %{SOURCE3} .
 for file in mythbackend.init \
             mythbackend.sysconfig \
             mythbackend.logrotate; do
-  sed -e's|@logdir@|%{_logdir}|g' \
+  sed -e's|@logdir@|%{_localstatedir}/log|g' \
       -e's|@rundir@|%{_rundir}|g' \
-      -e's|@sysconfigdir@|%{_sysconfigdir}|g' \
-      -e's|@initdir@|%{_initdir}|g' \
+      -e's|@sysconfigdir@|%{_sysconfdir}|g' \
+      -e's|@initdir@|%{_initrddir}|g' \
       -e's|@bindir@|%{_bindir}|g' \
       -e's|@sbindir@|%{_sbindir}|g' \
       -e's|@subsysdir@|%{_subsysdir}|g' \
-      -e's|@varlibdir@|%{_varlibdir}|g' \
+      -e's|@varlibdir@|/var/lib|g' \
       -e's|@varcachedir@|%{_varcachedir}|g' \
-      -e's|@logrotatedir@|%{_logrotatedir}|g' \
+      -e's|@logrotatedir@|%{_sysconfdir}/logrotate.d|g' \
   < $file.in > $file
 done
+%endif
 
 %build
-[ -n "$QTDIR" ] || . %{_sysconfdir}/profile.d/qt.sh
+export QTDIR="%{_prefix}"
 
 # Initialize the options string
 OPTS=""
 
 # Tune for the various processor types?
-%if %{?_with_cpu_autodetect:0}%{!?_with_cpu_autodetect:1}
+%if %{with cpu_autodetect}
     %ifarch i386
         OPTS="$OPTS --cpu=i386 --tune=pentium4 --enable-mmx"
     %endif
@@ -219,42 +220,42 @@ OPTS=""
 %endif
 
 # Enable arts support (or make sure it's disabled)
-%if %{with_arts}
+%if %{with arts}
     OPTS="$OPTS --enable-audio-arts"
 %else
     OPTS="$OPTS --disable-audio-arts"
 %endif
 
 # Enable alsa support (or make sure it's disabled)
-%if %{with_alsa}
+%if %{with alsa}
     OPTS="$OPTS --enable-audio-alsa"
 %else
     OPTS="$OPTS --disable-audio-alsa"
 %endif
 
 # Enable oss support (or make sure it's disabled)
-%if %{with_oss}
+%if %{with oss}
     OPTS="$OPTS --enable-audio-oss"
 %else
     OPTS="$OPTS --disable-audio-oss"
 %endif
 
 # Enable xvmc support (or make sure it's disabled)
-%if %{with_xvmc}
+%if %{with xvmc}
     OPTS="$OPTS --enable-xvmc --enable-xvmc-vld"
 %else
     OPTS="$OPTS --disable-xvmc --disable-xvmc-vld"
 %endif
 
 # Enable opengl-vsync support (or make sure it's disabled)
-%if %{with_opengl_vsync}
+%if %{with opengl_vsync}
     OPTS="$OPTS --enable-opengl-vsync"
 %else
     OPTS="$OPTS --disable-opengl-vsync"
 %endif
 
 # Enable lirc support (or make sure it's disabled)
-%if %{with_lirc}
+%if %{with lirc}
     OPTS="$OPTS --enable-lirc"
 %else
     OPTS="$OPTS --disable-lirc"
@@ -264,7 +265,6 @@ OPTS=""
 # Finally, actually configure
 
 %configure \
-    --prefix=%{_prefix}            \
     --compile-type=%{compile_type} \
     --disable-audio-jack           \
     --enable-dvb                   \
@@ -277,19 +277,19 @@ OPTS=""
 
 # MythTV doesn't support parallel builds
 qmake mythtv.pro
-make %{?_smp_mflags}
+%{__make} %{?_smp_mflags}
 
 # We don't want rpm to add perl requirements to anything in contrib
 find contrib -type f | xargs -r chmod a-x
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install INSTALL_ROOT=$RPM_BUILD_ROOT
+%{__make} install INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the files that we added on top of mythtv's own stuff
-install -pD mythbackend.init       $RPM_BUILD_ROOT%{_initdir}/mythbackend
-install -pD mythbackend.sysconfig  $RPM_BUILD_ROOT%{_sysconfigdir}/mythbackend
-install -pD mythbackend.logrotate  $RPM_BUILD_ROOT%{_logrotatedir}/mythbackend
+install -pD mythbackend.init       $RPM_BUILD_ROOT%{_initrddir}/mythbackend
+install -pD mythbackend.sysconfig  $RPM_BUILD_ROOT%{_sysconfdir}/mythbackend
+install -pD mythbackend.logrotate  $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 
 # Desktop entries
 #mkdir -p %{buildroot}%{_datadir}/pixmaps
@@ -305,15 +305,15 @@ install -pD mythbackend.logrotate  $RPM_BUILD_ROOT%{_logrotatedir}/mythbackend
 #done
 
 # Various utility directories that we want rpm to keep track of mythtv ownership
-mkdir -p $RPM_BUILD_ROOT%{_varlibdir}/mythtv
-mkdir -p $RPM_BUILD_ROOT%{_varcachedir}/mythtv
-mkdir -p $RPM_BUILD_ROOT%{_logdir}/mythtv
-mkdir -p $RPM_BUILD_ROOT%{_logrotatedir}
-mkdir -p $RPM_BUILD_ROOT%{_initdir}
-mkdir -p $RPM_BUILD_ROOT%{_sysconfigdir}
+install -d $RPM_BUILD_ROOT/var/lib/mythtv
+install -d $RPM_BUILD_ROOT/var/lib/cache/mythtv
+install -d $RPM_BUILD_ROOT%{_localstatedir}/log/mythtv
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
+install -d $RPM_BUILD_ROOT%{_initrddir}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}
 
 # Create the plugins directory, so rpm can know mythtv owns it
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
+install -d $RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
 
 # Install settings.pro so people can see the build options we used
 install -pD settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build/settings.pro
@@ -326,43 +326,41 @@ rm -rf $RPM_BUILD_ROOT
 # ...and install-info's for ones that install %{_infodir}/*.info*
 # -> Don't forget Requires(post) and Requires(preun): /sbin/install-info
 
-%post
-/sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
+%defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS COPYING FAQ
 %doc database keys.txt
 %doc docs contrib configfiles
 
 %files backend
-%defattr(-,root,root,-)
-%{_bindir}/mythbackend
-%{_bindir}/mythfilldatabase
-%{_bindir}/mythjobqueue
-%attr(-,mythtv,mythtv) %dir %{_varlibdir}/mythtv
-%attr(-,mythtv,mythtv) %dir %{_varcachedir}/mythtv
-%{_initdir}/mythbackend
-%config %{_sysconfigdir}/mythbackend
-%config %{_logrotatedir}/mythbackend
-%attr(-,mythtv,mythtv) %dir %{_logdir}/mythtv
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mythbackend
+%attr(755,root,root) %{_bindir}/mythfilldatabase
+%attr(755,root,root) %{_bindir}/mythjobqueue
+%attr(-,mythtv,mythtv) %dir /var/lib/mythtv
+%attr(-,mythtv,mythtv) %dir /var/lib/cache/mythtv
+%{_initrddir}/mythbackend
+%config %{_sysconfdir}/mythbackend
+%config /etc/logrotate.d/mythbackend
+%attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 
 %files setup
-%defattr(-,root,root,-)
-%{_bindir}/mythtv-setup
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mythtv-setup
 
 %files frontend
-%defattr(-,root,root,-)
+%defattr(644,root,root,755)
 %{_datadir}/mythtv/*.xml
-%{_bindir}/mythfrontend
-%{_bindir}/mythtv
-%{_bindir}/mythepg
-%{_bindir}/mythprogfind
-%{_bindir}/mythcommflag
-%{_bindir}/mythtranscode
-%{_bindir}/mythtvosd
+%attr(755,root,root) %{_bindir}/mythfrontend
+%attr(755,root,root) %{_bindir}/mythtv
+%attr(755,root,root) %{_bindir}/mythepg
+%attr(755,root,root) %{_bindir}/mythprogfind
+%attr(755,root,root) %{_bindir}/mythcommflag
+%attr(755,root,root) %{_bindir}/mythtranscode
+%attr(755,root,root) %{_bindir}/mythtvosd
 %{_libdir}/mythtv/filters
 %{_libdir}/mythtv/plugins
 %{_datadir}/mythtv/*.ttf
@@ -371,24 +369,16 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/pixmaps/myth*.png
 
 %files themes
-%defattr(-,root,root,-)
+%defattr(644,root,root,755)
 %{_datadir}/mythtv/themes
 
 %files -n libmyth
-%defattr(-,root,root,-)
-%{_libdir}/*.so.*
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/*.so.*
 
 %files -n libmyth-devel
-%defattr(-,root,root,-)
+%defattr(644,root,root,755)
 %{_includedir}/*
-%{_libdir}/*.so
+%attr(755,root,root) %{_libdir}/*.so
 %{_libdir}/*.a
 %{_datadir}/mythtv/build/settings.pro
-
-
-%changelog
-
-* Sat Mar 26 2005 Chris Petersen <rpm@forevermore.net> - 0.18-0.20050326.snapshot
-- Finished first revision of new specfile according to new Fedora guidelines.
-- Some portions of this file are based on Axel Thimm's mythtv spec, which was
-- made incompatible by updates to mythtv's build process.

@@ -21,7 +21,7 @@
 Name:		mythtv
 Version:	0.17
 #define _snap 20050326
-Release:	0.3
+Release:	0.7
 Summary:	A personal video recorder (PVR) application.
 Group:		Applications/Multimedia
 License:	GPL v2
@@ -32,7 +32,6 @@ Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Patch0:		%{name}-configure.patch
-# Source12-md5:	6dd599f24b7abecd1e32c203eaa7fa8a
 ExclusiveArch:	i386 i686 athlon x86_64
 Requires(post):	/sbin/ldconfig
 Requires(postun):	/sbin/ldconfig
@@ -46,12 +45,18 @@ BuildRequires:	mysql-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	sed >= 4.0
 BuildRequires:	linux-libc-headers >= 7:2.6.10
+BuildRequires:	rpmbuild(macros) >= 1.200
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_lirc:BuildRequires:	lirc-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 %{?with_xvmc:BuildRequires:	nvidia-graphics-devel}
 %{?with_opengl_vsync:BuildRequires:	nvidia-graphics-devel}
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define	uid	149
+%define	gid	149
 
 %description
 MythTV implements the following PVR features, and more, with a unified
@@ -145,6 +150,8 @@ Summary:	Server component of mythtv (a PVR).
 Group:		Applications/Multimedia
 Conflicts:	xmltv-grabbers < 0.5.34
 Requires:	mythtv = %{version}-%{release}
+Provides:	user(mythtv)
+Provides:	group(mythtv)
 
 %description backend
 MythTV provides a unified graphical interface for recording and
@@ -234,7 +241,7 @@ export QTDIR="%{_prefix}"
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the files that we added on top of mythtv's own stuff
-install -pD %{SOURCE2} $RPM_BUILD_ROOT%{_initrddir}/mythbackend
+install -pD %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 install -pD %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
 install -pD %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 
@@ -256,7 +263,7 @@ install -d $RPM_BUILD_ROOT/var/lib/mythtv
 install -d $RPM_BUILD_ROOT/var/lib/cache/mythtv
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log/mythtv
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -d $RPM_BUILD_ROOT%{_initrddir}
+install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 
 # Create the plugins directory, so rpm can know mythtv owns it
@@ -268,13 +275,18 @@ install -pD settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build/settings.pro
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# ldconfig's for packages that install %{_libdir}/*.so.*
-# -> Don't forget Requires(post) and Requires(postun): /sbin/ldconfig
-# ...and install-info's for ones that install %{_infodir}/*.info*
-# -> Don't forget Requires(post) and Requires(preun): /sbin/install-info
+%pre
+%groupadd -g %{gid} %{name}
+%useradd -u %{uid} -d /usr/share/empty -g %{name} -c "Mythtv User" %{name}
 
 %post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+if [ "$1" = "0" ]; then
+	%userremove %{name}
+	%groupremove %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -287,12 +299,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mythbackend
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
-%attr(-,mythtv,mythtv) %dir /var/lib/mythtv
-%attr(-,mythtv,mythtv) %dir /var/lib/cache/mythtv
-%{_initrddir}/mythbackend
-%config %{_sysconfdir}/sysconfig/mythbackend
+%attr(755,mythtv,mythtv) %dir /var/lib/mythtv
+%attr(755,mythtv,mythtv) %dir /var/lib/cache/mythtv
+%attr(754,root,root) /etc/rc.d/init.d/mythbackend
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %config /etc/logrotate.d/mythbackend
-%attr(-,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
+%attr(755,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
 
 %files setup
 %defattr(644,root,root,755)

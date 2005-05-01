@@ -48,7 +48,7 @@ BuildRequires:	mysql-devel
 %{?with_opengl_vsync:BuildRequires:	nvidia-graphics-devel}
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
-BuildRequires:	rpmbuild(macros) >= 1.200
+BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
 # ???
 ExclusiveArch:	i386 i686 athlon x86_64

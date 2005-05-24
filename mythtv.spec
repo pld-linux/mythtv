@@ -381,6 +381,8 @@ fi
 
 %files frontend
 %defattr(644,root,root,755)
+%dir %{_datadir}/mythtv
+%dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
 %attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythtv
@@ -412,7 +414,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/*.so
 %{_includedir}/*
-# XXX: missing dirs
+%dir %{_datadir}/mythtv/build
 %{_datadir}/mythtv/build/settings.pro
 
 %files -n libmyth-static

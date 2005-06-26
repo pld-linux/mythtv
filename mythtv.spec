@@ -2,6 +2,7 @@
 # - CFLAGS doesn't get passed
 # - bconds broken?
 # - mythtv user
+# - what about Patch0?
 #
 # Specfile for MythTV
 #

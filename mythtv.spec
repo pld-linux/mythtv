@@ -19,21 +19,21 @@
 %bcond_with	xvmc		# xvmc support
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time
 #
+Summary:	A personal video recorder (PVR) application
+Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define _snap 20050326
 Release:	0.1
-Summary:	A personal video recorder (PVR) application
-Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
-Group:		Applications/Multimedia
 License:	GPL v2
-URL:		http://www.mythtv.org/
+Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 # Source0-md5:	e6cabf88feeaf6ae8f830d3fdf7b113d
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Patch0:		%{name}-configure.patch
+URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
@@ -48,10 +48,10 @@ BuildRequires:	mysql-devel
 %{?with_opengl_vsync:BuildRequires:	nvidia-graphics-devel}
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
 # ???
-ExclusiveArch:	i386 i686 athlon x86_64 amd64
+ExclusiveArch:	i386 i686 athlon %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	uid	149
@@ -272,7 +272,7 @@ export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
     %ifarch athlon
         --arch=athlon \
     %endif
-    %ifarch x86_64 amd64
+    %ifarch %{x8664}
         --arch=x86_64 \
     %endif
 %endif

@@ -20,16 +20,16 @@
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time
 #
 Name:		mythtv
-Version:	0.17
+Version:	0.18.1
 #define _snap 20050326
-Release:	0.7
+Release:	0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Group:		Applications/Multimedia
 License:	GPL v2
 URL:		http://www.mythtv.org/
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	c996dc690d36e946396fc5cd4b715e3b
+# Source0-md5:	e6cabf88feeaf6ae8f830d3fdf7b113d
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -51,7 +51,7 @@ BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	sed >= 4.0
 # ???
-ExclusiveArch:	i386 i686 athlon x86_64
+ExclusiveArch:	i386 i686 athlon x86_64 amd64
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	uid	149
@@ -253,7 +253,7 @@ Statyczna biblioteka libmyth.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 
 %build
 export QTDIR="%{_prefix}"
@@ -272,7 +272,7 @@ export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
     %ifarch athlon
         --arch=athlon \
     %endif
-    %ifarch x86_64
+    %ifarch x86_64 amd64
         --arch=x86_64 \
     %endif
 %endif

@@ -88,7 +88,7 @@ Summary:	Server component of mythtv (a PVR)
 Summary(pl):	Czê¶æ serwerowa mythtv (PVR)
 Group:		Applications/Multimedia
 Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/groupadd
+Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(postun):	/usr/sbin/groupdel

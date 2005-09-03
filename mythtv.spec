@@ -31,6 +31,7 @@ Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Patch0:		%{name}-configure.patch
+Patch1:		%{name}-lib64.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
@@ -234,19 +235,20 @@ Statyczna biblioteka libmyth.
 %prep
 %setup -q
 #%patch0 -p1
+%patch1 -p1
 
 %build
 export QTDIR="%{_prefix}"
 export QMAKESPEC="linux-g++"
-export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
+#export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 
 # BTW: this is not autoconf configure
 %configure \
     --compile-type=%{?debug:debug}%{!?debug:release} \
     --disable-audio-jack \
     --enable-dvb --dvb-path=%{_includedir} \
-	--extra-cflags="%{rpmcflags}" \
-	--extra-cxxflags="%{rpmcxxflags}" \
+	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
+	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
 %if %{with cpu_autodetect}
     %ifarch i386 i686
 		--cpu=i386 --tune=pentium4 --enable-mmx \
@@ -279,6 +281,9 @@ export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 # dunno. the configure doesn't take --prefix...
 sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
 
+# lib64 hack
+echo "LIBDIR=%{_libdir}" >> settings.pro
+
 # MythTV doesn't support parallel builds
 #qmake -o Makefile mythtv.pro \
 #    QMAKE_CXX="%{__cxx}" \
@@ -288,9 +293,6 @@ sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
 qmake mythtv.pro
 
 %{__make} qmake
-
-# We don't want rpm to add perl requirements to anything in contrib
-find contrib -type f | xargs -r chmod a-x
 
 %install
 rm -rf $RPM_BUILD_ROOT

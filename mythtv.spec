@@ -1,7 +1,5 @@
 # TODO
-# - CFLAGS doesn't get passed
-# - bconds broken?
-# - mythtv user
+# - bconds broken? (???)
 # - what about Patch0?
 #
 # Specfile for MythTV
@@ -9,7 +7,6 @@
 #  MythTV now uses a fairly intelligent cpu-detection script, so if you are
 #  building an rpm by hand on the machine it will be used on, I encourage you
 #  to use "--with cpu_autodetect" to let mythtv decide for you.
-#
 #
 # Conditional build:
 %bcond_with	lirc		# lirc support
@@ -36,9 +33,10 @@ Source3:	mythbackend.logrotate
 Patch0:		%{name}-configure.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
+#BuildRequires:	DirectFB-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-BuildRequires:	desktop-file-utils
+#BuildRequires:	desktop-file-utils
 BuildRequires:	freetype-devel >= 1:2.0.0
 BuildRequires:	gcc-c++
 BuildRequires:	lame-libs-devel
@@ -55,21 +53,17 @@ BuildRequires:	sed >= 4.0
 ExclusiveArch:	i386 i686 athlon %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define	uid	149
-%define	gid	149
-
 %description
 MythTV implements the following PVR features, and more, with a unified
 graphical interface:
-
- - Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
- - Video compression using RTjpeg or MPEG-4
- - Program listing retrieval using XMLTV
- - Themable, semi-transparent on-screen display
- - Electronic program guide
- - Scheduled recording of TV programs
- - Resolution of conflicts between scheduled recordings
- - Basic video editing
+- Basic 'live-tv' functionality. Pause/Fast Forward/Rewind "live" TV.
+- Video compression using RTjpeg or MPEG-4
+- Program listing retrieval using XMLTV
+- Themable, semi-transparent on-screen display
+- Electronic program guide
+- Scheduled recording of TV programs
+- Resolution of conflicts between scheduled recordings
+- Basic video editing
 
 %description -l pl
 MythTV implementuje nastêpuj±ce mo¿liwo¶ci PVR, a nawet wiêcej, wraz z
@@ -217,21 +211,6 @@ Summary:	Development files for libmyth
 Summary(pl):	Pliki nag³ówkowe libmyth
 Group:		Development/Libraries
 Requires:	libmyth = %{version}-%{release}
-# ??? Requires???
-#BuildRequires:	freetype-devel >= 1:2.0.0
-#BuildRequires:	lame-libs-devel
-#BuildRequires:	qt-devel >= 6:3.2.1-4
-#BuildRequires:	mysql-devel
-#BuildRequires:	DirectFB-devel
-#%if %{with alsa}
-#BuildRequires:	alsa-lib-devel
-#%endif
-#%if %{with lirc}
-#BuildRequires:	lirc-devel
-#%endif
-#%if %{with arts}
-#BuildRequires:	arts-devel >= 13:0.9.5
-#%endif
 
 %description -n libmyth-devel
 This package contains the header files for developing add-ons for
@@ -266,6 +245,8 @@ export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
     --compile-type=%{?debug:debug}%{!?debug:release} \
     --disable-audio-jack \
     --enable-dvb --dvb-path=%{_includedir} \
+	--extra-cflags="%{rpmcflags}" \
+	--extra-cxxflags="%{rpmcxxflags}" \
 %if %{with cpu_autodetect}
     %ifarch i386 i686
 		--cpu=i386 --tune=pentium4 --enable-mmx \
@@ -288,6 +269,11 @@ export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 #  --disable-firewire \
 #  --disable-ivtv \
 #  --enable-dvb-eit \
+#  --disable-x11            disable X11 support
+#  --disable-xrandr         disable X11 resolution switching
+#  --disable-xv             disable XVideo   (X11 video output accel.)
+#  --enable-directfb        enable DirectFB  (Linux non-X11 video)
+#  --enable-directx         enable DirectX   (Microsoft video)
 
 #sed -i -e 's:OPTFLAGS=.*:OPTFLAGS=%{rpmcflags} -Wno-switch:g' config.mak
 # dunno. the configure doesn't take --prefix...
@@ -350,8 +336,8 @@ install -pD settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build/settings.pro
 rm -rf $RPM_BUILD_ROOT
 
 %pre backend
-%groupadd -g %{gid} %{name}
-%useradd -u %{uid} -d /usr/share/empty -g %{name} -c "Mythtv User" %{name}
+%groupadd -g 149 %{name}
+%useradd -u 149 -d /usr/share/empty -g %{name} -c "MythTV User" %{name}
 
 %postun backend
 if [ "$1" = "0" ]; then

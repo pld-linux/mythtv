@@ -22,7 +22,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define _snap 20050326
-Release:	0.3
+Release:	0.5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -241,6 +241,8 @@ Statyczna biblioteka libmyth.
 %patch2 -p1
 %patch3 -p1
 
+rm -rf database/old # not supported in PLD
+
 %build
 %if %{with cpu_autodetect}
 # Make sure we have /proc mounted
@@ -368,10 +370,18 @@ fi
 %post	-n libmyth -p /sbin/ldconfig
 %postun	-n libmyth -p /sbin/ldconfig
 
+%post setup
+#if [ "$1" = 1 ]; then
+%banner -e %{name}-setup <<EOF
+To grant mysql permissions to mythtv, please run
+zcat %{_docdir}/%{name}-setup-%{version}/database/mc.sql.gz | mysql
+EOF
+#fi
+
 %files
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS COPYING FAQ
-%doc database keys.txt
+%doc keys.txt
 %doc docs contrib configfiles
 
 %files backend
@@ -407,6 +417,7 @@ fi
 
 %files setup
 %defattr(644,root,root,755)
+%doc database
 %attr(755,root,root) %{_bindir}/mythtv-setup
 
 %files themes

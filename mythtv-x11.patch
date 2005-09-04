@@ -1,0 +1,11 @@
+--- ./configure~	2005-09-04 11:49:01.000000000 +0300
++++ ./configure	2005-09-04 13:43:02.000000000 +0300
+@@ -1683,7 +1683,7 @@
+ 
+ if test x"$x11" = x"yes" ; then
+     x11="no"
+-    if test -f /usr/X11R6/bin/xinit ; then
++    if test -f /usr/X11R6/include/X11/X.h; then
+         x11="yes"
+     fi
+ fi

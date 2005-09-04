@@ -252,7 +252,7 @@ fi
 export QTDIR="%{_prefix}"
 export QMAKESPEC="linux-g++"
 
-%ifarch %{x8664}
+%if "%{_lib}" != "lib"
 export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 %endif
 #export CFLAGS="%{rpmcflags} -fomit-frame-pointer"

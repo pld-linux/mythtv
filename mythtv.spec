@@ -22,7 +22,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define _snap 20050326
-Release:	0.1
+Release:	0.3
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -32,6 +32,8 @@ Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Patch0:		%{name}-configure.patch
 Patch1:		%{name}-lib64.patch
+Patch2:		%{name}-x86_64-configure.patch
+Patch3:		%{name}-x11.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
@@ -236,10 +238,23 @@ Statyczna biblioteka libmyth.
 %setup -q
 #%patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
+%if %{with cpu_autodetect}
+# Make sure we have /proc mounted
+if [ ! -r /proc/cpuinfo ]; then
+	echo "You need to have /proc mounted in order to build with cpu_autodetect!"
+	exit 1
+fi
+%endif
 export QTDIR="%{_prefix}"
 export QMAKESPEC="linux-g++"
+
+%ifarch %{x8664}
+export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
+%endif
 #export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 
 # BTW: this is not autoconf configure
@@ -260,6 +275,9 @@ export QMAKESPEC="linux-g++"
         --arch=x86_64 \
     %endif
 %endif
+    %ifarch %{x8664}
+        --enable-mmx \
+    %endif
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
@@ -279,10 +297,10 @@ export QMAKESPEC="linux-g++"
 
 #sed -i -e 's:OPTFLAGS=.*:OPTFLAGS=%{rpmcflags} -Wno-switch:g' config.mak
 # dunno. the configure doesn't take --prefix...
-sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
+#sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
 
 # lib64 hack
-echo "LIBDIR=%{_libdir}" >> settings.pro
+#echo "LIBDIR=%{_libdir}" >> config.mak
 
 # MythTV doesn't support parallel builds
 #qmake -o Makefile mythtv.pro \
@@ -322,7 +340,7 @@ install -pD %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 
 # Various utility directories that we want rpm to keep track of mythtv ownership
 install -d $RPM_BUILD_ROOT/var/lib/mythtv
-install -d $RPM_BUILD_ROOT/var/lib/cache/mythtv
+install -d $RPM_BUILD_ROOT/var/cache/mythtv
 install -d $RPM_BUILD_ROOT%{_localstatedir}/log/mythtv
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -362,7 +380,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(755,mythtv,mythtv) %dir /var/lib/mythtv
-%attr(755,mythtv,mythtv) %dir /var/lib/cache/mythtv
+%attr(755,mythtv,mythtv) %dir /var/cache/mythtv
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %config /etc/logrotate.d/mythbackend

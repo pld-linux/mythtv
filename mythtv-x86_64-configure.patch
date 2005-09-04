@@ -26,3 +26,25 @@ http://bugs.gentoo.org/show_bug.cgi?id=94664
  case "$cpu" in
    x86)
    ;;
+--- ./configure~	2005-09-04 11:48:59.000000000 +0300
++++ ./configure	2005-09-04 11:49:01.000000000 +0300
+@@ -237,12 +237,13 @@
+   x86)
+   ;;
+   x86_64)
+-    if [ "`$cc -dumpmachine | grep x86_64 | cut -d- -f1`" = "x86_64" -a \
+-         -z "`echo $CFLAGS | grep -- -m32`"  ]; then
+-      cpu="x86_64"
+-    else
+-      cpu="x86"
+-    fi
++	if [ "`$cc -dumpmachine | grep x86_64 | cut -d- -f1`" = "x86_64" ]; then
++		if [ -z "`echo $CFLAGS | grep -- -m32`"  ]; then
++			cpu="x86_64"
++		else
++			cpu="x86"
++		fi
++	fi
+   ;;
+   # armv4l is a subset of armv5tel
+   armv4l|armv5tel)

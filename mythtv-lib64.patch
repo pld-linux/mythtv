@@ -1,3 +1,42 @@
+--- ./configure~	2005-09-04 01:26:56.000000000 +0300
++++ ./configure	2005-09-04 01:26:58.000000000 +0300
+@@ -13,6 +13,7 @@
+ # default parameters
+ compile_type="release"
+ prefix="/usr/local"
++libdir="${prefix}/lib"
+ mandir=""
+ bindir=""
+ cross_prefix=""
+@@ -496,6 +497,8 @@
+   ;;  
+   --prefix=*) prefix=`echo $opt | cut -d '=' -f 2`
+   ;;
++  --libdir=*) libdir=`echo $opt | cut -d '=' -f 2`
++  ;;
+   --mandir=*) mandir=`echo $opt | cut -d '=' -f 2`
+   ;;
+   --source-path=*) source_path=`echo $opt | cut -d '=' -f 2`
+@@ -1612,6 +1615,10 @@
+ bindir="${prefix}/bin"
+ fi
+ 
++if test x"$libdir" = x""; then
++libdir="${prefix}/lib"
++fi
++
+ if test x"$mandir" = x""; then
+ mandir="${prefix}/man"
+ fi
+@@ -1840,6 +1847,7 @@
+ 
+ echo "PREFIX=$prefix" >> config.mak
+ #echo "bindir=$bindir" >> config.mak
++echo "LIBDIR=$libdir" >> config.mak
+ #echo "mandir=$mandir" >> config.mak
+ #echo "MAKE=$make" >> config.mak
+ echo "QMAKE_CC=$cc" >> config.mak
+
 --- ./libs/libmythsamplerate/libmythsamplerate.pro~	2005-05-06 23:19:54.000000000 +0300
 +++ ./libs/libmythsamplerate/libmythsamplerate.pro	2005-09-04 00:10:56.000000000 +0300
 @@ -4,7 +4,7 @@

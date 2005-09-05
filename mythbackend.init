@@ -21,7 +21,7 @@ fi
 binary=/usr/bin/mythbackend
 prog=mythbackend
 RETVAL=0
-OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/$prog.log --pidfile /var/run/$prog.pid"
+OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/$prog.log --pidfile /var/run/mythtv/$prog.pid"
 
 # See how we were called.
 case "$1" in
@@ -41,8 +41,8 @@ stop)
 	# Stop daemons.
 	if [ -f /var/lock/subsys/$prog ]; then
 		msg_stopping "Mythbackend"
-		killproc $binary
-		rm -f /var/lock/subsys/$prog /var/run/$prog.pid >/dev/null 2>&1
+		killproc --pidfile mythtv/$prog.pid $binary
+		rm -f /var/lock/subsys/$prog /var/run/mythtv/$prog.pid >/dev/null 2>&1
 	else
 		msg_not_running "Mythbackend"
 	fi

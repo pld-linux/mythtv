@@ -276,3 +276,14 @@ diff -ur mythtv-0.18.1/libs/libmythui/libmythui.pro mythtv-0.18.1.fixed/libs/lib
  INSTALLS = target
  INCLUDEPATH += ../../libs/libmyth
  INCLUDEPATH += ../..
+--- ./configure~	2005-09-05 20:10:30.000000000 +0300
++++ ./configure	2005-09-05 20:10:33.000000000 +0300
+@@ -703,7 +703,7 @@
+         LIBPATHS="$LIBPATHS $LP_APPEND"
+     done
+ 
+-    LIBPATHS="`echo $LIBPATHS /lib /usr/lib | sed s/'\/ '/' '/g` "
++    LIBPATHS="`echo $LIBPATHS $libdir /lib /usr/lib | sed s/'\/ '/' '/g` "
+ 
+     HAS_IT="no"
+     for LIBPATH in $LIBPATHS ; do

@@ -1,6 +1,7 @@
 # TODO
-# - bconds broken? (???)
 # - what about Patch0?
+# - bconds: altivec joystick lcd unichrome
+# - lcd? ( app-misc/lcdproc )
 #
 # Specfile for MythTV
 #
@@ -9,20 +10,28 @@
 #  to use "--with cpu_autodetect" to let mythtv decide for you.
 #
 # Conditional build:
-%bcond_with	lirc		# lirc support
-%bcond_without	alsa		# alsa support
-%bcond_without	oss		# oss
-%bcond_with	opengl_vsync	# opengl vsync
-%bcond_with	arts		# arts support
-%bcond_with	xvmc		# xvmc support
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time
+%bcond_without	lirc		# lirc support
+%bcond_without	alsa		# alsa support
+%bcond_without	oss		# oss support
+%bcond_without	arts		# arts support
+%bcond_without	jack		# jack audio connection kit
+%bcond_without	oggvorbis	# ogg vorbis
+%bcond_without	opengl		# opengl vsync
+%bcond_without	nvidia		# MPEG accel.
+%bcond_without	dvb		# DVB
+%bcond_with	firewire	# ieee1394 (NFY)
+
+%if %{with nvidia}
+%define	with_opengl 1
+%endif
 #
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define _snap 20050326
-Release:	0.5
+Release:	0.11
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -39,21 +48,27 @@ BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-#BuildRequires:	desktop-file-utils
+%{?with_dvb:BuildRequires:	libdvb-devel}
+%{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
+%{?with_oggvorbis:BuildRequires:	libvorbis-devel}
+%if %{with firewire}
+BuildRequires:	libraw1394-devel
+BuildRequires:	libavc1394-devel
+BuildRequires:	libiec61883-devel # missing in PLD?
+%endif
 BuildRequires:	freetype-devel >= 1:2.0.0
 BuildRequires:	gcc-c++
 BuildRequires:	lame-libs-devel
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-%{?with_xvmc:BuildRequires:	nvidia-graphics-devel}
-%{?with_opengl_vsync:BuildRequires:	nvidia-graphics-devel}
+%{?with_nvidia:BuildRequires:	X11-driver-nvidia-devel}
+%{?with_opengl:BuildRequires:	X11-driver-nvidia-devel}
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed >= 4.0
-# ???
-ExclusiveArch:	i386 i686 athlon %{x8664}
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -91,10 +106,10 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+Requires(post,preun):	/sbin/chkconfig
 Requires:	mythtv = %{version}-%{release}
 Provides:	user(mythtv)
 Provides:	group(mythtv)
-Conflicts:	xmltv-grabbers < 0.5.34
 
 %description backend
 MythTV provides a unified graphical interface for recording and
@@ -122,7 +137,6 @@ Summary(pl):	Czê¶æ kliencka mythtv (PVR)
 Group:		Applications/Multimedia
 Requires:	mythtv = %{version}-%{release}
 Requires:	mythtv-themes = %{version}-%{release}
-Provides:	mythtv-frontend-api = %(echo %{version} | cut -d. -f1,2)
 
 %description frontend
 MythTV provides a unified graphical interface for recording and
@@ -150,7 +164,6 @@ Summary(pl):	Konfigurator backendu mythtv
 Group:		Applications/Multimedia
 Requires:	mythtv-backend = %{version}-%{release}
 Requires:	mythtv-themes = %{version}-%{release}
-Provides:	mythtvsetup
 
 %description setup
 MythTV provides a unified graphical interface for recording and
@@ -262,56 +275,39 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 # BTW: this is not autoconf configure
 %configure \
     --compile-type=%{?debug:debug}%{!?debug:release} \
-    --disable-audio-jack \
-    --enable-dvb --dvb-path=%{_includedir} \
+    %{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
-%if %{with cpu_autodetect}
-    %ifarch i386 i686
+%if %{without cpu_autodetect}
+    %ifarch i386 i486 i586 i686 pentium3 pentium4
 		--cpu=i386 --tune=pentium4 --enable-mmx \
     %endif
     %ifarch athlon
-        --arch=athlon \
+        --arch=athlon --enable-mmx \
     %endif
     %ifarch %{x8664}
-        --arch=x86_64 \
+        --arch=x86_64 --enable-mmx \
     %endif
 %endif
-    %ifarch %{x8664}
-        --enable-mmx \
-    %endif
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
-	--%{?with_opengl_vsync:en}%{!?with_openvl_vsync:dis}able-opengl-vsync \
+	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
+	--%{?with_opengl:en}%{!?with_openvl_vsync:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
-	%{?with_xvmc:--enable-xvmc --enable-xvmc-vld} \
-	%{!?with_xvmc:--disable-xvmc --disable-xvmc-vld} \
+	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
+	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
+	%{?with_nvidia:--enable-xvmc --enable-xvmc-vld} \
+	%{!?with_nvidia:--disable-xvmc --disable-xvmc-vld} \
+	--enable-xv \
+	--enable-x11 \
 #  --disable-joystick-menu \
-#  --disable-firewire \
 #  --disable-ivtv \
-#  --enable-dvb-eit \
-#  --disable-x11            disable X11 support
 #  --disable-xrandr         disable X11 resolution switching
-#  --disable-xv             disable XVideo   (X11 video output accel.)
 #  --enable-directfb        enable DirectFB  (Linux non-X11 video)
 #  --enable-directx         enable DirectX   (Microsoft video)
 
-#sed -i -e 's:OPTFLAGS=.*:OPTFLAGS=%{rpmcflags} -Wno-switch:g' config.mak
-# dunno. the configure doesn't take --prefix...
-#sed -i -e 's:PREFIX =.*:PREFIX = %{_prefix}:g' settings.pro
-
-# lib64 hack
-#echo "LIBDIR=%{_libdir}" >> config.mak
-
-# MythTV doesn't support parallel builds
-#qmake -o Makefile mythtv.pro \
-#    QMAKE_CXX="%{__cxx}" \
-#    QMAKE_LINK="%{__cxx}" \
-#    QMAKE_CXXFLAGS_RELEASE="%{rpmcflags}"
-
 qmake mythtv.pro
-
 %{__make} qmake
 
 %install
@@ -327,23 +323,8 @@ install -pD %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 install -pD %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
 install -pD %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 
-# Desktop entries
-#mkdir -p %{buildroot}%{_datadir}/pixmaps
-#mkdir -p %{buildroot}%{_datadir}/applications
-#for file in %{desktop_applications}; do
-#  install -p %{_sourcedir}/$file.png %{buildroot}%{_datadir}/pixmaps/$file.png
-#  desktop-file-install --vendor %{desktop_vendor} \
-#    --dir %{buildroot}%{_datadir}/applications    \
-#    --add-category X-Red-Hat-Extra                \
-#    --add-category Application                    \
-#    --add-category AudioVideo                     \
-#    %{_sourcedir}/$file.desktop
-#done
-
 # Various utility directories that we want rpm to keep track of mythtv ownership
-install -d $RPM_BUILD_ROOT/var/lib/mythtv
-install -d $RPM_BUILD_ROOT/var/cache/mythtv
-install -d $RPM_BUILD_ROOT%{_localstatedir}/log/mythtv
+install -d $RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
@@ -359,7 +340,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre backend
 %groupadd -g 149 %{name}
-%useradd -u 149 -d /usr/share/empty -g %{name} -c "MythTV User" %{name}
+%useradd -u 149 -d /var/lib/mythtv -g %{name} -c "MythTV User" %{name}
+%addusertogroup %{name} video
+%addusertogroup %{name} audio
+
+%post backend
+# NFY
+#/sbin/chkconfig --add mythbackend
+
+%preun backend
+if [ "$1" = "0" ]; then
+	%service -q mythbackend stop
+	/sbin/chkconfig --del mythbackend
+fi
 
 %postun backend
 if [ "$1" = "0" ]; then
@@ -371,12 +364,12 @@ fi
 %postun	-n libmyth -p /sbin/ldconfig
 
 %post setup
-#if [ "$1" = 1 ]; then
+if [ "$1" = 1 ]; then
 %banner -e %{name}-setup <<EOF
 To grant mysql permissions to mythtv, please run
 zcat %{_docdir}/%{name}-setup-%{version}/database/mc.sql.gz | mysql
 EOF
-#fi
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -389,12 +382,13 @@ EOF
 %attr(755,root,root) %{_bindir}/mythbackend
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
-%attr(755,mythtv,mythtv) %dir /var/lib/mythtv
-%attr(755,mythtv,mythtv) %dir /var/cache/mythtv
+%attr(775,root,mythtv) %dir /var/lib/mythtv
+%attr(775,root,mythtv) %dir /var/cache/mythtv
+%attr(775,root,mythtv) %dir /var/run/mythtv
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %config /etc/logrotate.d/mythbackend
-%attr(755,mythtv,mythtv) %dir %{_localstatedir}/log/mythtv
+%attr(775,root,mythtv) %dir %{_localstatedir}/log/mythtv
 
 %files frontend
 %defattr(644,root,root,755)
@@ -408,8 +402,9 @@ EOF
 %attr(755,root,root) %{_bindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythtvosd
-%{_libdir}/mythtv/filters
-%{_libdir}/mythtv/plugins
+%dir %{_libdir}/mythtv/filters
+%dir %{_libdir}/mythtv/plugins
+%attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/*.ttf
 %{_datadir}/mythtv/i18n
 #%{_datadir}/applications/*myth*.desktop

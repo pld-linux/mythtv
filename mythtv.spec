@@ -1,5 +1,4 @@
 # TODO
-# - what about Patch0?
 # - bconds: altivec joystick lcd unichrome
 # - lcd? ( app-misc/lcdproc )
 #
@@ -31,7 +30,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define _snap 20050326
-Release:	0.11
+Release:	0.13
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -39,10 +38,9 @@ Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
-Patch0:		%{name}-configure.patch
-Patch1:		%{name}-lib64.patch
-Patch2:		%{name}-x86_64-configure.patch
-Patch3:		%{name}-x11.patch
+Patch0:		%{name}-lib64.patch
+Patch1:		%{name}-x86_64-configure.patch
+Patch2:		%{name}-x11.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
@@ -249,10 +247,9 @@ Statyczna biblioteka libmyth.
 
 %prep
 %setup -q
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -278,7 +275,9 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
     %{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
-%if %{without cpu_autodetect}
+%if %{with cpu_autodetect}
+	--enable-proc-opt \
+%else
     %ifarch i386 i486 i586 i686 pentium3 pentium4
 		--cpu=i386 --tune=pentium4 --enable-mmx \
     %endif
@@ -293,7 +292,7 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
-	--%{?with_opengl:en}%{!?with_openvl_vsync:dis}able-opengl-vsync \
+	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \

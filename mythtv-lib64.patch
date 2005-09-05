@@ -287,3 +287,38 @@ diff -ur mythtv-0.18.1/libs/libmythui/libmythui.pro mythtv-0.18.1.fixed/libs/lib
  
      HAS_IT="no"
      for LIBPATH in $LIBPATHS ; do
+--- ./libs/libmyth/mythcontext.cpp~	2005-04-11 21:59:29.000000000 +0300
++++ ./libs/libmyth/mythcontext.cpp	2005-09-05 20:20:24.000000000 +0300
+@@ -41,6 +41,10 @@
+ const QString kPluginLibSuffix = ".so";
+ #endif
+ 
++#ifndef LIBDIR
++#define LIBDIR "lib"
++#endif
++
+ MythContext *gContext = NULL;
+ QMutex MythContext::verbose_mutex(true);
+ 
+@@ -874,7 +878,7 @@
+ 
+ QString MythContext::GetLibraryDir(void) 
+ { 
+-    return d->m_installprefix + "/lib/mythtv/"; 
++    return d->m_installprefix + "/" + LIBDIR "/mythtv/"; 
+ }
+ 
+ QString MythContext::GetThemesParentDir(void) 
+--- ./configure~	2005-09-05 20:25:05.000000000 +0300
++++ ./configure	2005-09-05 20:25:08.000000000 +0300
+@@ -2394,6 +2394,10 @@
+   echo "CONFIG_INCLUDEPATH=$CONFIG_INCLUDEPATH" >> config.mak
+ fi
+ 
++if test "$_lib" != ""; then
++  echo "#define LIBDIR \"$_lib\""  >> $TMPH
++fi
++
+ diff $TMPH config.h >/dev/null 2>&1
+ if test $? -ne 0 ; then
+   mv -f $TMPH config.h

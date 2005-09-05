@@ -29,7 +29,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-#define _snap 20050326
+#define	_snap	20050326
 Release:	0.13
 License:	GPL v2
 Group:		Applications/Multimedia
@@ -271,21 +271,21 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 
 # BTW: this is not autoconf configure
 %configure \
-    --compile-type=%{?debug:debug}%{!?debug:release} \
-    %{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
+	--compile-type=%{?debug:debug}%{!?debug:release} \
+	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else
     %ifarch i386 i486 i586 i686 pentium3 pentium4
-		--cpu=i386 --tune=pentium4 --enable-mmx \
+	--cpu=i386 --tune=pentium4 --enable-mmx \
     %endif
     %ifarch athlon
-        --arch=athlon --enable-mmx \
+	--arch=athlon --enable-mmx \
     %endif
     %ifarch %{x8664}
-        --arch=x86_64 --enable-mmx \
+	--arch=x86_64 --enable-mmx \
     %endif
 %endif
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
@@ -300,11 +300,11 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 	%{!?with_nvidia:--disable-xvmc --disable-xvmc-vld} \
 	--enable-xv \
 	--enable-x11 \
-#  --disable-joystick-menu \
-#  --disable-ivtv \
-#  --disable-xrandr         disable X11 resolution switching
-#  --enable-directfb        enable DirectFB  (Linux non-X11 video)
-#  --enable-directx         enable DirectX   (Microsoft video)
+#	--disable-joystick-menu \
+#	--disable-ivtv \
+#	--disable-xrandr	disable X11 resolution switching
+#	--enable-directfb	enable DirectFB (Linux non-X11 video)
+#	--enable-directx	enable DirectX  (Microsoft video)
 
 qmake mythtv.pro
 %{__make} qmake

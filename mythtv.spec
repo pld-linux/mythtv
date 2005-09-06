@@ -1,5 +1,5 @@
 # TODO
-# - bconds: altivec joystick lcd unichrome
+# - bconds: altivec joystick lcd unichrome xrandr
 # - lcd? ( app-misc/lcdproc )
 #
 # Specfile for MythTV
@@ -29,8 +29,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-#define	_snap	20050326
-Release:	0.15
+Release:	0.16
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -38,6 +37,10 @@ Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
+Source4:	mythepg.desktop
+Source5:	mythfrontend.desktop
+Source6:	mythprofind.desktop
+Source7:	%{name}.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
 Patch2:		%{name}-x11.patch
@@ -64,7 +67,7 @@ BuildRequires:	mysql-devel
 %{?with_opengl:BuildRequires:	X11-driver-nvidia-devel}
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -312,25 +315,25 @@ qmake mythtv.pro
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/{logrotate.d,sysconfig} \
+		$RPM_BUILD_ROOT/etc/rc.d/init.d \
+		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
+		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
 
 export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the files that we added on top of mythtv's own stuff
-install -pD %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
-install -pD %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
-install -pD %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
 
-# Various utility directories that we want rpm to keep track of mythtv ownership
-install -d $RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
-
-# Create the plugins directory, so rpm can know mythtv owns it
-install -d $RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
+# desktop entries
+install %{SOURCE4} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE7} $RPM_BUILD_ROOT%{_desktopdir}
 
 # Install settings.pro so people can see the build options we used
 install -pD settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build/settings.pro

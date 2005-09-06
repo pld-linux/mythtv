@@ -30,7 +30,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
 #define	_snap	20050326
-Release:	0.13
+Release:	0.15
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -270,6 +270,7 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 #export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 
 # BTW: this is not autoconf configure
+_lib=%{_lib} \
 %configure \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
 	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
@@ -372,7 +373,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README* UPGRADING AUTHORS COPYING FAQ
+%doc README* UPGRADING AUTHORS FAQ
 %doc keys.txt
 %doc docs contrib configfiles
 

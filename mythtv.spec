@@ -315,7 +315,7 @@ qmake mythtv.pro
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/{logrotate.d,sysconfig} \
+install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 		$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
 		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
@@ -327,7 +327,7 @@ export QTDIR="%{_prefix}"
 # Install the files that we added on top of mythtv's own stuff
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/mythbackend
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
 
 # desktop entries
 install %{SOURCE4} $RPM_BUILD_ROOT%{_desktopdir}

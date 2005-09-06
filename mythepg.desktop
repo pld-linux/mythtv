@@ -6,4 +6,5 @@ Icon=mythepg.png
 Exec=mythepg
 Terminal=false
 Type=Application
+Categories=Video;TV;
 # vi: encoding=utf-8

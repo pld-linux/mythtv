@@ -29,7 +29,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.16
+Release:	0.17
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -316,7 +316,7 @@ qmake mythtv.pro
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{logrotate.d,sysconfig} \
-		$RPM_BUILD_ROOT/etc/rc.d/init.d \
+		$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
 		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
 
@@ -410,8 +410,7 @@ fi
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/*.ttf
 %{_datadir}/mythtv/i18n
-#%{_datadir}/applications/*myth*.desktop
-#%{_datadir}/pixmaps/myth*.png
+%{_desktopdir}/*.desktop
 
 %files setup
 %defattr(644,root,root,755)

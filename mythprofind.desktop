@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=mythTV progfind
+Comment=Programm finder for mythTV.
+Icon=mythprogfind.png
+Exec=mythprogfind
+Terminal=false
+Type=Application
+# vi: encoding=utf-8

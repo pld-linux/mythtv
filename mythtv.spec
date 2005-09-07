@@ -1,6 +1,7 @@
 # TODO
-# - bconds: altivec joystick lcd unichrome xrandr
+# - bconds: altivec joystick lcd
 # - lcd? ( app-misc/lcdproc )
+# - icons for desktop entries
 #
 # Specfile for MythTV
 #
@@ -12,24 +13,22 @@
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
-%bcond_without	oss		# oss support
+%bcond_without	oss			# oss support
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without	oggvorbis	# ogg vorbis
 %bcond_without	opengl		# opengl vsync
-%bcond_without	nvidia		# MPEG accel.
-%bcond_without	dvb		# DVB
-%bcond_with	firewire	# ieee1394 (NFY)
+%bcond_without	dvb			# DVB support
+%bcond_without	xrandr		# disable X11 resolution switching
+%bcond_with		ivtv		# ivtv support (PVR-250, PVR-350) NFY
+%bcond_with		firewire	# ieee1394 (NFY)
+%bcond_without	xvmc		# do not use XvMCW
 
-%if %{with nvidia}
-%define	with_opengl 1
-%endif
-#
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.17
+Release:	0.19
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -60,11 +59,10 @@ BuildRequires:	libiec61883-devel # missing in PLD?
 BuildRequires:	freetype-devel >= 1:2.0.0
 BuildRequires:	gcc-c++
 BuildRequires:	lame-libs-devel
+%{?with_xvmc:BuildRequires:	libXvMCW-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-%{?with_nvidia:BuildRequires:	X11-driver-nvidia-devel}
-%{?with_opengl:BuildRequires:	X11-driver-nvidia-devel}
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -300,13 +298,12 @@ _lib=%{_lib} \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
-	%{?with_nvidia:--enable-xvmc --enable-xvmc-vld} \
-	%{!?with_nvidia:--disable-xvmc --disable-xvmc-vld} \
+	--%{?with_xrandr:en}%{!?with_xrandr:dis}able-xrandr \
+	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
 	--enable-xv \
 	--enable-x11 \
 #	--disable-joystick-menu \
 #	--disable-ivtv \
-#	--disable-xrandr	disable X11 resolution switching
 #	--enable-directfb	enable DirectFB (Linux non-X11 video)
 #	--enable-directx	enable DirectX  (Microsoft video)
 

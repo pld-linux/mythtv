@@ -28,7 +28,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.19
+Release:	0.21
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -136,6 +136,7 @@ Summary(pl):	Czê¶æ kliencka mythtv (PVR)
 Group:		Applications/Multimedia
 Requires:	mythtv = %{version}-%{release}
 Requires:	mythtv-themes = %{version}-%{release}
+Provides:	mythtv-frontend-api = %(echo %{version} | cut -d. -f1,2)
 
 %description frontend
 MythTV provides a unified graphical interface for recording and
@@ -183,7 +184,6 @@ Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 Summary:	Base themes for mythtv's frontend
 Summary(pl):	Podstawowe motywy dla frontendu mythtv
 Group:		Applications/Multimedia
-Obsoletes:	mythtv-theme-Titivillus
 
 %description themes
 MythTV provides a unified graphical interface for recording and
@@ -263,7 +263,7 @@ if [ ! -r /proc/cpuinfo ]; then
 fi
 %endif
 export QTDIR="%{_prefix}"
-export QMAKESPEC="linux-g++"
+#export QMAKESPEC="linux-g++"
 
 %if "%{_lib}" != "lib"
 export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
@@ -334,7 +334,8 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE7} $RPM_BUILD_ROOT%{_desktopdir}
 
 # Install settings.pro so people can see the build options we used
-install -pD settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build/settings.pro
+install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build
+install config.mak settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -346,8 +347,7 @@ rm -rf $RPM_BUILD_ROOT
 %addusertogroup %{name} audio
 
 %post backend
-# NFY
-#/sbin/chkconfig --add mythbackend
+/sbin/chkconfig --add mythbackend
 
 %preun backend
 if [ "$1" = "0" ]; then
@@ -375,7 +375,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
-%doc keys.txt
 %doc docs contrib configfiles
 
 %files backend
@@ -393,6 +392,7 @@ fi
 
 %files frontend
 %defattr(644,root,root,755)
+%doc keys.txt
 %dir %{_datadir}/mythtv
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
@@ -427,8 +427,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/*.so
 %{_includedir}/*
-%dir %{_datadir}/mythtv/build
-%{_datadir}/mythtv/build/settings.pro
+%{_datadir}/mythtv/build
 
 %files -n libmyth-static
 %defattr(644,root,root,755)

@@ -273,6 +273,7 @@ export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 # BTW: this is not autoconf configure
 _lib=%{_lib} \
 %configure \
+	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
 	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \

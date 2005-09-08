@@ -1,7 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=mythTV EPG
+Name=MythTV EPG
 Comment=Electronic Programm Guide for mythTV.
+GenericName=Electronic Programm Guide
 Icon=mythepg.png
 Exec=mythepg
 Terminal=false

@@ -28,7 +28,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.21
+Release:	0.22
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -263,12 +263,10 @@ if [ ! -r /proc/cpuinfo ]; then
 fi
 %endif
 export QTDIR="%{_prefix}"
-#export QMAKESPEC="linux-g++"
 
 %if "%{_lib}" != "lib"
 export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
 %endif
-#export CFLAGS="%{rpmcflags} -fomit-frame-pointer"
 
 # BTW: this is not autoconf configure
 _lib=%{_lib} \

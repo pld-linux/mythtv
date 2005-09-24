@@ -28,7 +28,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.22
+Release:	0.23
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -162,8 +162,6 @@ sieci.
 Summary:	Setup the mythtv backend
 Summary(pl):	Konfigurator backendu mythtv
 Group:		Applications/Multimedia
-Requires:	mythtv-backend = %{version}-%{release}
-Requires:	mythtv-themes = %{version}-%{release}
 
 %description setup
 MythTV provides a unified graphical interface for recording and

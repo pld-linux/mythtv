@@ -1,7 +1,8 @@
 # TODO
 # - bconds: altivec joystick lcd
-# - lcd? ( app-misc/lcdproc )
+# - lcd? (app-misc/lcdproc)
 # - icons for desktop entries
+# - alpha, sparc, ppc arches?
 #
 # Specfile for MythTV
 #
@@ -28,7 +29,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.23
+Release:	0.24
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -277,11 +278,15 @@ _lib=%{_lib} \
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else
-    %ifarch i386 i486 i586 i686 pentium3 pentium4
-	--cpu=i386 --tune=pentium4 --enable-mmx \
-    %endif
-    %ifarch athlon
-	--arch=athlon --enable-mmx \
+    %ifarch %{ix86}
+		%ifarch athlon
+			--arch=athlon --enable-mmx \
+		%else
+			--cpu=i386 --tune=pentium4 \
+			%ifnarch i386 i486 i586
+				--enable-mmx \
+			%endif
+		%endif
     %endif
     %ifarch %{x8664}
 	--arch=x86_64 --enable-mmx \

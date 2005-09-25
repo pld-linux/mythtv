@@ -283,7 +283,7 @@ _lib=%{_lib} \
 			--arch=athlon --enable-mmx \
 		%else
 			--cpu=i386 --tune=pentium4 \
-			%ifnarch i386 i486 i586
+			%ifnarch i386 i486
 				--enable-mmx \
 			%endif
 		%endif

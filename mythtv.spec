@@ -11,7 +11,7 @@
 #  to use "--with cpu_autodetect" to let mythtv decide for you.
 #
 # Conditional build:
-%bcond_with	cpu_autodetect	# enable CPU autodetection at compile time
+%bcond_with	cpu_autodetect	# enable CPU autodetection at compile time (sets "-march", "-mcpu" compile flags really)
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
 %bcond_without	oss			# oss support
@@ -283,7 +283,7 @@ _lib=%{_lib} \
 			--arch=athlon --enable-mmx \
 		%else
 			--cpu=i386 --tune=pentium4 \
-			%ifnarch i386 i486
+			%ifnarch i386 i486 i586
 				--enable-mmx \
 			%endif
 		%endif

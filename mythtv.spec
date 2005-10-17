@@ -24,6 +24,14 @@
 %bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
+%bcond_with	mmx			# enable mmx
+
+# enable mmx automatically on arches having it
+%ifarch %{ix86} %{x8664}
+%ifnarch i386 i486 i586 i686
+%define	with_mmx 1
+%endif
+%endif
 
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
@@ -280,17 +288,15 @@ _lib=%{_lib} \
 %else
     %ifarch %{ix86}
 		%ifarch athlon
-			--arch=athlon --enable-mmx \
+			--arch=athlon
 		%else
 			--cpu=i386 --tune=pentium4 \
-			%ifnarch i386 i486 i586 i686
-				--enable-mmx \
-			%endif
 		%endif
     %endif
     %ifarch %{x8664}
-	--arch=x86_64 --enable-mmx \
+	--arch=x86_64
     %endif
+	%{?with_mmx:--enable-mmx} \
 %endif
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \

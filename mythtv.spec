@@ -14,15 +14,15 @@
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time (sets "-march", "-mcpu" compile flags really)
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
-%bcond_without	oss			# oss support
+%bcond_without	oss		# oss support
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without	oggvorbis	# ogg vorbis
 %bcond_without	opengl		# opengl vsync
-%bcond_without	dvb			# DVB support
+%bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
-%bcond_with		ivtv		# ivtv support (PVR-250, PVR-350) NFY
-%bcond_with		firewire	# ieee1394 (NFY)
+%bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
+%bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
 
 Summary:	A personal video recorder (PVR) application
@@ -283,7 +283,7 @@ _lib=%{_lib} \
 			--arch=athlon --enable-mmx \
 		%else
 			--cpu=i386 --tune=pentium4 \
-			%ifnarch i386 i486 i586
+			%ifnarch i386 i486 i586 i686
 				--enable-mmx \
 			%endif
 		%endif

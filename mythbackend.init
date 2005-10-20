@@ -1,11 +1,13 @@
 #!/bin/bash
 #
-# Startup script for mythbackend
+# Starts the mythbackend as a daemon
 #
-# chkconfig: 2345 86 14
-# description: mythbackend.
+# chkconfig: 345 90 10
+# description: Starts the mythbackend process as a daemon after the XWindows \
+#              system is started, in runlevel 5. This allows scheduled \
+#              recordings to occur without manual intervention.
 # processname: mythbackend
-# pidfile: /var/run/mythbackend.pid
+# pidfile: /var/run/mythtv/mythbackend.pid
 # config: /etc/sysconfig/mythbackend
 
 # Source function library.

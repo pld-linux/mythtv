@@ -17,7 +17,7 @@
 %bcond_without	oss		# oss support
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
-%bcond_without	oggvorbis	# ogg vorbis
+%bcond_with	oggvorbis	# ogg vorbis (gone?!)
 %bcond_without	opengl		# opengl vsync
 %bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
@@ -37,11 +37,13 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.24
+%define	_snap 20051019
+Release:	0.%{_snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	e6cabf88feeaf6ae8f830d3fdf7b113d
+#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+Source0:	mythtv-%{_snap}.tar.bz2
+# Source0-md5:	60aa0fd6c00382c5332eb1d1c2e42552
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -51,7 +53,6 @@ Source6:	mythprofind.desktop
 Source7:	%{name}.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
-Patch2:		%{name}-x11.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
@@ -254,12 +255,24 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %prep
-%setup -q
+%setup -q %{?_snap:-n %{name}}
+%if %{_lib} != "lib"
 %patch0 -p1
+%endif
 %patch1 -p1
-%patch2 -p1
 
 rm -rf database/old # not supported in PLD
+
+# lib64 fix - enable to update patch
+%if %{_lib} != "lib" && 0
+find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
+xargs grep -l /lib . | xargs sed -i -e '
+	s,/usr/lib/,/usr/%{_lib}/,g
+	s,/lib/mythtv,/%{_lib}/mythtv,g
+	s,{PREFIX}/lib$,{PREFIX}/%{_lib},g
+'
+exit 1
+%endif
 
 %build
 %if %{with cpu_autodetect}
@@ -273,14 +286,17 @@ export QTDIR="%{_prefix}"
 
 %if "%{_lib}" != "lib"
 export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
+# help configure::has_library() to locate libs
+export LD_LIBRARY_PATH=%{_libdir}
 %endif
 
-# BTW: this is not autoconf configure
-_lib=%{_lib} \
-%configure \
+# NB: not autoconf configure
+./configure \
+ 	--prefix=%{_prefix} \
+	--libdir=%{_libdir} \
+	--mandir=%{_mandir} \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
-	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
 %if %{with cpu_autodetect}
@@ -288,28 +304,30 @@ _lib=%{_lib} \
 %else
     %ifarch %{ix86}
 		%ifarch athlon
-			--arch=athlon
+			--arch=athlon \
 		%else
 			--cpu=i386 --tune=pentium4 \
 		%endif
     %endif
     %ifarch %{x8664}
-	--arch=x86_64
+	--arch=x86_64 \
     %endif
 	%{?with_mmx:--enable-mmx} \
 %endif
+	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
-	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
 	--%{?with_xrandr:en}%{!?with_xrandr:dis}able-xrandr \
 	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
 	--enable-xv \
 	--enable-x11 \
+
+#	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 #	--disable-joystick-menu \
 #	--disable-ivtv \
 #	--enable-directfb	enable DirectFB (Linux non-X11 video)
@@ -389,6 +407,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythbackend
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
+%attr(755,root,root) %{_bindir}/mythlcdserver
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
@@ -405,8 +424,8 @@ fi
 %{_datadir}/mythtv/*.xml
 %attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythtv
-%attr(755,root,root) %{_bindir}/mythepg
-%attr(755,root,root) %{_bindir}/mythprogfind
+#%attr(755,root,root) %{_bindir}/mythepg
+#%attr(755,root,root) %{_bindir}/mythprogfind
 %attr(755,root,root) %{_bindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythtvosd

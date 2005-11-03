@@ -37,13 +37,13 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-%define	_snap 20051023
-Release:	0.%{_snap}.1
+%define	_snap 20051104
+Release:	0.23.%{_snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	mythtv-%{_snap}.tar.bz2
-# Source0-md5:	85e19fefb46c5913a59ddc06d848f471
+Source0:	%{name}-%{_snap}.tar.bz2
+# Source0-md5:	e5af4edfa7237dfc36a96555cb0b2638
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -267,8 +267,8 @@ rm -rf database/old # not supported in PLD
 %if %{_lib} != "lib" && 0
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib . | xargs sed -i -e '
-	s,/usr/lib/,/usr/%{_lib}/,g
-	s,/lib/mythtv,/%{_lib}/mythtv,g
+	s,/''usr/lib/,/%{_libdir}/,g
+	s,/''lib/mythtv,/%{_lib}/mythtv,g
 	s,{PREFIX}/lib$,{PREFIX}/%{_lib},g
 '
 exit 1
@@ -408,6 +408,8 @@ fi
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(755,root,root) %{_bindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythshutdown
+%attr(755,root,root) %{_bindir}/mythwelcome
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv

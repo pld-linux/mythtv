@@ -37,7 +37,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.18.1
-Release:	0.24
+Release:	0.25
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -288,13 +288,13 @@ _lib=%{_lib} \
 %else
     %ifarch %{ix86}
 		%ifarch athlon
-			--arch=athlon
+			--arch=athlon \
 		%else
 			--cpu=i386 --tune=pentium4 \
 		%endif
     %endif
     %ifarch %{x8664}
-	--arch=x86_64
+	--arch=x86_64 \
     %endif
 	%{?with_mmx:--enable-mmx} \
 %endif

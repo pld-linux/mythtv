@@ -36,14 +36,16 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.19.0.20051026
-%define	_rev 7738
-Release:	1.%{_rev}.1
+%define	_snap 20051221
+%define	_rev 8332
+%define	_rel 1
+Version:	0.19.0.%{_snap}
+Release:	1.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_rev}.tar.bz2
-# Source0-md5:	93182c232598f497b45e42521a9425cd
+Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
+# Source0-md5:	aae71621a4d3a54b06ee144ce7ec2900
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -77,6 +79,8 @@ BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
+# for bundled libavcodec
+BuildRequires:	libdts-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -291,6 +295,8 @@ export LD_LIBRARY_PATH=%{_libdir}
 %endif
 
 # NB: not autoconf configure
+export CC="%{__cc}"
+export CXX="%{__cxx}"
 ./configure \
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
@@ -334,7 +340,7 @@ export LD_LIBRARY_PATH=%{_libdir}
 #	--enable-directx	enable DirectX  (Microsoft video)
 
 qmake mythtv.pro
-%{__make} qmake
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT

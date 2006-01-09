@@ -38,7 +38,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 %define	_snap 20051221
 %define	_rev 8332
-%define	_rel 1
+%define	_rel 3
 Version:	0.19.0.%{_snap}
 Release:	1.%{_rev}.%{_rel}
 License:	GPL v2
@@ -49,10 +49,7 @@ Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
-Source4:	mythepg.desktop
 Source5:	mythfrontend.desktop
-Source6:	mythprofind.desktop
-Source7:	%{name}.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
 URL:		http://www.mythtv.org/
@@ -359,10 +356,7 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
 
 # desktop entries
-install %{SOURCE4} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE7} $RPM_BUILD_ROOT%{_desktopdir}
 
 # Install settings.pro so people can see the build options we used
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build

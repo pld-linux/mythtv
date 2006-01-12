@@ -33,12 +33,12 @@
 %endif
 %endif
 
-Summary:	A personal video recorder (PVR) application
-Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
-Name:		mythtv
 %define	_snap 20051221
 %define	_rev 8332
 %define	_rel 4
+Summary:	A personal video recorder (PVR) application
+Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
+Name:		mythtv
 Version:	0.19.0.%{_snap}
 Release:	1.%{_rev}.%{_rel}
 License:	GPL v2
@@ -52,18 +52,19 @@ Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
+Patch2:		%{name}-translation-et.patch
 URL:		http://www.mythtv.org/
-BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
+BuildRequires:	XFree86-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-%{?with_dvb:BuildRequires:	libdvb-devel}
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
+%{?with_dvb:BuildRequires:	libdvb-devel}
 %{?with_oggvorbis:BuildRequires:	libvorbis-devel}
 %if %{with firewire}
-BuildRequires:	libraw1394-devel
 BuildRequires:	libavc1394-devel
 BuildRequires:	libiec61883-devel # missing in PLD?
+BuildRequires:	libraw1394-devel
 %endif
 BuildRequires:	freetype-devel >= 1:2.0.0
 BuildRequires:	gcc-c++
@@ -110,16 +111,16 @@ ujednoliconym interfejsem graficznym:
 Summary:	Server component of mythtv (a PVR)
 Summary(pl):	Czê¶æ serwerowa mythtv (PVR)
 Group:		Applications/Multimedia
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(post,preun):	/sbin/chkconfig
 Requires:	mythtv = %{version}-%{release}
-Provides:	user(mythtv)
 Provides:	group(mythtv)
+Provides:	user(mythtv)
 
 %description backend
 MythTV provides a unified graphical interface for recording and
@@ -261,6 +262,7 @@ Statyczna biblioteka libmyth.
 %patch0 -p1
 %endif
 %patch1 -p1
+%patch2 -p0
 
 rm -rf database/old # not supported in PLD
 

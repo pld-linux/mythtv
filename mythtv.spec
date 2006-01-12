@@ -38,7 +38,7 @@ Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 %define	_snap 20051221
 %define	_rev 8332
-%define	_rel 3
+%define	_rel 4
 Version:	0.19.0.%{_snap}
 Release:	1.%{_rev}.%{_rel}
 License:	GPL v2
@@ -405,10 +405,12 @@ fi
 %files backend
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythbackend
+%attr(755,root,root) %{_bindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(755,root,root) %{_bindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythshutdown
+%attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythwelcome
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
@@ -428,8 +430,6 @@ fi
 %attr(755,root,root) %{_bindir}/mythtv
 #%attr(755,root,root) %{_bindir}/mythepg
 #%attr(755,root,root) %{_bindir}/mythprogfind
-%attr(755,root,root) %{_bindir}/mythcommflag
-%attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythtvosd
 %dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins

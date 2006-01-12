@@ -409,9 +409,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(755,root,root) %{_bindir}/mythlcdserver
-%attr(755,root,root) %{_bindir}/mythshutdown
 %attr(755,root,root) %{_bindir}/mythtranscode
-%attr(755,root,root) %{_bindir}/mythwelcome
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
@@ -423,14 +421,14 @@ fi
 %files frontend
 %defattr(644,root,root,755)
 %doc keys.txt
+%attr(755,root,root) %{_bindir}/mythfrontend
+%attr(755,root,root) %{_bindir}/mythshutdown
+%attr(755,root,root) %{_bindir}/mythtv
+%attr(755,root,root) %{_bindir}/mythtvosd
+%attr(755,root,root) %{_bindir}/mythwelcome
 %dir %{_datadir}/mythtv
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
-%attr(755,root,root) %{_bindir}/mythfrontend
-%attr(755,root,root) %{_bindir}/mythtv
-#%attr(755,root,root) %{_bindir}/mythepg
-#%attr(755,root,root) %{_bindir}/mythprogfind
-%attr(755,root,root) %{_bindir}/mythtvosd
 %dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so

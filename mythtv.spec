@@ -52,6 +52,7 @@ Source7:	%{name}.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
 Patch2:		%{name}-x11.patch
+Patch3:		%{name}-mythstream.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
@@ -258,6 +259,7 @@ Statyczna biblioteka libmyth.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 rm -rf database/old # not supported in PLD
 

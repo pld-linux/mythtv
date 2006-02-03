@@ -301,6 +301,7 @@ export CXX="%{__cxx}"
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
+	--disable-opts \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \

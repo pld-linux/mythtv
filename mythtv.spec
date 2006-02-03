@@ -35,12 +35,12 @@
 
 %define	_snap 20060129
 %define	_rev 8763
-%define	_rel 1.1
+%define	_rel 1.4
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.19.0.%{_snap}
-Release:	1.%{_rev}.%{_rel}
+Version:	0.19
+Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 #Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -366,6 +366,21 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build
 install config.mak settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build
 
+for p in mythfrontend; do
+	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
+		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+	done > $p.lang
+done
+
+# glibc language codes. attempt was made to change it on libmyth side,
+# but that was just asking for trouble due large coverage of
+# language.lower() usage.
+sed -i -e '
+s,%%lang(en_gb),%%lang(en_GB),
+s,%%lang(zh_tw),%%lang(zh_TW),
+s,%%lang(pt_br),%%lang(pt_BR),
+' *.lang
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -422,7 +437,7 @@ fi
 %config /etc/logrotate.d/mythbackend
 %attr(775,root,mythtv) %dir %{_localstatedir}/log/mythtv
 
-%files frontend
+%files frontend -f mythfrontend.lang
 %defattr(644,root,root,755)
 %doc keys.txt
 %attr(755,root,root) %{_bindir}/mythfrontend
@@ -437,7 +452,7 @@ fi
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/*.ttf
-%{_datadir}/mythtv/i18n
+%dir %{_datadir}/mythtv/i18n
 %{_desktopdir}/*.desktop
 
 %files setup

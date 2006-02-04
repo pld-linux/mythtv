@@ -1,11 +1,8 @@
 /var/log/mythtv/mythbackend.log {
 	notifempty
 	missingok
-	compress
-	compresscmd /usr/bin/bzip2
-	uncompresscmd /usr/bin/bunzip2
-	compressext .bz2
-	weekly
-	rotate 4
-	size 10M
+	sharedscripts
+	postrotate
+		/etc/rc.d/init.d/mythbackend flush-logs
+	endscript
 }

@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# mythbackend	mythbackend
+# mythbackend	Server component of MythTV
 #
 # chkconfig: 2345 86 14
-# description: mythbackend
+# description: MythTV backend server
 # processname: mythbackend
 # pidfile: /var/run/mythbackend.pid
 # config: /etc/sysconfig/mythbackend

@@ -435,8 +435,8 @@ fi
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
-%config /etc/logrotate.d/mythbackend
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/mythbackend
 %attr(775,root,mythtv) %dir %{_localstatedir}/log/mythtv
 
 %files frontend -f mythfrontend.lang

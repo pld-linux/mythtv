@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 #
-# Startup script for mythbackend
+# mythbackend	mythbackend
 #
 # chkconfig: 2345 86 14
-# description: mythbackend.
+# description: mythbackend
 # processname: mythbackend
 # pidfile: /var/run/mythbackend.pid
 # config: /etc/sysconfig/mythbackend
@@ -18,31 +18,28 @@ fi
 ## Defaults, override them in /etc/sysconfig/mythbackend
 : ${MYTHTV_HOME=/var/lib/mythtv}
 
-binary=/usr/bin/mythbackend
-prog=mythbackend
-RETVAL=0
-OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/$prog.log --pidfile /var/run/mythtv/$prog.pid"
+OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/mythbackend.log --pidfile /var/run/mythtv/mythbackend.pid"
 
+RETVAL=0
 # See how we were called.
 case "$1" in
 start)
 	# Start daemons.
-	if [ ! -f /var/lock/subsys/$prog ]; then
+	if [ ! -f /var/lock/subsys/mythbackend ]; then
 		msg_starting "Mythbackend"
-		daemon --user mythtv "cd $MYTHTV_HOME && $binary $OPTIONS"
-
+		daemon --user mythtv "cd $MYTHTV_HOME && /usr/sbin/mythbackend $OPTIONS"
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mythbackend
 	else
 		msg_already_running "Mythbackend"
 	fi
 ;;
 stop)
 	# Stop daemons.
-	if [ -f /var/lock/subsys/$prog ]; then
+	if [ -f /var/lock/subsys/mythbackend ]; then
 		msg_stopping "Mythbackend"
-		killproc --pidfile mythtv/$prog.pid $binary
-		rm -f /var/lock/subsys/$prog /var/run/mythtv/$prog.pid >/dev/null 2>&1
+		killproc --pidfile mythtv/mythbackend.pid mythbackend
+		rm -f /var/lock/subsys/mythbackend /var/run/mythtv/mythbackend.pid >/dev/null 2>&1
 	else
 		msg_not_running "Mythbackend"
 	fi
@@ -52,8 +49,13 @@ restart)
 	$0 start
 	exit $?
 ;;
+flush-logs)
+	if [ -f /var/lock/subsys/mythbackend ]; then
+		killproc --pidfile mythtv/mythbackend.pid -HUP mythbackend
+	fi
+	;;
 status)
-	status $prog
+	status mythbackend
 ;;
 *)
 	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"

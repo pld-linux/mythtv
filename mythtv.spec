@@ -84,6 +84,8 @@ BuildConflicts:	libmyth
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define	myth_api_version %(echo %{version} | cut -d. -f1,2)
+
 %description
 MythTV implements the following PVR features, and more, with a unified
 graphical interface:
@@ -120,6 +122,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
 Provides:	group(mythtv)
 Provides:	user(mythtv)
@@ -148,9 +151,10 @@ albo innym osi±galnym po sieci.
 Summary:	Client component of mythtv (a PVR)
 Summary(pl):	Czê¶æ kliencka mythtv (PVR)
 Group:		Applications/Multimedia
+Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
 Requires:	mythtv-themes = %{version}-%{release}
-Provides:	mythtv-frontend-api = %(echo %{version} | cut -d. -f1,2)
+Provides:	mythtv-frontend-api = %{myth_api_version}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and
@@ -176,6 +180,7 @@ sieci.
 Summary:	Setup the mythtv backend
 Summary(pl):	Konfigurator backendu mythtv
 Group:		Applications/Multimedia
+Requires:	libmyth = %{version}-%{release}
 
 %description setup
 MythTV provides a unified graphical interface for recording and

@@ -35,7 +35,7 @@
 
 %define	_snap 20060204
 %define	_rev 8859
-%define	_rel 1.1
+%define	_rel 1.2
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -54,6 +54,7 @@ Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
+Patch4:		%{name}-pl.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -61,6 +62,7 @@ BuildRequires:	XFree86-devel
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 %{?with_dvb:BuildRequires:	libdvb-devel}
+BuildRequires:	libdvdnav-devel
 %{?with_oggvorbis:BuildRequires:	libvorbis-devel}
 %if %{with firewire}
 BuildRequires:	libavc1394-devel
@@ -271,6 +273,7 @@ Statyczna biblioteka libmyth.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -333,6 +336,7 @@ export CXX="%{__cxx}"
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
+	--enable-dvd \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \

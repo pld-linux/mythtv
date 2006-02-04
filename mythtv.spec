@@ -35,7 +35,7 @@
 
 %define	_snap 20060204
 %define	_rev 8859
-%define	_rel 1
+%define	_rel 1.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -80,7 +80,7 @@ BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 # for bundled libavcodec
 BuildRequires:	libdts-devel
-BuildConflicts:	libmyth
+BuildConflicts:	libmyth-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -388,6 +388,10 @@ s,%%lang(zh_tw),%%lang(zh_TW),
 s,%%lang(pt_br),%%lang(pt_BR),
 ' *.lang
 
+# not for users, move to sbin
+install -d $RPM_BUILD_ROOT%{_sbindir}
+mv $RPM_BUILD_ROOT%{_bindir}/myth{backend,commflag,jobqueue,lcdserver} $RPM_BUILD_ROOT%{_sbindir}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -430,11 +434,11 @@ fi
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mythbackend
-%attr(755,root,root) %{_bindir}/mythcommflag
+%attr(755,root,root) %{_sbindir}/mythbackend
+%attr(755,root,root) %{_sbindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_bindir}/mythjobqueue
-%attr(755,root,root) %{_bindir}/mythlcdserver
+%attr(755,root,root) %{_sbindir}/mythjobqueue
+%attr(755,root,root) %{_sbindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv

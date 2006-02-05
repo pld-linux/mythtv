@@ -51,7 +51,8 @@ restart)
 ;;
 flush-logs)
 	if [ -f /var/lock/subsys/mythbackend ]; then
-		killproc --pidfile mythtv/mythbackend.pid -HUP mythbackend
+		show "Rotating %s logs" "Mythbackend"
+		killproc --pidfile mythtv/mythbackend.pid mythbackend -HUP
 	fi
 	;;
 status)

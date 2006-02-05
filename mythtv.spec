@@ -35,7 +35,7 @@
 
 %define	_snap 20060204
 %define	_rev 8859
-%define	_rel 1.2
+%define	_rel 1.3
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -55,6 +55,7 @@ Patch1:		%{name}-x86_64-configure.patch
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 Patch4:		%{name}-pl.patch
+Patch5:		%{name}-sbinpath.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -274,6 +275,7 @@ Statyczna biblioteka libmyth.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -391,10 +393,6 @@ s,%%lang(en_gb),%%lang(en_GB),
 s,%%lang(zh_tw),%%lang(zh_TW),
 s,%%lang(pt_br),%%lang(pt_BR),
 ' *.lang
-
-# not for users, move to sbin
-install -d $RPM_BUILD_ROOT%{_sbindir}
-mv $RPM_BUILD_ROOT%{_bindir}/myth{backend,commflag,jobqueue,lcdserver} $RPM_BUILD_ROOT%{_sbindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT

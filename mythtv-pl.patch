@@ -8408,3 +8408,32 @@
        <action>CONFIGPLUGIN mythburn</action>
        <depends>mythburn</depends>
     </button>
+--- mythtv/i18n/i18n.pro.fix	2006-02-09 10:05:55.234583000 +0100
++++ mythtv/i18n/i18n.pro	2006-02-09 10:06:28.967708000 +0100
+@@ -11,7 +11,7 @@
+ trans.files += mythfrontend_ja.qm mythfrontend_si.qm mythfrontend_fi.qm
+ trans.files += mythfrontend_zh_tw.qm mythfrontend_nb.qm mythfrontend_is.qm
+ trans.files += mythfrontend_pt_br.qm mythfrontend_en_gb.qm mythfrontend_cz.qm
+-trans.files += mythfrontend_et.qm
++trans.files += mythfrontend_et.qm mythfrontend_pl.qm
+ 
+ INSTALLS += trans
+ 
+--- mythtv/i18n/translate.pro.fix	2006-02-09 10:06:00.701848000 +0100
++++ mythtv/i18n/translate.pro	2006-02-09 10:06:49.267553000 +0100
+@@ -69,4 +69,4 @@
+ TRANSLATIONS += mythfrontend_ja.ts mythfrontend_si.ts mythfrontend_fi.ts
+ TRANSLATIONS += mythfrontend_zh_tw.ts mythfrontend_nb.ts mythfrontend_is.ts
+ TRANSLATIONS += mythfrontend_pt_br.ts mythfrontend_en_gb.ts mythfrontend_cz.ts
+-TRANSLATIONS += mythfrontend_et.ts
++TRANSLATIONS += mythfrontend_et.ts mythfrontend_pl.ts
+--- mythtv/libs/libmyth/langsettings.cpp.fix	2006-02-09 10:07:23.450453000 +0100
++++ mythtv/libs/libmyth/langsettings.cpp	2006-02-09 10:08:35.904208000 +0100
+@@ -146,6 +146,7 @@
+           << QString::fromUtf8("Islenska")    << "IS"   // Icelandic
+           << QString::fromUtf8("Norsk (bokmål)") << "NB" // Norwegian (Bokmål)
+           << QString::fromUtf8("Svenska")     << "SV"   // Swedish
++          << QString::fromUtf8("Polski")      << "PL"   // Polish
+           << QString::fromUtf8("Português")  << "PT"   // Portuguese
+           << QString::fromUtf8("Nihongo")     << "JA"   // Japanese
+           << QString::fromUtf8("Slovenski")   << "SI"   // Slovenian

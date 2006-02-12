@@ -17,7 +17,7 @@
 %bcond_without	oss		# oss support
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
-%bcond_without	oggvorbis	# ogg vorbis
+%bcond_with	oggvorbis	# ogg vorbis (gone?!)
 %bcond_without	opengl		# opengl vsync
 %bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
@@ -36,35 +36,35 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.18.1
-Release:	1
+Version:	0.19
+Release:	0.20060213.0.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	e6cabf88feeaf6ae8f830d3fdf7b113d
+# Source0-md5:	ebba5829d264bb4de2f75cae936141f4
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
-Source4:	mythepg.desktop
 Source5:	mythfrontend.desktop
-Source6:	mythprofind.desktop
-Source7:	%{name}.desktop
 Patch0:		%{name}-lib64.patch
 Patch1:		%{name}-x86_64-configure.patch
-Patch2:		%{name}-x11.patch
-Patch3:		%{name}-mythstream.patch
+Patch2:		%{name}-mythstream.patch
+Patch3:		%{name}-ldconfig.patch
+Patch4:		%{name}-pl.patch
+Patch5:		%{name}-sbinpath.patch
 URL:		http://www.mythtv.org/
-BuildRequires:	XFree86-devel
 #BuildRequires:	DirectFB-devel
+BuildRequires:	XFree86-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-%{?with_dvb:BuildRequires:	libdvb-devel}
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
+%{?with_dvb:BuildRequires:	libdvb-devel}
+BuildRequires:	libdvdnav-devel
 %{?with_oggvorbis:BuildRequires:	libvorbis-devel}
 %if %{with firewire}
-BuildRequires:	libraw1394-devel
 BuildRequires:	libavc1394-devel
 BuildRequires:	libiec61883-devel # missing in PLD?
+BuildRequires:	libraw1394-devel
 %endif
 BuildRequires:	freetype-devel >= 1:2.0.0
 BuildRequires:	gcc-c++
@@ -77,8 +77,13 @@ BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
+# for bundled libavcodec
+BuildRequires:	libdts-devel
+BuildConflicts:	libmyth-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define	myth_api_version %(echo %{version} | cut -d. -f1,2)
 
 %description
 MythTV implements the following PVR features, and more, with a unified
@@ -109,16 +114,17 @@ ujednoliconym interfejsem graficznym:
 Summary:	Server component of mythtv (a PVR)
 Summary(pl):	Czê¶æ serwerowa mythtv (PVR)
 Group:		Applications/Multimedia
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(post,preun):	/sbin/chkconfig
+Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
-Provides:	user(mythtv)
 Provides:	group(mythtv)
+Provides:	user(mythtv)
 
 %description backend
 MythTV provides a unified graphical interface for recording and
@@ -144,9 +150,10 @@ albo innym osi±galnym po sieci.
 Summary:	Client component of mythtv (a PVR)
 Summary(pl):	Czê¶æ kliencka mythtv (PVR)
 Group:		Applications/Multimedia
+Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
 Requires:	mythtv-themes = %{version}-%{release}
-Provides:	mythtv-frontend-api = %(echo %{version} | cut -d. -f1,2)
+Provides:	mythtv-frontend-api = %{myth_api_version}
 
 %description frontend
 MythTV provides a unified graphical interface for recording and
@@ -172,6 +179,7 @@ sieci.
 Summary:	Setup the mythtv backend
 Summary(pl):	Konfigurator backendu mythtv
 Group:		Applications/Multimedia
+Requires:	libmyth = %{version}-%{release}
 
 %description setup
 MythTV provides a unified graphical interface for recording and
@@ -255,13 +263,28 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %prep
-%setup -q
+%setup -q %{?_rev:-n %{name}}
+%if %{_lib} != "lib"
 %patch0 -p1
+%endif
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 rm -rf database/old # not supported in PLD
+
+# lib64 fix - enable to update patch
+%if %{_lib} != "lib" && 0
+find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
+xargs grep -l /lib . | xargs sed -i -e '
+	s,/''usr/lib/,/%{_libdir}/,g
+	s,/''lib/mythtv,/%{_lib}/mythtv,g
+	s,{PREFIX}/lib$,{PREFIX}/%{_lib},g
+'
+exit 1
+%endif
 
 %build
 %if %{with cpu_autodetect}
@@ -275,14 +298,20 @@ export QTDIR="%{_prefix}"
 
 %if "%{_lib}" != "lib"
 export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
+# help configure::has_library() to locate libs
+export LD_LIBRARY_PATH=%{_libdir}
 %endif
 
-# BTW: this is not autoconf configure
-_lib=%{_lib} \
-%configure \
+# NB: not autoconf configure
+export CC="%{__cc}"
+export CXX="%{__cxx}"
+./configure \
+ 	--prefix=%{_prefix} \
+	--libdir=%{_libdir} \
+	--mandir=%{_mandir} \
+	--disable-opts \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
-	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
 %if %{with cpu_autodetect}
@@ -300,25 +329,28 @@ _lib=%{_lib} \
     %endif
 	%{?with_mmx:--enable-mmx} \
 %endif
+	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
+	--enable-dvd \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
-	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
 	--%{?with_xrandr:en}%{!?with_xrandr:dis}able-xrandr \
 	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
 	--enable-xv \
 	--enable-x11 \
+
+#	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
 #	--disable-joystick-menu \
 #	--disable-ivtv \
 #	--enable-directfb	enable DirectFB (Linux non-X11 video)
 #	--enable-directx	enable DirectX  (Microsoft video)
 
 qmake mythtv.pro
-%{__make} qmake
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -337,14 +369,32 @@ install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
 
 # desktop entries
-install %{SOURCE4} $RPM_BUILD_ROOT%{_desktopdir}
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE7} $RPM_BUILD_ROOT%{_desktopdir}
 
 # Install settings.pro so people can see the build options we used
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build
 install config.mak settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build
+
+for p in mythfrontend; do
+	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
+		echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*${p}_\(.*\).qm\),%%lang(\2) \1,"
+	done > $p.lang
+done
+
+# glibc language codes. attempt was made to change it on libmyth side,
+# but that was just asking for trouble due large coverage of
+# language.lower() usage.
+sed -i -e '
+s,%%lang(en_gb),%%lang(en_GB),
+s,%%lang(zh_tw),%%lang(zh_TW),
+s,%%lang(pt_br),%%lang(pt_BR),
+' *.lang
+
+rm -rf mythtvosd mythwelcome mythlcdserver
+mkdir -p mythtvosd mythwelcome
+cp -a programs/mythtvosd/{README,*.xml} mythtvosd
+cp -a programs/mythwelcome/README mythwelcome
+cp -a programs/mythlcdserver/README mythlcdserver
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -385,38 +435,39 @@ fi
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
 %doc docs contrib configfiles
+%doc keys.txt mythtvosd mythwelcome mythlcdserver
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mythbackend
+%attr(755,root,root) %{_sbindir}/mythbackend
+%attr(755,root,root) %{_sbindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_bindir}/mythjobqueue
+%attr(755,root,root) %{_sbindir}/mythjobqueue
+%attr(755,root,root) %{_sbindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythtranscode
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
-%config /etc/logrotate.d/mythbackend
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/mythbackend
 %attr(775,root,mythtv) %dir %{_localstatedir}/log/mythtv
 
-%files frontend
+%files frontend -f mythfrontend.lang
 %defattr(644,root,root,755)
-%doc keys.txt
+%attr(755,root,root) %{_bindir}/mythfrontend
+%attr(755,root,root) %{_bindir}/mythshutdown
+%attr(755,root,root) %{_bindir}/mythtv
+%attr(755,root,root) %{_bindir}/mythtvosd
+%attr(755,root,root) %{_bindir}/mythwelcome
 %dir %{_datadir}/mythtv
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
-%attr(755,root,root) %{_bindir}/mythfrontend
-%attr(755,root,root) %{_bindir}/mythtv
-%attr(755,root,root) %{_bindir}/mythepg
-%attr(755,root,root) %{_bindir}/mythprogfind
-%attr(755,root,root) %{_bindir}/mythcommflag
-%attr(755,root,root) %{_bindir}/mythtranscode
-%attr(755,root,root) %{_bindir}/mythtvosd
 %dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/*.ttf
-%{_datadir}/mythtv/i18n
+%dir %{_datadir}/mythtv/i18n
 %{_desktopdir}/*.desktop
 
 %files setup

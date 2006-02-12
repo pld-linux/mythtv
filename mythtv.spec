@@ -33,19 +33,15 @@
 %endif
 %endif
 
-%define	_snap 20060204
-%define	_rev 8859
-%define	_rel 1.3
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.19
-Release:	0.%{_snap}.%{_rev}.%{_rel}
+Release:	0.20060213.0.1
 License:	GPL v2
 Group:		Applications/Multimedia
-#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	8dbe20ef01c04ad70436c609ac28b4dd
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	ebba5829d264bb4de2f75cae936141f4
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -394,6 +390,12 @@ s,%%lang(zh_tw),%%lang(zh_TW),
 s,%%lang(pt_br),%%lang(pt_BR),
 ' *.lang
 
+rm -rf mythtvosd mythwelcome mythlcdserver
+mkdir -p mythtvosd mythwelcome
+cp -a programs/mythtvosd/{README,*.xml} mythtvosd
+cp -a programs/mythwelcome/README mythwelcome
+cp -a programs/mythlcdserver/README mythlcdserver
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -433,6 +435,7 @@ fi
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
 %doc docs contrib configfiles
+%doc keys.txt mythtvosd mythwelcome mythlcdserver
 
 %files backend
 %defattr(644,root,root,755)
@@ -452,7 +455,6 @@ fi
 
 %files frontend -f mythfrontend.lang
 %defattr(644,root,root,755)
-%doc keys.txt
 %attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythshutdown
 %attr(755,root,root) %{_bindir}/mythtv

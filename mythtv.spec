@@ -52,6 +52,7 @@ Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
+Patch6:		%{name}-ticket-1310.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -272,6 +273,7 @@ Statyczna biblioteka libmyth.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p0
 
 rm -rf database/old # not supported in PLD
 
@@ -391,7 +393,7 @@ s,%%lang(pt_br),%%lang(pt_BR),
 ' *.lang
 
 rm -rf mythtvosd mythwelcome mythlcdserver
-mkdir -p mythtvosd mythwelcome
+install -d mythtvosd mythwelcome
 cp -a programs/mythtvosd/{README,*.xml} mythtvosd
 cp -a programs/mythwelcome/README mythwelcome
 cp -a programs/mythlcdserver/README mythlcdserver

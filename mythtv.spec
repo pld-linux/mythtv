@@ -68,7 +68,6 @@ BuildRequires:	libiec61883-devel # missing in PLD?
 BuildRequires:	libraw1394-devel
 %endif
 BuildRequires:	freetype-devel >= 1:2.0.0
-BuildRequires:	gcc-c++
 BuildRequires:	lame-libs-devel
 %{?with_xvmc:BuildRequires:	libXvMCW-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
@@ -335,7 +334,7 @@ export CXX="%{__cxx}"
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
-	--%{?with_oss:en}%{!?with_oss:dis}able-audio-jack \
+	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \
 	--enable-dvd \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \

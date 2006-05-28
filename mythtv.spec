@@ -37,7 +37,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.19
-Release:	2
+Release:	2.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -53,6 +53,8 @@ Patch3:		%{name}-ldconfig.patch
 Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
 Patch6:		%{name}-ticket-1310.patch
+Patch7:		%{name}-optflags.patch
+Patch8:		%{name}-branch.diff
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -273,6 +275,8 @@ Statyczna biblioteka libmyth.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p0
+%patch7 -p1
+%patch8 -p1
 
 rm -rf database/old # not supported in PLD
 

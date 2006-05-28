@@ -37,7 +37,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.19
-Release:	2.1
+Release:	2.2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -60,21 +60,20 @@ URL:		http://www.mythtv.org/
 BuildRequires:	XFree86-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-%{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
-%{?with_dvb:BuildRequires:	libdvb-devel}
-BuildRequires:	libdvdnav-devel
-%{?with_oggvorbis:BuildRequires:	libvorbis-devel}
-%if %{with firewire}
-BuildRequires:	libavc1394-devel
-BuildRequires:	libiec61883-devel # missing in PLD?
-BuildRequires:	libraw1394-devel
-%endif
 BuildRequires:	freetype-devel >= 1:2.0.0
+%{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
 %{?with_xvmc:BuildRequires:	libXvMCW-devel}
+%{?with_firewire:BuildRequires:	libavc1394-devel}
+%{?with_dvb:BuildRequires:	libdvb-devel}
+BuildRequires:	libdvdnav-devel
+%{?with_firewire:BuildRequires:	libiec61883-devel}
+%{?with_firewire:BuildRequires:	libraw1394-devel}
+%{?with_oggvorbis:BuildRequires:	libvorbis-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
+BuildRequires:	patchutils
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -276,7 +275,7 @@ Statyczna biblioteka libmyth.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p1
-%patch8 -p1
+filterdiff -i 'mythtv/*' %{PATCH8} | %{__patch} -p1 -s
 
 rm -rf database/old # not supported in PLD
 
@@ -322,16 +321,16 @@ export CXX="%{__cxx}"
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else
-    %ifarch %{ix86}
+	%ifarch %{ix86}
 		%ifarch athlon
 			--arch=athlon \
 		%else
 			--cpu=i386 --tune=pentium4 \
 		%endif
-    %endif
-    %ifarch %{x8664}
+	%endif
+	%ifarch %{x8664}
 	--arch=x86_64 \
-    %endif
+	%endif
 	%{?with_mmx:--enable-mmx} \
 %endif
 	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \

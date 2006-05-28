@@ -1,0 +1,11 @@
+--- mythtv-0.19/configure~	2006-05-28 14:40:14.000000000 +0300
++++ mythtv-0.19/configure	2006-05-28 14:43:47.000000000 +0300
+@@ -1907,8 +1907,6 @@
+     if test -n "`$cc -v 2>&1 | grep xlc`"; then
+ 	CFLAGS="$CFLAGS -O5"
+ 	LDFLAGS="$LDFLAGS -O5"
+-    else
+-	CFLAGS="-O3 $CFLAGS"
+     fi
+ fi
+ 

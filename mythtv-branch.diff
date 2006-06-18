@@ -1,7 +1,7 @@
 Index: mythplugins/mythweb/themes/wml/header.php
 ===================================================================
---- mythplugins/mythweb/themes/wml/header.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/themes/wml/header.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/themes/wml/header.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/themes/wml/header.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -26,4 +26,4 @@
  <p><a href="<?php echo root ?>tv/upcoming"><?php echo t('Upcoming Recordings') ?></a></p>
  <p><a href="<?php echo root ?>tv/recorded"><?php echo t('Recorded Programs') ?></a></p>
@@ -10,8 +10,8 @@ Index: mythplugins/mythweb/themes/wml/header.php
 +<p><a href="<?php echo root ?>status/xml"><?php echo t('Backend Status') ?></a></p>
 Index: mythplugins/mythweb/themes/default/weather/weather.php
 ===================================================================
---- mythplugins/mythweb/themes/default/weather/weather.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/themes/default/weather/weather.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/themes/default/weather/weather.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/themes/default/weather/weather.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -93,13 +93,13 @@
                  $tomorrow = date("m/d/Y", mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")));
  
@@ -29,8 +29,8 @@ Index: mythplugins/mythweb/themes/default/weather/weather.php
  
 Index: mythplugins/mythweb/themes/default/music/music.php
 ===================================================================
---- mythplugins/mythweb/themes/default/music/music.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/themes/default/music/music.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/themes/default/music/music.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/themes/default/music/music.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -164,10 +164,12 @@
  
      function print_header($filterPlaylist,$filterArtist,$filterAlbum,$filterGenre) {
@@ -50,8 +50,8 @@ Index: mythplugins/mythweb/themes/default/music/music.php
  
 Index: mythplugins/mythweb/themes/default/tv/detail.php
 ===================================================================
---- mythplugins/mythweb/themes/default/tv/detail.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/themes/default/tv/detail.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/themes/default/tv/detail.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/themes/default/tv/detail.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -51,7 +51,7 @@
  <?php   } ?>
              <div id="program_title">
@@ -63,8 +63,8 @@ Index: mythplugins/mythweb/themes/default/tv/detail.php
  <?php
 Index: mythplugins/mythweb/includes/mythbackend.php
 ===================================================================
---- mythplugins/mythweb/includes/mythbackend.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/mythbackend.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/mythbackend.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/mythbackend.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -15,10 +15,6 @@
  // The character string used by the backend to separate records
      define('backend_sep', '[]:[]');
@@ -78,8 +78,8 @@ Index: mythplugins/mythweb/includes/mythbackend.php
      define('MYTH_PROTO_VERSION', 26);
 Index: mythplugins/mythweb/includes/programs.php
 ===================================================================
---- mythplugins/mythweb/includes/programs.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/programs.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/programs.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/programs.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -81,7 +81,9 @@
  /**/
      function &load_all_program_data($start_time, $end_time, $chanid = false, $single_program = false, $extra_query = '') {
@@ -238,8 +238,8 @@ Index: mythplugins/mythweb/includes/programs.php
              $this->length = $this->recendts - $this->recstartts;
 Index: mythplugins/mythweb/includes/utils.php
 ===================================================================
---- mythplugins/mythweb/includes/utils.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/utils.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/utils.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/utils.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -276,7 +276,7 @@
          static $first_run=true;
          if($first_run) {
@@ -251,8 +251,8 @@ Index: mythplugins/mythweb/includes/utils.php
          if (is_array($data) || is_object($data))
 Index: mythplugins/mythweb/includes/init.php
 ===================================================================
---- mythplugins/mythweb/includes/init.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/init.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/init.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/init.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -16,28 +16,15 @@
   *
  /**/
@@ -323,8 +323,8 @@ Index: mythplugins/mythweb/includes/init.php
  
 Index: mythplugins/mythweb/includes/mobile.php
 ===================================================================
---- mythplugins/mythweb/includes/mobile.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/mobile.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/mobile.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/mobile.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -74,58 +74,56 @@
       * If you don't know the screensize of some mobile terminal then use
       * an empty array or approximate dimensions.
@@ -434,8 +434,8 @@ Index: mythplugins/mythweb/includes/mobile.php
      /* Scan through $mobiles and try to find matching user agent. */
 Index: mythplugins/mythweb/includes/recording_schedules.php
 ===================================================================
---- mythplugins/mythweb/includes/recording_schedules.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/recording_schedules.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/recording_schedules.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/recording_schedules.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -68,10 +68,14 @@
  // Cleanup
      mysql_free_result($result);
@@ -455,8 +455,8 @@ Index: mythplugins/mythweb/includes/recording_schedules.php
          if ($key === 'offset') {
 Index: mythplugins/mythweb/includes/session.php
 ===================================================================
---- mythplugins/mythweb/includes/session.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/includes/session.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/includes/session.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/includes/session.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -19,8 +19,8 @@
  
  // Start the session
@@ -470,8 +470,8 @@ Index: mythplugins/mythweb/includes/session.php
  
 Index: mythplugins/mythweb/modules/weather/handler.php
 ===================================================================
---- mythplugins/mythweb/modules/weather/handler.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/modules/weather/handler.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/modules/weather/handler.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/modules/weather/handler.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -222,8 +222,10 @@
  
      $data = explode("|", $data);
@@ -487,8 +487,8 @@ Index: mythplugins/mythweb/modules/weather/handler.php
          $forecast->DescText = (strlen($forecast->DescText) > 0) ? $forecast->DescText : t('Unknown') . " (" . $data[15+$i] . ")";
 Index: mythplugins/mythweb/modules/status/handler.php
 ===================================================================
---- mythplugins/mythweb/modules/status/handler.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/modules/status/handler.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/modules/status/handler.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/modules/status/handler.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -18,14 +18,17 @@
      $masterhost = get_backend_setting('MasterServerIP');
      $statusport = get_backend_setting('BackendStatusPort');
@@ -511,8 +511,8 @@ Index: mythplugins/mythweb/modules/status/handler.php
      preg_match('#<title>(.+?)</title>#s', $status, $title);
 Index: mythplugins/mythweb/modules/backend_log/handler.php
 ===================================================================
---- mythplugins/mythweb/modules/backend_log/handler.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/modules/backend_log/handler.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/modules/backend_log/handler.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/modules/backend_log/handler.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -16,7 +16,7 @@
  // Where to start searching from
      $_GET['start'] = intVal($_GET['start']);
@@ -524,8 +524,8 @@ Index: mythplugins/mythweb/modules/backend_log/handler.php
      $_GET['show'] = intVal($_GET['show']);
 Index: mythplugins/mythweb/modules/tv/upcoming.php
 ===================================================================
---- mythplugins/mythweb/modules/tv/upcoming.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/modules/tv/upcoming.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/modules/tv/upcoming.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/modules/tv/upcoming.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -103,8 +103,9 @@
                          continue;
                  }
@@ -540,8 +540,8 @@ Index: mythplugins/mythweb/modules/tv/upcoming.php
                  $all_shows[] =& $Scheduled_Recordings[$channum][$starttime][$key];
 Index: mythplugins/mythweb/modules/tv/recorded.php
 ===================================================================
---- mythplugins/mythweb/modules/tv/recorded.php	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/modules/tv/recorded.php	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/modules/tv/recorded.php	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/modules/tv/recorded.php	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -128,9 +128,21 @@
                  continue;
          // Get the length (27 == recendts; 26 == recstartts)
@@ -599,8 +599,8 @@ Index: mythplugins/mythweb/modules/tv/recorded.php
      require_once theme_dir.'tv/recorded.php';
 Index: mythplugins/mythweb/.htaccess
 ===================================================================
---- mythplugins/mythweb/.htaccess	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/.htaccess	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/.htaccess	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/.htaccess	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -22,6 +22,7 @@
  #    AuthName           "MythTV"
  #    AuthDigestFile     /var/www/htdigest
@@ -621,7 +621,7 @@ Index: mythplugins/mythweb/.htaccess
 Index: mythplugins/mythweb/js/debug.js
 ===================================================================
 --- mythplugins/mythweb/js/debug.js	(.../tags/release-0-19)	(revision 0)
-+++ mythplugins/mythweb/js/debug.js	(.../branches/release-0-19-fixes)	(revision 10051)
++++ mythplugins/mythweb/js/debug.js	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -0,0 +1,24 @@
 +/**
 + * A random assortment of javascript debug routines
@@ -659,8 +659,8 @@ Name: svn:keywords
 
 Index: mythplugins/mythweb/js/browser.js
 ===================================================================
---- mythplugins/mythweb/js/browser.js	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/js/browser.js	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/js/browser.js	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/js/browser.js	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -215,14 +215,18 @@
      browser.is_css = (document.body  && document.body.style)
      browser.is_w3c = (browser.is_css && browser.getElementById)
@@ -688,8 +688,8 @@ Index: mythplugins/mythweb/js/browser.js
  
 Index: mythplugins/mythweb/README
 ===================================================================
---- mythplugins/mythweb/README	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweb/README	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweb/README	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweb/README	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1,18 +1,12 @@
  This is the README file for the MythWeb package.
 -January 17, 2006
@@ -742,8 +742,8 @@ Index: mythplugins/mythweb/README
  
 Index: mythplugins/mythdvd/mtd/jobthread.cpp
 ===================================================================
---- mythplugins/mythdvd/mtd/jobthread.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythdvd/mtd/jobthread.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythdvd/mtd/jobthread.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythdvd/mtd/jobthread.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -11,6 +11,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -754,8 +754,8 @@ Index: mythplugins/mythdvd/mtd/jobthread.cpp
  using namespace std;
 Index: mythplugins/mythdvd/mtd/mtd.cpp
 ===================================================================
---- mythplugins/mythdvd/mtd/mtd.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythdvd/mtd/mtd.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythdvd/mtd/mtd.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythdvd/mtd/mtd.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -8,6 +8,7 @@
  
  */
@@ -766,8 +766,8 @@ Index: mythplugins/mythdvd/mtd/mtd.cpp
  #include <qdir.h>
 Index: mythplugins/mythdvd/mtd/logging.cpp
 ===================================================================
---- mythplugins/mythdvd/mtd/logging.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythdvd/mtd/logging.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythdvd/mtd/logging.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythdvd/mtd/logging.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -9,6 +9,7 @@
  */
  #include "logging.h"
@@ -778,8 +778,8 @@ Index: mythplugins/mythdvd/mtd/logging.cpp
  #include <mythtv/mythcontext.h>
 Index: mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp
 ===================================================================
---- mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -12,6 +12,7 @@
  #include "metadata.h"
  #include "metaiooggvorbiscomment.h"
@@ -804,8 +804,8 @@ Index: mythplugins/mythmusic/mythmusic/vorbisdecoder.cpp
              bitrate = ov_bitrate_instant(&oggfile) / 1000;
 Index: mythplugins/mythmusic/mythmusic/flacdecoder.cpp
 ===================================================================
---- mythplugins/mythmusic/mythmusic/flacdecoder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythmusic/mythmusic/flacdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythmusic/mythmusic/flacdecoder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythmusic/mythmusic/flacdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -12,6 +12,7 @@
  #include "metadata.h"
  #include "metaioflacvorbiscomment.h"
@@ -842,8 +842,8 @@ Index: mythplugins/mythmusic/mythmusic/flacdecoder.cpp
          }
 Index: mythplugins/mythmusic/mythmusic/maddecoder.cpp
 ===================================================================
---- mythplugins/mythmusic/mythmusic/maddecoder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythmusic/mythmusic/maddecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythmusic/mythmusic/maddecoder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythmusic/mythmusic/maddecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -16,6 +16,7 @@
  #include <mythtv/audiooutput.h>
  #include "metaioid3v2.h"
@@ -889,8 +889,8 @@ Index: mythplugins/mythmusic/mythmusic/maddecoder.cpp
      }
 Index: mythplugins/mythweather/mythweather/weather.cpp
 ===================================================================
---- mythplugins/mythweather/mythweather/weather.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythweather/mythweather/weather.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythweather/mythweather/weather.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythweather/mythweather/weather.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -2571,6 +2571,14 @@
           return false;
       }
@@ -924,8 +924,8 @@ Index: mythplugins/mythweather/mythweather/weather.cpp
           sURL = QString("http://image.weather.com" + imageLoc + "%1L.jpg").arg(x);
 Index: mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp
 ===================================================================
---- mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -46,22 +46,6 @@
  #include "keygrabber.h"
  
@@ -986,8 +986,8 @@ Index: mythplugins/mythcontrols/mythcontrols/mythcontrols.cpp
      {
 Index: mythplugins/mythcontrols/mythcontrols/actionset.cpp
 ===================================================================
---- mythplugins/mythcontrols/mythcontrols/actionset.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythcontrols/mythcontrols/actionset.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythcontrols/mythcontrols/actionset.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythcontrols/mythcontrols/actionset.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -139,13 +139,19 @@
  /* method description in header */
  QStringList * ActionSet::actionStrings(const QString &context_name) const
@@ -1015,8 +1015,8 @@ Index: mythplugins/mythcontrols/mythcontrols/actionset.cpp
  
 Index: mythplugins/mythcontrols/mythcontrols/keybindings.h
 ===================================================================
---- mythplugins/mythcontrols/mythcontrols/keybindings.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythcontrols/mythcontrols/keybindings.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythcontrols/mythcontrols/keybindings.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythcontrols/mythcontrols/keybindings.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -65,6 +65,8 @@
      /**
       * @brief Get a list of the context names.
@@ -1028,8 +1028,8 @@ Index: mythplugins/mythcontrols/mythcontrols/keybindings.h
      {
 Index: mythplugins/mythvideo/mythvideo/videomanager.h
 ===================================================================
---- mythplugins/mythvideo/mythvideo/videomanager.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythvideo/mythvideo/videomanager.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythvideo/mythvideo/videomanager.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythvideo/mythvideo/videomanager.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -30,7 +30,7 @@
    public:
      VideoManager(MythMainWindow *parent, const char *name = 0);
@@ -1041,8 +1041,8 @@ Index: mythplugins/mythvideo/mythvideo/videomanager.h
      void slotManualIMDB();
 Index: mythplugins/mythvideo/mythvideo/videoselected.h
 ===================================================================
---- mythplugins/mythvideo/mythvideo/videoselected.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythvideo/mythvideo/videoselected.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythvideo/mythvideo/videoselected.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythvideo/mythvideo/videoselected.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -35,7 +35,7 @@
      VideoSelected(VideoList *lvideolist,
                   MythMainWindow *parent, const char *name = 0, int index = 0);
@@ -1054,8 +1054,8 @@ Index: mythplugins/mythvideo/mythvideo/videoselected.h
    protected slots:
 Index: mythplugins/mythphone/mythphone/sipfsm.h
 ===================================================================
---- mythplugins/mythphone/mythphone/sipfsm.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythphone/mythphone/sipfsm.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythphone/mythphone/sipfsm.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythphone/mythphone/sipfsm.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -618,7 +618,7 @@
      SipWatcher *CreateWatcherFsm(QString Url);
      SipIM *CreateIMFsm(QString Url="", QString callIdStr="");
@@ -1067,8 +1067,8 @@ Index: mythplugins/mythphone/mythphone/sipfsm.h
      int getPrimaryCall() { return primaryCall; };
 Index: mythplugins/mythphone/mythphone/vxml.h
 ===================================================================
---- mythplugins/mythphone/mythphone/vxml.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythphone/mythphone/vxml.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythphone/mythphone/vxml.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythphone/mythphone/vxml.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -10,7 +10,7 @@
  {
    public:
@@ -1080,8 +1080,8 @@ Index: mythplugins/mythphone/mythphone/vxml.h
      QString getName() { return Name; };
 Index: mythplugins/mythgame/mythgame/gamehandler.h
 ===================================================================
---- mythplugins/mythgame/mythgame/gamehandler.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythgame/mythgame/gamehandler.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythgame/mythgame/gamehandler.h	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythgame/mythgame/gamehandler.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -106,7 +106,7 @@
  
    protected:
@@ -1093,8 +1093,8 @@ Index: mythplugins/mythgame/mythgame/gamehandler.h
      int spandisks;
 Index: mythplugins/mythnews/mythnews/news-sites.xml
 ===================================================================
---- mythplugins/mythnews/mythnews/news-sites.xml	(.../tags/release-0-19)	(revision 10051)
-+++ mythplugins/mythnews/mythnews/news-sites.xml	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythplugins/mythnews/mythnews/news-sites.xml	(.../tags/release-0-19)	(revision 10231)
++++ mythplugins/mythnews/mythnews/news-sites.xml	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -119,7 +119,7 @@
  
      <item>
@@ -1104,10 +1104,47 @@ Index: mythplugins/mythnews/mythnews/news-sites.xml
          <ico>http://slashdot.org/favicon.ico</ico>
      </item>
  
+Index: mythtv/libs/libmythtv/dvbchannel.h
+===================================================================
+--- mythtv/libs/libmythtv/dvbchannel.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbchannel.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -60,11 +60,13 @@
+         { return chan_opts.pmt.HasTelevisionService(); }
+     /// Returns true iff we have a faulty DVB driver that munges PMT
+     bool HasCRCBug(void)                const { return has_crc_bug; }
++    uint GetMinSignalMonitorDelay(void) const { return sigmon_delay; }
+ 
+     // Commands
+     bool SwitchToInput(const QString &inputname, const QString &chan);
+     bool SwitchToInput(int newcapchannel, bool setstarting);
+     bool Tune(const dvb_channel_t& channel, bool force_reset=false);
++    bool Retune(void);
+ 
+     // Set/Get/Command just for SIScan/ScanWizardScanner
+     void SetMultiplexID(int mplexid)          { currentTID = mplexid; };
+@@ -109,11 +111,18 @@
+     volatile int      fd_frontend; ///< File descriptor for tuning hardware
+     int               cardnum;     ///< DVB Card number
+     bool              has_crc_bug; ///< true iff our driver munges PMT
++    uint              tuning_delay;///< Extra delay to add for broken drivers
++    uint              sigmon_delay;///< Minimum delay between FE_LOCK checks
+     int               currentTID;  ///< Stores mplexid from database
+ 
+     bool              first_tune;  ///< Used to force hardware reset
+ 
+     int               nextcapchannel; ///< Signal an input change
++
++    /// Last tuning options sent to hardware for retuning
++    DVBTuning         retune_tuning;
++    /// Retuning adjustment, required so drivers don't ignore retune request
++    int               retune_adj;
+ };
+ 
+ #endif
 Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
 ===================================================================
---- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -150,7 +150,8 @@
      // Complicated gets
      long long CalcMaxFFTime(long long ff, bool setjump = true) const;
@@ -1118,7 +1155,24 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
  
      /// Non-const gets
      OSD         *GetOSD(void)                 { return osd; }
-@@ -543,6 +544,7 @@
+@@ -297,6 +298,7 @@
+     bool DecodeFrame(struct rtframeheader *frameheader,
+                      unsigned char *strm, unsigned char *outbuf);
+ 
++    bool PrebufferEnoughFrames(void);
+     void CheckPrebuffering(void);
+     bool GetFrameNormal(int onlyvideo);
+     bool GetFrameFFREW(void);
+@@ -309,7 +311,7 @@
+     bool DoRewind(void);
+ 
+     // Private seeking stuff
+-    void ClearAfterSeek(void);
++    void ClearAfterSeek(bool clearvideobuffers = true);
+     bool FrameIsInMap(long long frameNumber, QMap<long long, int> &breakMap);
+     void JumpToFrame(long long frame);
+     void JumpToNetFrame(long long net) { JumpToFrame(framesPlayed + net); }
+@@ -543,6 +545,7 @@
      QMap<long long, int>::Iterator deleteIter;
      QMap<long long, int>::Iterator blankIter;
      QMap<long long, int>::Iterator commBreakIter;
@@ -1128,8 +1182,8 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.h
      /// Lock for next_play_speed and next_normal_speed
 Index: mythtv/libs/libmythtv/osdlistbtntype.h
 ===================================================================
---- mythtv/libs/libmythtv/osdlistbtntype.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/osdlistbtntype.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/osdlistbtntype.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/osdlistbtntype.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1,3 +1,4 @@
 +// -*- Mode: c++ -*-
  /* ============================================================
@@ -1574,8 +1628,8 @@ Index: mythtv/libs/libmythtv/osdlistbtntype.h
  
 Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
 ===================================================================
---- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/NuppelVideoPlayer.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -147,6 +147,7 @@
        hascommbreaktable(false),
        deleteIter(deleteMap.end()),  blankIter(blankMap.end()),
@@ -1602,7 +1656,116 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  
      if ((size.width() > 0) && (size.height() > 0))
      {
-@@ -1920,7 +1923,7 @@
+@@ -1626,8 +1629,8 @@
+         {
+             // If we are using hardware decoding, so we've already done the
+             // decoding; display the frame, but don't wait for A/V Sync.
+-            videoOutput->PrepareFrame(buffer, ps);
+-            videoOutput->Show(m_scan);
++            videoOutput->PrepareFrame(buffer, kScan_Intr2ndField);
++            videoOutput->Show(kScan_Intr2ndField);
+             VERBOSE(VB_PLAYBACK, LOC + dbg + "skipping A/V wait.");
+         }
+         else
+@@ -1685,14 +1688,14 @@
+ 
+     if (diverge > MAXDIVERGE)
+     {
+-        // If audio is way ahead of video, adjust for it...
++        // If audio is way behind of video, adjust for it...
+         // by cutting the frame rate in half for the length of this frame
+ 
+         avsync_adjustment = frame_interval;
+         lastsync = true;
+         VERBOSE(VB_PLAYBACK, LOC + 
+-                QString("Audio is %1 frames ahead of video,\n"
+-                        "\t\t\tdoubling video frame interval.").arg(diverge));
++                QString("Video is %1 frames ahead of audio,\n"
++                        "\t\t\tdoubling video frame interval to slow down.").arg(diverge));
+     }
+ 
+     if (audioOutput && normal_speed)
+@@ -1811,11 +1814,8 @@
+     videosync->Start();
+ }
+ 
+-void NuppelVideoPlayer::DisplayNormalFrame(void)
++bool NuppelVideoPlayer::PrebufferEnoughFrames(void)
+ {
+-    video_actually_paused = false;
+-    resetvideo = false;
+-
+     prebuffering_lock.lock();
+     if (prebuffering)
+     {
+@@ -1843,14 +1843,29 @@
+         }
+         prebuffering_lock.unlock();
+         videosync->Start();
+-        return;
++
++        return false;
+     }
+     prebuffering_lock.unlock();
+ 
+     //VERBOSE(VB_PLAYBACK, LOC + "fs: " + videoOutput->GetFrameStatus());
+     if (!videoOutput->EnoughPrebufferedFrames())
+     {
+-        VERBOSE(VB_GENERAL, LOC + "prebuffering pause");
++        if (videoOutput)
++        {
++            videoOutput->CheckFrameStates();
++            if (videoOutput->hasMCAcceleration()   ||
++                videoOutput->hasIDCTAcceleration() ||
++                videoOutput->hasVLDAcceleration())
++            {
++                // Prebuffering fails w/XvMC's 8 surfaces..
++                usleep(5000);
++                return false;
++            }
++        }
++        VERBOSE(VB_GENERAL, LOC + "prebuffering pause" +
++                videoOutput->GetFrameStatus());
++
+         SetPrebuffering(true);
+ #if FAST_RESTART
+         if (!m_playing_slower && audio_channels <= 2)
+@@ -1861,7 +1876,7 @@
+             VERBOSE(VB_GENERAL, "playing slower due to falling behind...");
+         }
+ #endif
+-        return;
++        return false;
+     }
+ 
+ #if FAST_RESTART
+@@ -1877,6 +1892,25 @@
+     prebuffer_tries = 0;
+     prebuffering_lock.unlock();
+ 
++    return true;
++}
++
++void NuppelVideoPlayer::DisplayNormalFrame(void)
++{
++    video_actually_paused = false;
++    resetvideo = false;
++
++    if (!PrebufferEnoughFrames())
++    {
++        // When going to switch channels
++        if (paused)
++        {
++            usleep(frame_interval);
++            DisplayPauseFrame();
++        }
++        return;
++    }
++
+     videoOutput->StartDisplayingFrame();
+ 
+     VideoFrame *frame = videoOutput->GetLastShownFrame();
+@@ -1920,7 +1954,7 @@
          ShowText();
          DisplaySubtitles();
      }
@@ -1611,7 +1774,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
      {
          ClearSubtitles();
      }
-@@ -2176,7 +2179,10 @@
+@@ -2176,7 +2210,10 @@
      }
  
      if (eof)
@@ -1622,7 +1785,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  
      livetvchain->SetProgram(pginfo);
  
-@@ -2199,6 +2205,7 @@
+@@ -2199,6 +2236,7 @@
      }
      if (IsErrored())
      {
@@ -1630,7 +1793,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          eof = true;
          return;
      }
-@@ -2265,6 +2272,8 @@
+@@ -2265,6 +2303,8 @@
      ringBuffer->Pause();
      ringBuffer->WaitForPause();
  
@@ -1639,7 +1802,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
      livetvchain->SetProgram(pginfo);
  
      ringBuffer->Reset(true);
-@@ -2284,6 +2293,7 @@
+@@ -2284,6 +2324,7 @@
  
      if (errored || !GetDecoder())
      {
@@ -1647,7 +1810,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          errored = true;
          return;
      }
-@@ -2471,6 +2481,12 @@
+@@ -2471,6 +2512,12 @@
                  JumpToProgram();
          }
  
@@ -1660,7 +1823,48 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          if (IsErrored() || (nvr_enc && nvr_enc->GetErrorStatus()))
          {
              VERBOSE(VB_IMPORTANT, LOC_ERR + "Unknown error, exiting decoder");
-@@ -4398,6 +4414,8 @@
+@@ -3246,7 +3293,10 @@
+     GetDecoder()->DoFastForward(desiredFrame);
+     GetDecoder()->setExactSeeks(exactseeks);
+ 
+-    ClearAfterSeek();
++    // Note: The video output will be reset by what the the decoder 
++    //       does, so we only need to reset the audio, subtitles, etc.
++    ClearAfterSeek(false);
++
+     lastSkipTime = time(NULL);
+     return true;
+ }
+@@ -3291,19 +3341,24 @@
+ }
+ #endif
+ 
+-/** \fn NuppelVideoPlayer::ClearAfterSeek(void)
++/** \fn NuppelVideoPlayer::ClearAfterSeek(bool)
+  *  \brief This is to support seeking...
+  *
+  *   This resets the output classes and discards all
+  *   frames no longer being used by the decoder class.
+  *
+  *   Note: caller should not hold any locks
++ *
++ *  \param clearvideobuffers This clears the videooutput buffers as well,
++ *                           this is only safe if no old frames are
++ *                           required to continue decoding.
+  */
+-void NuppelVideoPlayer::ClearAfterSeek(void)
++void NuppelVideoPlayer::ClearAfterSeek(bool clearvideobuffers)
+ {
+-    VERBOSE(VB_PLAYBACK, LOC + "ClearAfterSeek()");
++    VERBOSE(VB_PLAYBACK, LOC + "ClearAfterSeek("<<clearvideobuffers<<")");
+ 
+-    videoOutput->ClearAfterSeek();
++    if (clearvideobuffers)
++        videoOutput->ClearAfterSeek();
+ 
+     for (int i = 0; i < MAXTBUFFER; i++)
+         txtbuffers[i].timecode = 0;
+@@ -4398,6 +4453,8 @@
      hascommbreaktable = !commBreakMap.isEmpty();
      SetCommBreakIter();
      commBreakMapLock.unlock();
@@ -1669,7 +1873,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  }
  
  bool NuppelVideoPlayer::RebuildSeekTable(bool showPercentage, StatusCallback cb, void* cbData)
-@@ -4541,7 +4559,8 @@
+@@ -4541,7 +4598,8 @@
      return (int)((float)(written - played) / video_frame_rate);
  }
  
@@ -1679,7 +1883,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
  {
      posInfo.desc = "";
      posInfo.position = 0;
-@@ -4588,15 +4607,23 @@
+@@ -4588,15 +4646,23 @@
      int ssecs = (playbackLen - shours * 3600 - smins * 60);
  
      QString text1, text2;
@@ -1708,7 +1912,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
      }
  
      posInfo.desc = QObject::tr("%1 of %2").arg(text1).arg(text2);
-@@ -4654,6 +4681,7 @@
+@@ -4654,6 +4720,7 @@
  
              if (commBreakIter.key() == totalFrames)
              {
@@ -1716,7 +1920,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
                  eof = true;
              }
              else
-@@ -4721,7 +4749,7 @@
+@@ -4721,7 +4788,7 @@
  
          QString message = "COMMFLAG_REQUEST ";
          message += m_playbackinfo->chanid + " " +
@@ -1725,7 +1929,7 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
          RemoteSendMessage(message);
  
          return false;
-@@ -5018,7 +5046,7 @@
+@@ -5018,7 +5085,7 @@
                  QImage scaledImage = qImage.smoothScale(rect->w, rect->h);
  
                  OSDTypeImage* image = new OSDTypeImage();
@@ -1736,8 +1940,8 @@ Index: mythtv/libs/libmythtv/NuppelVideoPlayer.cpp
                  subtitleOSD->AddType(image);
 Index: mythtv/libs/libmythtv/NuppelVideoRecorder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/NuppelVideoRecorder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/NuppelVideoRecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/NuppelVideoRecorder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/NuppelVideoRecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -216,7 +216,10 @@
      }
  
@@ -1792,10 +1996,27 @@ Index: mythtv/libs/libmythtv/NuppelVideoRecorder.cpp
  
      audio_bytes_per_sample = audio_channels * audio_bits / 8;
      blocksize *= 4;
+Index: mythtv/libs/libmythtv/signalmonitor.cpp
+===================================================================
+--- mythtv/libs/libmythtv/signalmonitor.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/signalmonitor.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -100,9 +100,9 @@
+                              uint wait_for_mask,  const char *name)
+     : QObject(NULL, name),             channel(_channel),
+       capturecardnum(_capturecardnum), flags(wait_for_mask),
+-      update_rate(25),                 running(false),
+-      exit(false),                     update_done(false),
+-      notify_frontend(true),
++      update_rate(25),                 minimum_update_rate(5),
++      running(false),                  exit(false),
++      update_done(false),              notify_frontend(true),
+       signalLock    (QObject::tr("Signal Lock"),  "slock",
+                      1, true, 0,   1, 0),
+       signalStrength(QObject::tr("Signal Power"), "signal",
 Index: mythtv/libs/libmythtv/osdlistbtntype.cpp
 ===================================================================
---- mythtv/libs/libmythtv/osdlistbtntype.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/osdlistbtntype.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/osdlistbtntype.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/osdlistbtntype.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -19,206 +19,148 @@
   * 
   * ============================================================ */
@@ -3126,8 +3347,8 @@ Index: mythtv/libs/libmythtv/osdlistbtntype.cpp
 -
 Index: mythtv/libs/libmythtv/RingBuffer.cpp
 ===================================================================
---- mythtv/libs/libmythtv/RingBuffer.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/RingBuffer.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/RingBuffer.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/RingBuffer.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -145,6 +145,12 @@
      VERBOSE(VB_PLAYBACK, LOC + QString("OpenFile(%1, %1)")
              .arg(lfilename).arg(retryCount));
@@ -3254,8 +3475,8 @@ Index: mythtv/libs/libmythtv/RingBuffer.cpp
          if (commserror)
 Index: mythtv/libs/libmythtv/hdtvrecorder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/hdtvrecorder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/hdtvrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/hdtvrecorder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/hdtvrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -627,9 +627,8 @@
  
          len += remainder;
@@ -3270,8 +3491,8 @@ Index: mythtv/libs/libmythtv/hdtvrecorder.cpp
      FinishRecording();
 Index: mythtv/libs/libmythtv/dummydtvrecorder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/dummydtvrecorder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/dummydtvrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/dummydtvrecorder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dummydtvrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -125,7 +125,8 @@
      // TRANSFER DATA
      while (_request_recording || _frames_seen_count <= 5)
@@ -3296,8 +3517,8 @@ Index: mythtv/libs/libmythtv/dummydtvrecorder.cpp
      FinishRecording();
 Index: mythtv/libs/libmythtv/avformatdecoder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/avformatdecoder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/avformatdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/avformatdecoder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/avformatdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -725,7 +725,12 @@
          return -1;
      }
@@ -3313,8 +3534,8 @@ Index: mythtv/libs/libmythtv/avformatdecoder.cpp
          VERBOSE(VB_IMPORTANT, LOC_ERR + "Could not find codec parameters. " +
 Index: mythtv/libs/libmythtv/osdtypes.cpp
 ===================================================================
---- mythtv/libs/libmythtv/osdtypes.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/osdtypes.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/osdtypes.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/osdtypes.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -14,6 +14,9 @@
  
  #include "mythcontext.h"
@@ -4027,8 +4248,8 @@ Index: mythtv/libs/libmythtv/osdtypes.cpp
  
 Index: mythtv/libs/libmythtv/tv_play.cpp
 ===================================================================
---- mythtv/libs/libmythtv/tv_play.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/tv_play.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/tv_play.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/tv_play.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -247,7 +247,7 @@
        browsechannum(""), browsechanid(""), browsestarttime(""),
        // Program Info for currently playing video
@@ -4282,8 +4503,8 @@ Index: mythtv/libs/libmythtv/tv_play.cpp
  /** \fn TV::PauseLiveTV(void)
 Index: mythtv/libs/libmythtv/jobqueue.cpp
 ===================================================================
---- mythtv/libs/libmythtv/jobqueue.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/jobqueue.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/jobqueue.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/jobqueue.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -275,6 +275,11 @@
                      (hostname != "") &&
                      (hostname != m_hostname))
@@ -4298,8 +4519,8 @@ Index: mythtv/libs/libmythtv/jobqueue.cpp
                                        .arg(JobText(type))
 Index: mythtv/libs/libmythtv/dvbdev/dvbdev.c
 ===================================================================
---- mythtv/libs/libmythtv/dvbdev/dvbdev.c	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/dvbdev/dvbdev.c	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/dvbdev/dvbdev.c	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbdev/dvbdev.c	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -29,55 +29,79 @@
  
  const char* dvbdevice(int type, int cardnum)
@@ -4393,10 +4614,22 @@ Index: mythtv/libs/libmythtv/dvbdev/dvbdev.c
          return 0;
  
      switch(type)
+Index: mythtv/libs/libmythtv/videosource.h
+===================================================================
+--- mythtv/libs/libmythtv/videosource.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videosource.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -75,6 +75,7 @@
+ 
+     static CARD_TYPES   GetDVBType(uint device, QString &name, QString &card_type);
+     static bool         HasDVBCRCBug(uint device);
++    static uint         GetMinSignalMonitoringDelay(uint device);
+     static QString      GetDefaultInput(uint cardid);
+ 
+     static bool         IgnoreEncrypted(uint cardid, const QString &inputname);
 Index: mythtv/libs/libmythtv/libmythtv.pro
 ===================================================================
---- mythtv/libs/libmythtv/libmythtv.pro	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/libmythtv.pro	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/libmythtv.pro	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/libmythtv.pro	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -144,10 +144,10 @@
      # On screen display (video output overlay)
      HEADERS += osd.h                    osdtypes.h
@@ -4410,10 +4643,134 @@ Index: mythtv/libs/libmythtv/libmythtv.pro
  
      # Video output
      HEADERS += videooutbase.h           videoout_null.h
+Index: mythtv/libs/libmythtv/dvbchannel.cpp
+===================================================================
+--- mythtv/libs/libmythtv/dvbchannel.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbchannel.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -74,14 +74,27 @@
+  *  \bug Only supports single input cards.
+  */
+ DVBChannel::DVBChannel(int aCardNum, TVRec *parent)
+-    : QObject(NULL, "DVBChannel"), ChannelBase(parent),
+-      diseqc(NULL),    dvbcam(NULL),
+-      fd_frontend(-1), cardnum(aCardNum), has_crc_bug(false),
+-      currentTID(-1),  first_tune(true)
++    : QObject(NULL, "DVBChannel"),  ChannelBase(parent),
++      diseqc(NULL),                 dvbcam(NULL),
++      fd_frontend(-1),              cardnum(aCardNum),
++      has_crc_bug(false),
++      tuning_delay(0),              sigmon_delay(25),
++      currentTID(-1),               first_tune(true),
++      retune_adj(-10)
+ {
+     dvbcam = new DVBCam(cardnum);
+     bzero(&info, sizeof(info));
+     has_crc_bug = CardUtil::HasDVBCRCBug(aCardNum);
++
++    QString name(""), type("");
++    CardUtil::GetDVBType(aCardNum, name, type);
++    if ((name == "DiBcom 3000P/M-C DVB-T") ||
++        (name == "TerraTec/qanu USB2.0 Highspeed DVB-T Receiver"))
++    {
++        tuning_delay = 200;
++    }
++
++    sigmon_delay = CardUtil::GetMinSignalMonitoringDelay(aCardNum);
+ }
+ 
+ DVBChannel::~DVBChannel()
+@@ -367,7 +380,7 @@
+     }
+ 
+     bool found = false;
+-    int mplexid;
++    int mplexid = 0;
+     while (query.next())
+     {
+         int this_inputid = query.value(4).toInt();
+@@ -633,7 +646,8 @@
+  *   This is used by DVB Channel Scanner, the EIT Parser, and by TVRec.
+  *
+  *  \param channel     Info on transport to tune to
+- *  \param force_reset If true frequency tuning is done even if not strictly needed
++ *  \param force_reset If true, frequency tuning is done
++ *                     even if it should not be needed.
+  *  \return true on success, false on failure
+  */
+ bool DVBChannel::Tune(const dvb_channel_t& channel, bool force_reset)
+@@ -642,6 +656,8 @@
+     bool has_diseq = (FE_QPSK == info.type) && diseqc;
+     struct dvb_frontend_parameters params = channel.tuning.params;
+ 
++    retune_tuning = channel.tuning;
++
+     if (fd_frontend < 0)
+     {
+         ERROR("DVBChannel::Tune: Card not open!");
+@@ -669,15 +685,22 @@
+         // Adjust for Satelite recievers which offset the frequency.
+         params.frequency = tuned_frequency(channel.tuning, info.type, NULL);
+ 
++        params.frequency = params.frequency + (retune_adj = -retune_adj);
++
+         if (ioctl(fd_frontend, FE_SET_FRONTEND, &params) < 0)
+         {
+             ERRNO("DVBChannel::Tune: "
+                   "Setting Frontend tuning parameters failed.");
+             return false;
+         }
++
++        // Extra delay to add for broken DVB drivers
++        if (tuning_delay)
++            usleep(tuning_delay * 1000);
++
+         wait_for_backend(fd_frontend, 5 /* msec */);
+ 
+-        prev_tuning.params = params;
++        prev_tuning.params = channel.tuning.params;
+         first_tune = false;
+     }
+ 
+@@ -686,6 +709,24 @@
+     return true;
+ }
+ 
++/** \fn DVBChannel::Retune(void)
++ *  \brief Calls DVBChannel::Tune() with the last known parameters
++ *
++ *   This is used to retune DVB-C hardware. DVB-C hardware
++ *   sometimes does not successfully tune the first time
++ *   despite reports of success from the drivers. This is
++ *   probably a hardware problem and not a driver problem
++ *   per say, so it is unlikely to be fixed at a lower level.
++ *
++ *  \return true iff drivers report that tuning was successful
++ */
++bool DVBChannel::Retune(void)
++{
++    dvb_channel_t retune_channel;
++    retune_channel.tuning = retune_tuning;
++    return Tune(retune_channel, true);
++}
++
+ /** \fn DVBChannel::GetTuningParams(DVBTuning& tuning) const
+  *  \brief Fetches DVBTuning params from driver
+  *  \return true on success, false on failure
+@@ -855,6 +896,9 @@
+     for (uint i = 0; i < 64 && !tuned; i++)
+         if (!diseqc->Set(t, reset, tuned))
+             return false;
+-        
++
++    // Wait 10 ms, recommended by Marcus Metzler, see #1552
++    usleep(10 * 1000);
++
+     return true;
+ }
 Index: mythtv/libs/libmythtv/osdtypes.h
 ===================================================================
---- mythtv/libs/libmythtv/osdtypes.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/osdtypes.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/osdtypes.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/osdtypes.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -8,6 +8,7 @@
  #include <vector>
  #include <qobject.h>
@@ -4640,10 +4997,32 @@ Index: mythtv/libs/libmythtv/osdtypes.h
      int xoffset, yoffset, displaywidth, displayheight;
  };
  
+Index: mythtv/libs/libmythtv/videoout_xv.h
+===================================================================
+--- mythtv/libs/libmythtv/videoout_xv.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videoout_xv.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -80,6 +80,8 @@
+     virtual bool hasVLDAcceleration(void) const
+         { return XVideoVLD == VideoOutputSubType(); }
+ 
++    void CheckFrameStates(void);
++
+     static MythCodecID GetBestSupportedCodec(uint width, uint height,
+                                              uint osd_width, uint osd_height,
+                                              uint stream_type, int xvmc_chroma,
+@@ -141,7 +143,7 @@
+     static bool IsRendering(VideoFrame* frame);
+     static void SyncSurface(VideoFrame* frame, int past_future = 0);
+     static void FlushSurface(VideoFrame* frame);
+-    void CheckDisplayedFramesForAvailability(void);
++
+ #ifdef USING_XVMC 
+     XvMCOSD* GetAvailableOSD();
+     void ReturnAvailableOSD(XvMCOSD*);
 Index: mythtv/libs/libmythtv/osdimagecache.h
 ===================================================================
 --- mythtv/libs/libmythtv/osdimagecache.h	(.../tags/release-0-19)	(revision 0)
-+++ mythtv/libs/libmythtv/osdimagecache.h	(.../branches/release-0-19-fixes)	(revision 10051)
++++ mythtv/libs/libmythtv/osdimagecache.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -0,0 +1,74 @@
 +// -*- Mode: c++ -*-
 +
@@ -4721,8 +5100,8 @@ Index: mythtv/libs/libmythtv/osdimagecache.h
 +};
 Index: mythtv/libs/libmythtv/tv_play.h
 ===================================================================
---- mythtv/libs/libmythtv/tv_play.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/tv_play.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/tv_play.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/tv_play.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -456,7 +456,6 @@
      ProgramInfo *recorderPlaybackInfo; ///< info requested from recorder
      ProgramInfo *playbackinfo;  ///< info sent in via Playback()
@@ -4742,8 +5121,8 @@ Index: mythtv/libs/libmythtv/tv_play.h
      RingBuffer *prbuffer;
 Index: mythtv/libs/libmythtv/videosource.cpp
 ===================================================================
---- mythtv/libs/libmythtv/videosource.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/videosource.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/videosource.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videosource.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -32,6 +32,7 @@
  #include "videosource.h"
  #include "datadirect.h"
@@ -4752,7 +5131,25 @@ Index: mythtv/libs/libmythtv/videosource.cpp
  
  #ifdef USING_DVB
  #include <linux/dvb/frontend.h>
-@@ -574,22 +575,10 @@
+@@ -156,6 +157,17 @@
+             (name == "ST STV0299 DVB-S"));         // munges PAT
+ }
+ 
++uint CardUtil::GetMinSignalMonitoringDelay(uint device)
++{
++    QString name(""), type("");
++    GetDVBType(device, name, type);
++    if (name.find("DVB-S") >= 0)
++        return 300;
++    if (name == "DiBcom 3000P/M-C DVB-T")
++        return 100;
++    return 25;
++}
++
+ /** \fn CardUtil::GetCardType(uint, QString&, QString&)
+  *  \brief Returns the card type from the video device
+  *  \param nCardID   cardid of card to be checked
+@@ -574,22 +586,10 @@
  {
      setLabel(QObject::tr("Channel frequency table"));
      addSelection("default");
@@ -4781,8 +5178,8 @@ Index: mythtv/libs/libmythtv/videosource.cpp
                  "defined in the General settings."));
 Index: mythtv/libs/libmythtv/frequencytables.cpp
 ===================================================================
---- mythtv/libs/libmythtv/frequencytables.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/frequencytables.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/frequencytables.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/frequencytables.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -283,104 +283,52 @@
          "ATSC Channel %1", 70, 809000000, 887000000, 6000000, VSB_8);
  #endif // USING_DVB
@@ -4933,8 +5330,8 @@ Index: mythtv/libs/libmythtv/frequencytables.cpp
  }
 Index: mythtv/libs/libmythtv/scanwizardhelpers.h
 ===================================================================
---- mythtv/libs/libmythtv/scanwizardhelpers.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/scanwizardhelpers.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/scanwizardhelpers.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/scanwizardhelpers.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -272,11 +272,13 @@
    public:
      ScanFrequencyTable()
@@ -4956,8 +5353,8 @@ Index: mythtv/libs/libmythtv/scanwizardhelpers.h
          setHelpText(QObject::tr("Frequency table to use.") + " " +
 Index: mythtv/libs/libmythtv/scanwizard.cpp
 ===================================================================
---- mythtv/libs/libmythtv/scanwizard.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/scanwizard.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/scanwizard.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/scanwizard.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -518,7 +518,9 @@
                      "SELECT dvb_diseqc_type, diseqc_port,  diseqc_pos, "
                      "       lnb_lof_switch,  lnb_lof_hi,   lnb_lof_lo "
@@ -4969,10 +5366,323 @@ Index: mythtv/libs/libmythtv/scanwizard.cpp
                  .arg(parent->captureCard()).arg(nVideoSource));
  
              if (query.exec() && query.isActive() && query.size() > 0)
+Index: mythtv/libs/libmythtv/videoout_xv.cpp
+===================================================================
+--- mythtv/libs/libmythtv/videoout_xv.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videoout_xv.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -1089,6 +1089,9 @@
+     bool use_xv = true, use_shm = true;
+ 
+     QString dec = gContext->GetSetting("PreferredMPEG2Decoder", "ffmpeg");
++    if (dec != "libmpeg2" && height < 720 && 
++        gContext->GetNumSetting("UseXvMCForHDOnly", 0))
++        dec = "ffmpeg";
+     if (dec == "xvmc")
+         use_xvmc_idct = use_xvmc = true;
+     else if (dec == "xvmc-vld")
+@@ -1335,40 +1338,39 @@
+     if (attributes)
+         X11S(XFree(attributes));
+ 
+-    if (xv_draw_colorkey)
++    if (!xv_draw_colorkey)
++        return;
++
++    QString msg = LOC + "Chromakeying not possible with this XVideo port.";
++    X11S(xv_atom = XInternAtom(XJ_disp, "XV_COLORKEY", False));
++    if (xv_atom == None)
+     {
+-        X11S(xv_atom = XInternAtom(XJ_disp, "XV_COLORKEY", False));
+-        if (xv_atom != None)
+-        {
+-            X11S(ret = XvGetPortAttribute(XJ_disp, xv_port, xv_atom, 
+-                                          &xv_colorkey));
++        VERBOSE(VB_PLAYBACK, msg);
++        xv_colorkey = 0;
++        return;
++    }
+ 
+-            if (ret == Success && xv_colorkey == 0)
+-            {
+-                const int default_colorkey = 1;
+-                X11S(ret = XvSetPortAttribute(XJ_disp, xv_port, xv_atom,
+-                                              default_colorkey));
+-                if (ret == Success)
+-                {
+-                    VERBOSE(VB_PLAYBACK, LOC +
+-                            "0,0,0 is the only bad color key for MythTV, "
+-                            "using "<<default_colorkey<<" instead.");
+-                    xv_colorkey = default_colorkey;
+-                }
+-                ret = Success;
+-            }
+-
+-            if (ret != Success)
+-            {
+-                VERBOSE(VB_IMPORTANT, LOC_ERR +
+-                        "Couldn't get the color key color,"
+-                        "\n\t\t\tprobably due to a driver bug or limitation."
+-                        "\n\t\t\tYou might not get any video, "
+-                        "but we'll try anyway.");
+-                xv_colorkey = 0;
+-            }
++    X11S(ret = XvGetPortAttribute(XJ_disp, xv_port, xv_atom, &xv_colorkey));
++    if (ret == Success && xv_colorkey == 0)
++    {
++        const int default_colorkey = 1;
++        X11S(ret = XvSetPortAttribute(XJ_disp, xv_port, xv_atom,
++                                      default_colorkey));
++        if (ret == Success)
++        {
++            VERBOSE(VB_PLAYBACK, LOC +
++                    "0,0,0 is the only bad color key for MythTV, "
++                    "using "<<default_colorkey<<" instead.");
++            xv_colorkey = default_colorkey;
+         }
++        ret = Success;
+     }
++
++    if (ret != Success)
++    {
++        VERBOSE(VB_PLAYBACK, msg);
++        xv_colorkey = 0;
++    }
+ }
+ 
+ bool VideoOutputXv::SetupDeinterlace(bool interlaced,
+@@ -1955,86 +1957,75 @@
+     } while (0)
+ 
+ void VideoOutputXv::DiscardFrames(bool next_frame_keyframe)
+-{ 
++{
++    VERBOSE(VB_PLAYBACK, LOC + "DiscardFrames("<<next_frame_keyframe<<")");
+     if (VideoOutputSubType() <= XVideo)
+     {
+         vbuffers.DiscardFrames(next_frame_keyframe);
++        VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 3: %1 -- done()")
++                .arg(vbuffers.GetStatus()));
+         return;
+     }
+ 
+ #ifdef USING_XVMC
+     frame_queue_t::iterator it;
+     frame_queue_t syncs;
+-    frame_queue_t ula;
+-    frame_queue_t discards;
+ 
+-    {
+-        vbuffers.begin_lock(kVideoBuffer_displayed); // Lock X
+-        VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 1: %1")
+-                .arg(vbuffers.GetStatus()));
+-        vbuffers.end_lock(); // Lock X
+-    }
++    // Print some debugging
++    vbuffers.begin_lock(kVideoBuffer_displayed); // Lock X
++    VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 1: %1")
++            .arg(vbuffers.GetStatus()));
++    vbuffers.end_lock(); // Lock X
+ 
+-    CheckDisplayedFramesForAvailability();
+-
++    // Finish rendering all these surfaces and move them
++    // from the used queue to the displayed queue.
++    // This allows us to reuse these surfaces, if they
++    // get moved to the used list in CheckFrameStates().
++    // This will only happen if avlib isn't using them
++    // either and they are not currently being displayed.
++    vbuffers.begin_lock(kVideoBuffer_displayed); // Lock Y
++    DQ_COPY(syncs, kVideoBuffer_used);
++    for (it = syncs.begin(); it != syncs.end(); ++it)
+     {
+-        vbuffers.begin_lock(kVideoBuffer_displayed); // Lock Y
+-
+-        DQ_COPY(syncs, kVideoBuffer_displayed);
+-        DQ_COPY(syncs, kVideoBuffer_pause);
+-        for (it = syncs.begin(); it != syncs.end(); ++it)
+-        {
+-            SyncSurface(*it, -1); // sync past
+-            SyncSurface(*it, +1); // sync future
+-            SyncSurface(*it,  0); // sync current
+-            //GetRender(*it)->p_past_surface   = NULL;
+-            //GetRender(*it)->p_future_surface = NULL;
+-        }
+-        VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 2: %1")
+-                .arg(vbuffers.GetStatus()));
+-#if 0
+-        // Remove inheritence of all frames not in displayed or pause
+-        DQ_COPY(ula, kVideoBuffer_used);
+-        DQ_COPY(ula, kVideoBuffer_limbo);
+-        DQ_COPY(ula, kVideoBuffer_avail);
+-        
+-        for (it = ula.begin(); it != ula.end(); ++it)
+-            vbuffers.RemoveInheritence(*it);
+-#endif
+-
+-        VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 3: %1")
+-                .arg(vbuffers.GetStatus()));
+-        // create discard frame list
+-        DQ_COPY(discards, kVideoBuffer_used);
+-        DQ_COPY(discards, kVideoBuffer_limbo);
+-
+-        vbuffers.end_lock(); // Lock Y
++        SyncSurface(*it, -1); // sync past
++        SyncSurface(*it, +1); // sync future
++        SyncSurface(*it,  0); // sync current
++        vbuffers.safeEnqueue(kVideoBuffer_displayed, *it);
+     }
++    syncs.clear();
++    vbuffers.end_lock(); // Lock Y
+ 
+-    for (it = discards.begin(); it != discards.end(); ++it)
+-        DiscardFrame(*it);
++    CheckFrameStates();
+ 
++    // If the next frame is a keyframe we can clear out a lot more...
++    if (next_frame_keyframe)
+     {
+         vbuffers.begin_lock(kVideoBuffer_displayed); // Lock Z
+ 
+-        syncs.clear();
+-        DQ_COPY(syncs, kVideoBuffer_displayed);
+-        DQ_COPY(syncs, kVideoBuffer_pause);
++        // Move all the limbo and pause frames to displayed
++        DQ_COPY(syncs, kVideoBuffer_limbo);
+         for (it = syncs.begin(); it != syncs.end(); ++it)
+         {
+             SyncSurface(*it, -1); // sync past
+             SyncSurface(*it, +1); // sync future
+             SyncSurface(*it,  0); // sync current
+-            //GetRender(*it)->p_past_surface   = NULL;
+-            //GetRender(*it)->p_future_surface = NULL;
++            vbuffers.safeEnqueue(kVideoBuffer_displayed, *it);
+         }
+ 
+-        VERBOSE(VB_PLAYBACK, LOC +
+-                QString("DiscardFrames() 4: %1 -- done() ")
++        VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 2: %1")
+                 .arg(vbuffers.GetStatus()));
+-        
++
+         vbuffers.end_lock(); // Lock Z
++
++        // Now call CheckFrameStates() to remove inheritence and
++        // move the surfaces to the used list if possible (i.e.
++        // if avlib is not using them and they are not currently
++        // being displayed on screen).
++        CheckFrameStates();
+     }
++    VERBOSE(VB_PLAYBACK, LOC + QString("DiscardFrames() 3: %1 -- done()")
++            .arg(vbuffers.GetStatus()));
++        
+ #endif // USING_XVMC
+ }
+ 
+@@ -2071,7 +2062,7 @@
+         if (osdframe)
+             DiscardFrame(osdframe);
+     }
+-    CheckDisplayedFramesForAvailability();
++    CheckFrameStates();
+ #endif
+ }
+ 
+@@ -2411,7 +2402,7 @@
+             DiscardFrame(vbuffers.dequeue(kVideoBuffer_pause));
+     }
+     // clear any displayed frames not on screen
+-    CheckDisplayedFramesForAvailability();
++    CheckFrameStates();
+ 
+     // unlock the frame[s]
+     vbuffers.UnlockFrame(osdframe, "ShowXvMC -- OSD");
+@@ -2659,7 +2650,7 @@
+                     .arg(vbuffers.size(kVideoBuffer_pause)));
+             while (vbuffers.size(kVideoBuffer_pause))
+                 DiscardFrame(vbuffers.dequeue(kVideoBuffer_pause));
+-            CheckDisplayedFramesForAvailability();
++            CheckFrameStates();
+         } else if (1 == vbuffers.size(kVideoBuffer_pause))
+         {
+             VideoFrame *frame = vbuffers.dequeue(kVideoBuffer_used);
+@@ -2791,7 +2782,7 @@
+             // If there are no available buffer, try to toss old
+             // displayed frames.
+             if (!vbuffers.size(kVideoBuffer_avail))
+-                CheckDisplayedFramesForAvailability();
++                CheckFrameStates();
+ 
+             // If tossing doesn't work try hiding showing frames,
+             // then tossing displayed frames.
+@@ -2805,7 +2796,7 @@
+                                              GetRender(*it)->p_surface));
+                 vbuffers.end_lock();
+ 
+-                CheckDisplayedFramesForAvailability();
++                CheckFrameStates();
+             }
+ 
+             // If there is an available buffer grab it.
+@@ -3013,7 +3004,7 @@
+     return -1;
+ }
+ 
+-void VideoOutputXv::CheckDisplayedFramesForAvailability(void)
++void VideoOutputXv::CheckFrameStates(void)
+ {
+ #ifdef USING_XVMC
+     frame_queue_t::iterator it;
+@@ -3084,6 +3075,13 @@
+                     }
+                 }
+             }
++            else if (vbuffers.contains(kVideoBuffer_decode, pframe))
++            {
++                VERBOSE(VB_PLAYBACK, LOC + QString(
++                            "Frame %1 is in use by avlib and so is "
++                            "being held for later discarding.")
++                        .arg(DebugString(pframe, true)));
++            }
+             else
+             {
+                 vbuffers.RemoveInheritence(pframe);
+Index: mythtv/libs/libmythtv/signalmonitor.h
+===================================================================
+--- mythtv/libs/libmythtv/signalmonitor.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/signalmonitor.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -7,6 +7,10 @@
+ // C headers
+ #include <pthread.h>
+ 
++// C++ headers
++#include <algorithm>
++using namespace std;
++
+ // Qt headers
+ #include <qobject.h>
+ #include <qmutex.h>
+@@ -125,7 +129,8 @@
+      *   Defaults to 25 milliseconds.
+      *  \param msec Milliseconds between signal monitoring events.
+      */
+-    void SetUpdateRate(int msec) { update_rate = msec; }
++    void SetUpdateRate(int msec)
++        { update_rate = max(msec, (int)minimum_update_rate); }
+ 
+   public slots:
+     virtual void deleteLater(void);
+@@ -164,6 +169,7 @@
+     int          capturecardnum;
+     uint         flags;
+     int          update_rate;
++    uint         minimum_update_rate;
+     bool         running;
+     bool         exit;
+     bool         update_done;
 Index: mythtv/libs/libmythtv/RingBuffer.h
 ===================================================================
---- mythtv/libs/libmythtv/RingBuffer.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/RingBuffer.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/RingBuffer.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/RingBuffer.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -91,6 +91,7 @@
      long long GetTotalReadPosition(void);
  
@@ -4983,8 +5693,8 @@ Index: mythtv/libs/libmythtv/RingBuffer.h
      static void *StartReader(void *type);
 Index: mythtv/libs/libmythtv/dvbtypes.cpp
 ===================================================================
---- mythtv/libs/libmythtv/dvbtypes.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/dvbtypes.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/dvbtypes.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbtypes.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -202,7 +202,7 @@
  {
     {"TRANSMISSION_MODE_AUTO",TRANSMISSION_MODE_AUTO},
@@ -5014,8 +5724,8 @@ Index: mythtv/libs/libmythtv/dvbtypes.cpp
  
 Index: mythtv/libs/libmythtv/mpegrecorder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/mpegrecorder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/mpegrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/mpegrecorder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/mpegrecorder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -363,9 +363,9 @@
  
      if (ioctl(chanfd, VIDIOC_S_CTRL, &ctrl) < 0)
@@ -5040,8 +5750,8 @@ Index: mythtv/libs/libmythtv/mpegrecorder.cpp
          }
 Index: mythtv/libs/libmythtv/ivtvdecoder.cpp
 ===================================================================
---- mythtv/libs/libmythtv/ivtvdecoder.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/ivtvdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/ivtvdecoder.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/ivtvdecoder.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -270,7 +270,9 @@
  
      GetNVP()->SetVideoParams(720 /*width*/, (ntsc) ? 480 : 576 /*height*/,
@@ -5055,9 +5765,20 @@ Index: mythtv/libs/libmythtv/ivtvdecoder.cpp
      if (m_playbackinfo || livetv || watchingrecording)
 Index: mythtv/libs/libmythtv/dvbsignalmonitor.cpp
 ===================================================================
---- mythtv/libs/libmythtv/dvbsignalmonitor.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/dvbsignalmonitor.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
-@@ -348,8 +348,8 @@
+--- mythtv/libs/libmythtv/dvbsignalmonitor.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbsignalmonitor.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -100,6 +100,10 @@
+ #undef DVB_IO
+     AddFlags(newflags);
+     DBG_SM("constructor()", QString("initial flags 0x%1").arg(newflags,0,16));
++
++    minimum_update_rate = _channel->GetMinSignalMonitorDelay();
++    if (minimum_update_rate > 30)
++        usleep(minimum_update_rate * 1000);
+ }
+ 
+ /** \fn DVBSignalMonitor::~DVBSignalMonitor()
+@@ -348,8 +352,8 @@
  
          len += remainder;
          remainder = GetStreamData()->ProcessData(buffer, len);
@@ -5068,10 +5789,113 @@ Index: mythtv/libs/libmythtv/dvbsignalmonitor.cpp
      }
      VERBOSE(VB_CHANNEL, LOC + "RunTableMonitorTS(): " + "shutdown");
  
+Index: mythtv/libs/libmythtv/tv_rec.cpp
+===================================================================
+--- mythtv/libs/libmythtv/tv_rec.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/tv_rec.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -130,6 +130,11 @@
+       // RingBuffer info
+       ringBuffer(NULL), rbFilePrefix(""), rbFileExt("mpg")
+ {
++      // Retune stuff
++      retune_timer = new TuningTimer();
++      retune_timer->setTimeout(10000);
++      retune_timer->start();
++      retune_requests = 0;
+ }
+ 
+ /** \fn TVRec::Init()
+@@ -3221,6 +3226,8 @@
+  */
+ void TVRec::HandleTuning(void)
+ {
++    bool handle_done = false;
++
+     if (tuningRequests.size())
+     {
+         const TuningRequest *request = &tuningRequests.front();
+@@ -3232,7 +3239,12 @@
+                               kFlagEITScan|kFlagAntennaAdjust))
+         {
+             if (!recorder)
++            {
+                 TuningFrequency(*request);
++                retune_timer->restart();
++                retune_timer->addMSecs(1);
++                retune_requests = 0;
++            }
+             else
+                 SetFlags(kFlagWaitingForRecPause);
+         }
+@@ -3261,15 +3273,29 @@
+     if (HasFlags(kFlagWaitingForSignal))
+     {
+         if (!TuningSignalCheck())
+-            return;
++            handle_done = true;
+     }
+ 
+     if (HasFlags(kFlagWaitingForSIParser))
+     {
+         if (!TuningPMTCheck())
+-            return;
++            handle_done = true;
+     }
+ 
++#ifdef USING_DVB
++    // Just because we have signal, we may not have the right transponder
++    if ((HasFlags(kFlagWaitingForSignal) ||
++         HasFlags(kFlagWaitingForSIParser)) &&
++        (!retune_timer->elapsed() && (retune_requests < 30)))
++    {
++        RetuneChannel();
++        retune_requests++;
++    }
++#endif // USING_DVB
++
++    if (handle_done)
++        return;
++
+     if (HasFlags(kFlagNeedToStartRecorder))
+     { 
+         if (recorder)
+@@ -3354,6 +3380,19 @@
+     ClearFlags(kFlagPendingActions);
+ }
+ 
++/** \fn TVRec::RetuneChannel(void)
++ *  \brief Retunes a DVB channel
++ *  \return DVBChannel::Retune() or false if ifndef USING_DVB
++ */
++bool TVRec::RetuneChannel(void)
++{
++#ifdef USING_DVB
++    if (GetDVBChannel())
++        return GetDVBChannel()->Retune();
++#endif // USING_DVB
++    return false;
++}
++
+ /** \fn TVRec::TuningFrequency(const TuningRequest&)
+  *  \brief Performs initial tuning required for any tuning event.
+  *
+Index: mythtv/libs/libmythtv/videooutbase.h
+===================================================================
+--- mythtv/libs/libmythtv/videooutbase.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videooutbase.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -256,6 +256,8 @@
+     ///        onto the queue of frames ready for decoding onto.
+     virtual void DiscardFrames(bool kf) { vbuffers.DiscardFrames(kf); }
+ 
++    virtual void CheckFrameStates(void) { }
++
+     /// \bug not implemented correctly. vpos is not updated.
+     VideoFrame *GetLastDecodedFrame(void) { return vbuffers.GetLastDecodedFrame(); }
+ 
 Index: mythtv/libs/libmythtv/osdimagecache.cpp
 ===================================================================
 --- mythtv/libs/libmythtv/osdimagecache.cpp	(.../tags/release-0-19)	(revision 0)
-+++ mythtv/libs/libmythtv/osdimagecache.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
++++ mythtv/libs/libmythtv/osdimagecache.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -0,0 +1,296 @@
 +// -*- Mode: c++ -*-
 +/** OSDImageCache
@@ -5371,8 +6195,8 @@ Index: mythtv/libs/libmythtv/osdimagecache.cpp
 +}
 Index: mythtv/libs/libmythtv/osd.cpp
 ===================================================================
---- mythtv/libs/libmythtv/osd.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/osd.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/osd.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/osd.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -154,7 +154,8 @@
          }
  
@@ -5428,10 +6252,84 @@ Index: mythtv/libs/libmythtv/osd.cpp
  
      set->AddType(image);
      set->Display();
+Index: mythtv/libs/libmythtv/tv_rec.h
+===================================================================
+--- mythtv/libs/libmythtv/tv_rec.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/tv_rec.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -13,6 +13,7 @@
+ #include "mythdeque.h"
+ #include "programinfo.h"
+ #include "tv.h"
++#include "util.h"
+ 
+ class QSocket;
+ class NuppelVideoRecorder;
+@@ -48,6 +49,30 @@
+     BROWSE_FAVORITE ///< Fetch information on the next favorite channel
+ } BrowseDirections;
+ 
++class TuningTimer
++{
++  public:
++    TuningTimer() {}
++
++    void setTimeout(long t) { _timeout = t; }
++    long timeout(void) { return _timeout; }
++    void start() { t_timer.start(); }
++    int restart() { int ret = elapsed();
++                    t_timer.restart();
++                    return ret;
++                  }
++    int elapsed() { int ret = t_timer.elapsed();
++                    if (ret > _timeout) { ret = 0;  t_timer.restart(); }
++                    return ret;
++                  }
++
++    void addMSecs(int ms) { t_timer.addMSecs(ms); }
++
++  private:
++    QTime t_timer;
++    long _timeout;
++};
++
+ class GeneralDBOptions
+ {
+   public:
+@@ -275,6 +300,7 @@
+     bool TuningPMTCheck(void);
+     void TuningNewRecorder(void);
+     void TuningRestartRecorder(void);
++    bool RetuneChannel(void);
+ 
+     void HandleStateChange(void);
+     void ChangeState(TVState nextState);
+@@ -362,6 +388,10 @@
+     QString      rbFilePrefix;
+     QString      rbFileExt;
+ 
++    // Retune stuff
++    TuningTimer *retune_timer;
++    int          retune_requests;
++
+   public:
+     static const uint kEITScanStartTimeout;
+     static const uint kSignalMonitoringRate;
+Index: mythtv/libs/libmythtv/videobuffers.h
+===================================================================
+--- mythtv/libs/libmythtv/videobuffers.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videobuffers.h	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -40,6 +40,7 @@
+     kVideoBuffer_used      = 0x00000004,
+     kVideoBuffer_pause     = 0x00000008,
+     kVideoBuffer_displayed = 0x00000010,
++    kVideoBuffer_decode    = 0x00000020,
+     kVideoBuffer_all       = 0x0000001F,
+ };
+ 
 Index: mythtv/libs/libmythtv/dvbconfparser.cpp
 ===================================================================
---- mythtv/libs/libmythtv/dvbconfparser.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/dvbconfparser.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/dvbconfparser.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/dvbconfparser.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -193,10 +193,10 @@
      QStringList::Iterator end = tokens.end();
  
@@ -5447,8 +6345,8 @@ Index: mythtv/libs/libmythtv/dvbconfparser.cpp
      if (i != end) c.serviceid = (*i++).toInt(); else return false;
 Index: mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp
 ===================================================================
---- mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -108,8 +108,8 @@
  
          len += remainder;
@@ -5460,10 +6358,50 @@ Index: mythtv/libs/libmythtv/pchdtvsignalmonitor.cpp
      }
      DBG_SM("RunTableMonitor()", "end");
  }
+Index: mythtv/libs/libmythtv/videobuffers.cpp
+===================================================================
+--- mythtv/libs/libmythtv/videobuffers.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmythtv/videobuffers.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
+@@ -125,6 +125,8 @@
+ {
+     global_lock.lock();
+ 
++    Reset();
++
+     uint numcreate = numdecode + ((extra_for_pause) ? 1 : 0);
+ 
+     // make a big reservation, so that things that depend on
+@@ -409,6 +411,8 @@
+         q = &limbo;
+     else if (type == kVideoBuffer_pause)
+         q = &pause;
++    else if (type == kVideoBuffer_decode)
++        q = &decode;
+     global_lock.unlock();
+ 
+     return q;
+@@ -429,6 +433,8 @@
+         q = &limbo;
+     else if (type == kVideoBuffer_pause)
+         q = &pause;
++    else if (type == kVideoBuffer_decode)
++        q = &decode;
+     global_lock.unlock();
+ 
+     return q;
+@@ -503,6 +509,8 @@
+             limbo.remove(frame);
+         if ((type & kVideoBuffer_pause) == kVideoBuffer_pause)
+             pause.remove(frame);
++        if ((type & kVideoBuffer_decode) == kVideoBuffer_decode)
++            decode.remove(frame);
+         global_lock.unlock();
+     }
+ }
 Index: mythtv/libs/libavformat/aviobuf.c
 ===================================================================
---- mythtv/libs/libavformat/aviobuf.c	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libavformat/aviobuf.c	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libavformat/aviobuf.c	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libavformat/aviobuf.c	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -164,7 +164,13 @@
  
  void url_fskip(ByteIOContext *s, offset_t offset)
@@ -5481,8 +6419,8 @@ Index: mythtv/libs/libavformat/aviobuf.c
  offset_t url_ftell(ByteIOContext *s)
 Index: mythtv/libs/libmyth/lcddevice.cpp
 ===================================================================
---- mythtv/libs/libmyth/lcddevice.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/lcddevice.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/lcddevice.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/lcddevice.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -150,7 +150,7 @@
  
      if (!connected)
@@ -5512,8 +6450,8 @@ Index: mythtv/libs/libmyth/lcddevice.cpp
      {
 Index: mythtv/libs/libmyth/audiooutputca.cpp
 ===================================================================
---- mythtv/libs/libmyth/audiooutputca.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/audiooutputca.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/audiooutputca.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/audiooutputca.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -107,8 +107,10 @@
      bzero(&conv_in_desc, sizeof(AudioStreamBasicDescription));
      conv_in_desc.mSampleRate       = audio_samplerate;
@@ -5529,8 +6467,8 @@ Index: mythtv/libs/libmyth/audiooutputca.cpp
      conv_in_desc.mBytesPerFrame    = audio_bytes_per_sample;
 Index: mythtv/libs/libmyth/util.cpp
 ===================================================================
---- mythtv/libs/libmyth/util.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/util.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/util.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/util.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1006,16 +1006,20 @@
      long long freespace = -1;
      QCString cstr = file_on_disk.local8Bit();
@@ -5559,8 +6497,8 @@ Index: mythtv/libs/libmyth/util.cpp
  }
 Index: mythtv/libs/libmyth/mythdialogs.cpp
 ===================================================================
---- mythtv/libs/libmyth/mythdialogs.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/mythdialogs.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/mythdialogs.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/mythdialogs.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -2617,6 +2617,7 @@
      password_editor->setEchoMode(QLineEdit::Password);
      password_editor->setGeometry(textWidth + 20,10,135,30);
@@ -5571,8 +6509,8 @@ Index: mythtv/libs/libmyth/mythdialogs.cpp
  
 Index: mythtv/libs/libmyth/mythwidgets.cpp
 ===================================================================
---- mythtv/libs/libmyth/mythwidgets.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/mythwidgets.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/mythwidgets.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/mythwidgets.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -353,7 +353,8 @@
                      (e->key() == Qt::Key_Enter) ||
                      (e->key() == Qt::Key_Return)))
@@ -5610,8 +6548,8 @@ Index: mythtv/libs/libmyth/mythwidgets.cpp
          QTextEdit::keyPressEvent(e);
 Index: mythtv/libs/libmyth/remotefile.h
 ===================================================================
---- mythtv/libs/libmyth/remotefile.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/remotefile.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/remotefile.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/remotefile.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -27,6 +27,8 @@
  
      long long GetFileSize(void);
@@ -5631,8 +6569,8 @@ Index: mythtv/libs/libmyth/remotefile.h
  #endif
 Index: mythtv/libs/libmyth/mythwidgets.h
 ===================================================================
---- mythtv/libs/libmyth/mythwidgets.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/mythwidgets.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/mythwidgets.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/mythwidgets.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -122,17 +122,21 @@
      Q_OBJECT
    public:
@@ -5667,8 +6605,8 @@ Index: mythtv/libs/libmyth/mythwidgets.h
  
 Index: mythtv/libs/libmyth/mythcontext.cpp
 ===================================================================
---- mythtv/libs/libmyth/mythcontext.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/mythcontext.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/mythcontext.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/mythcontext.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -2621,9 +2621,13 @@
          d->LoadLogSettings();
      if (d->m_logenable == 1)
@@ -5704,8 +6642,8 @@ Index: mythtv/libs/libmyth/mythcontext.cpp
  
 Index: mythtv/libs/libmyth/remotefile.cpp
 ===================================================================
---- mythtv/libs/libmyth/remotefile.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libmyth/remotefile.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libmyth/remotefile.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libmyth/remotefile.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -15,6 +15,7 @@
      path = url;
      readposition = 0;
@@ -5752,8 +6690,8 @@ Index: mythtv/libs/libmyth/remotefile.cpp
 +
 Index: mythtv/libs/libavcodec/libavcodec.pro
 ===================================================================
---- mythtv/libs/libavcodec/libavcodec.pro	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/libs/libavcodec/libavcodec.pro	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/libs/libavcodec/libavcodec.pro	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/libs/libavcodec/libavcodec.pro	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -430,4 +430,5 @@
      LIBS               += -lz
      QMAKE_LFLAGS_SHLIB += -single_module
@@ -5762,8 +6700,8 @@ Index: mythtv/libs/libavcodec/libavcodec.pro
  }
 Index: mythtv/programs/mythfrontend/playbackbox.cpp
 ===================================================================
---- mythtv/programs/mythfrontend/playbackbox.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfrontend/playbackbox.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfrontend/playbackbox.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfrontend/playbackbox.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -17,6 +17,7 @@
  #include <qsqldatabase.h>
  #include <qmap.h>
@@ -5845,8 +6783,8 @@ Index: mythtv/programs/mythfrontend/playbackbox.cpp
          groupDisplayName = recGroup;
 Index: mythtv/programs/mythfrontend/customrecord.cpp
 ===================================================================
---- mythtv/programs/mythfrontend/customrecord.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfrontend/customrecord.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfrontend/customrecord.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfrontend/customrecord.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -149,7 +149,7 @@
      m_cfrom << "";
      m_csql << "program.stars >= 0.75 ";
@@ -5869,8 +6807,8 @@ Index: mythtv/programs/mythfrontend/customrecord.cpp
          {
 Index: mythtv/programs/mythfrontend/tv_schedule.xml
 ===================================================================
---- mythtv/programs/mythfrontend/tv_schedule.xml	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfrontend/tv_schedule.xml	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfrontend/tv_schedule.xml	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfrontend/tv_schedule.xml	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -26,7 +26,7 @@
        <alttext lang="CA">Guia</alttext>
        <alttext lang="DE">EPG</alttext>
@@ -5882,8 +6820,8 @@ Index: mythtv/programs/mythfrontend/tv_schedule.xml
        <alttext lang="JA">ガイド</alttext>
 Index: mythtv/programs/mythfrontend/playbackbox.h
 ===================================================================
---- mythtv/programs/mythfrontend/playbackbox.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfrontend/playbackbox.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfrontend/playbackbox.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfrontend/playbackbox.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -337,6 +337,7 @@
      int                 progIndex;  ///< Index of selected item index on page
      QStringList         titleList;  ///< list of pages
@@ -5894,8 +6832,8 @@ Index: mythtv/programs/mythfrontend/playbackbox.h
      QStringList         playList;   ///< list of selected items "play list"
 Index: mythtv/programs/mythfrontend/networkcontrol.cpp
 ===================================================================
---- mythtv/programs/mythfrontend/networkcontrol.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfrontend/networkcontrol.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfrontend/networkcontrol.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfrontend/networkcontrol.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -469,7 +469,7 @@
              message = "NETWORK_CONTROL SEEK BACKWARD";
          else if (tokens[2].contains(QRegExp("^\\d\\d:\\d\\d:\\d\\d$")))
@@ -5907,8 +6845,8 @@ Index: mythtv/programs/mythfrontend/networkcontrol.cpp
              message = QString("NETWORK_CONTROL SEEK POSITION %1")
 Index: mythtv/programs/mythtranscode/mpeg2fix.cpp
 ===================================================================
---- mythtv/programs/mythtranscode/mpeg2fix.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythtranscode/mpeg2fix.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythtranscode/mpeg2fix.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythtranscode/mpeg2fix.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1776,6 +1776,7 @@
  
          if (vFrame.count() && (file_end || vFrame.getLast()->isSequence))
@@ -5940,8 +6878,8 @@ Index: mythtv/programs/mythtranscode/mpeg2fix.cpp
                          }
 Index: mythtv/programs/mythcommflag/main.cpp
 ===================================================================
---- mythtv/programs/mythcommflag/main.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythcommflag/main.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythcommflag/main.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythcommflag/main.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -895,9 +895,6 @@
          return COMMFLAG_EXIT_INVALID_CMDLINE;
      }
@@ -5980,8 +6918,8 @@ Index: mythtv/programs/mythcommflag/main.cpp
                  }
 Index: mythtv/programs/mythbackend/mainserver.cpp
 ===================================================================
---- mythtv/programs/mythbackend/mainserver.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/mainserver.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/mainserver.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/mainserver.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1919,11 +1919,8 @@
      if (m_sched) {
          if (table == "") m_sched->getAllPending(strList);
@@ -6011,8 +6949,8 @@ Index: mythtv/programs/mythbackend/mainserver.cpp
          VERBOSE(VB_IMPORTANT, QString("Unknown command: %1").arg(command));
 Index: mythtv/programs/mythbackend/scheduler.cpp
 ===================================================================
---- mythtv/programs/mythbackend/scheduler.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/scheduler.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/scheduler.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/scheduler.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -35,8 +35,7 @@
  #define LOC_ERR QString("Scheduler, Error: ")
  
@@ -6065,8 +7003,8 @@ Index: mythtv/programs/mythbackend/scheduler.cpp
  "OR RECTABLE.type = %3 " // finddailyrecord
 Index: mythtv/programs/mythbackend/housekeeper.cpp
 ===================================================================
---- mythtv/programs/mythbackend/housekeeper.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/housekeeper.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/housekeeper.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/housekeeper.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -138,7 +138,6 @@
  
      while (1)
@@ -6077,8 +7015,8 @@ Index: mythtv/programs/mythbackend/housekeeper.cpp
  
 Index: mythtv/programs/mythbackend/scheduler.h
 ===================================================================
---- mythtv/programs/mythbackend/scheduler.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/scheduler.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/scheduler.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/scheduler.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -23,8 +23,7 @@
  {
    public:
@@ -6091,8 +7029,8 @@ Index: mythtv/programs/mythbackend/scheduler.h
      void Reschedule(int recordid);
 Index: mythtv/programs/mythbackend/filetransfer.cpp
 ===================================================================
---- mythtv/programs/mythbackend/filetransfer.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/filetransfer.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/filetransfer.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/filetransfer.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -131,3 +131,9 @@
  
      return size;
@@ -6105,8 +7043,8 @@ Index: mythtv/programs/mythbackend/filetransfer.cpp
 +
 Index: mythtv/programs/mythbackend/autoexpire.cpp
 ===================================================================
---- mythtv/programs/mythbackend/autoexpire.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/autoexpire.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/autoexpire.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/autoexpire.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -291,7 +291,8 @@
  
      if ((availFreeKB = getDiskSpace(record_file_prefix, tKB, uKB)) < 0)
@@ -6119,8 +7057,8 @@ Index: mythtv/programs/mythbackend/autoexpire.cpp
                             "Autoexpire Recording", msg);
 Index: mythtv/programs/mythbackend/filetransfer.h
 ===================================================================
---- mythtv/programs/mythbackend/filetransfer.h	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythbackend/filetransfer.h	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythbackend/filetransfer.h	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythbackend/filetransfer.h	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -35,6 +35,8 @@
  
      long long GetFileSize(void);
@@ -6132,8 +7070,8 @@ Index: mythtv/programs/mythbackend/filetransfer.h
      QMutex readthreadLock;
 Index: mythtv/programs/mythtv/main.cpp
 ===================================================================
---- mythtv/programs/mythtv/main.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythtv/main.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythtv/main.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythtv/main.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -132,6 +132,7 @@
          ProgramInfo *pginfo = new ProgramInfo();
          pginfo->endts = QDateTime::currentDateTime().addSecs(-180);
@@ -6144,8 +7082,8 @@ Index: mythtv/programs/mythtv/main.cpp
      }
 Index: mythtv/programs/mythfilldatabase/filldata.cpp
 ===================================================================
---- mythtv/programs/mythfilldatabase/filldata.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/programs/mythfilldatabase/filldata.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/programs/mythfilldatabase/filldata.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/programs/mythfilldatabase/filldata.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -337,7 +337,7 @@
  
      MSqlQuery query(MSqlQuery::InitCon());
@@ -6175,8 +7113,8 @@ Index: mythtv/programs/mythfilldatabase/filldata.cpp
              VERBOSE(VB_IMPORTANT, "Data fetching complete.");
 Index: mythtv/setup/backendsettings.cpp
 ===================================================================
---- mythtv/setup/backendsettings.cpp	(.../tags/release-0-19)	(revision 10051)
-+++ mythtv/setup/backendsettings.cpp	(.../branches/release-0-19-fixes)	(revision 10051)
+--- mythtv/setup/backendsettings.cpp	(.../tags/release-0-19)	(revision 10231)
++++ mythtv/setup/backendsettings.cpp	(.../branches/release-0-19-fixes)	(revision 10231)
 @@ -1,6 +1,7 @@
  #include <cstdio>
  

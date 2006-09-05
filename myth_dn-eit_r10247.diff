@@ -1,0 +1,135 @@
+Index: libs/libmythtv/mpeg/mpegdescriptors.cpp
+===================================================================
+--- libs/libmythtv/mpeg/mpegdescriptors.cpp.orig	2006-06-20 17:31:10.000000000 -0400
++++ libs/libmythtv/mpeg/mpegdescriptors.cpp	2006-06-20 17:36:06.000000000 -0400
+@@ -223,8 +223,12 @@
+             return QString("Audio");
+         case DescriptorID::caption_service:
+             return QString("Caption Service");
+-        case DescriptorID:: content_advisory:
++        case DescriptorID::content_advisory:
+             return QString("Content Advisory");
++        case DescriptorID::dish_ename:
++            return QString("Dishnet EIT Name");
++        case DescriptorID::dish_edescription:
++            return QString("Dishnet EIT Description");
+         case DescriptorID::extended_channel_name:
+             return QString("Extended Channel Name");
+         case DescriptorID::service_location:
+Index: libs/libmythtv/mpeg/mpegdescriptors.h
+===================================================================
+--- libs/libmythtv/mpeg/mpegdescriptors.h.orig	2006-06-20 17:31:10.000000000 -0400
++++ libs/libmythtv/mpeg/mpegdescriptors.h	2006-06-20 17:36:06.000000000 -0400
+@@ -115,6 +115,11 @@
+         audio_stream                = 0x81,
+         caption_service             = 0x86,
+         content_advisory            = 0x87,
++
++        // Dish Network
++        dish_ename                  = 0x91,
++        dish_edescription           = 0x92,
++
+         extended_channel_name       = 0xA0,
+         service_location            = 0xA1,
+         atsc_time_shifted_service   = 0xA2,
+Index: libs/libmythtv/siparser.cpp
+===================================================================
+--- libs/libmythtv/siparser.cpp.orig	2006-06-20 17:31:10.000000000 -0400
++++ libs/libmythtv/siparser.cpp	2006-06-20 17:37:24.000000000 -0400
+@@ -570,6 +570,9 @@
+             break;
+         case 0x42: /* Service Table(s) */
+         case 0x46:  
++            VERBOSE(VB_SIPARSER, LOC + QString("Calling ParseSDT (%1 / %2)")
++                                   .arg(head.table_id, 0, 16).arg(pid, 0, 16));
++
+             ParseSDT(pid, &head, &buffer[8], size-8);
+             break;
+ #ifdef USING_DVB_EIT
+@@ -577,6 +580,14 @@
+             /* Standard Now/Next Event Information Table(s) */
+         case 0x50 ... 0x6F:
+             /* Standard Future Event Information Table(s) */
++            VERBOSE(VB_SIPARSER, LOC + QString("Calling ParseDVBEIT (%1/%2)")
++                                   .arg(head.table_id, 0, 16).arg(pid, 0, 16));
++            ParseDVBEIT(pid, &head, &buffer[8], size-8);
++            break;
++        case 0x80 ... 0xFE:
++            /* Dishnet uses this range for longterm(7-9days) EIT */
++            VERBOSE(VB_SIPARSER, LOC + QString("Calling ParseDVBEIT DN(%1/%2)")
++                                   .arg(head.table_id, 0, 16).arg(pid, 0, 16));
+             ParseDVBEIT(pid, &head, &buffer[8], size-8);
+             break;
+ #endif
+@@ -1180,6 +1191,9 @@
+     uint16_t network_id = buffer[0] << 8 | buffer[1];
+     // TODO: Handle Network Specifics here if they aren't set
+ 
++    //TODO : Make this configurable.
++    PrivateTypes.ForceGuidePresent = true;
++
+     if (PrivateTypesLoaded == false)
+         LoadPrivateTypes(network_id);
+ 
+@@ -1266,6 +1280,13 @@
+             Table[EVENTS]->RequestEmit(s.ServiceID);
+             eit_requested = true;
+         }
++ 
++        //TODO: This should be tied into the above ?
++        if ((PrivateTypes.ForceGuidePresent) && (!eit_requested))
++        {
++            Table[EVENTS]->RequestEmit(s.ServiceID);
++            eit_requested = true;
++        }
+ #endif
+ 
+         VERBOSE(VB_SIPARSER, LOC +
+@@ -1292,6 +1313,10 @@
+     Table[EVENTS]->DependencyMet(SERVICES);
+     //Table[EVENTS]->AddPid(0x12,0x00,0x00,true); // see ticket #755
+     Table[EVENTS]->AddPid(0x12,0x7F,0x80,0x12); // see ticket #755
++
++    // This should only be added based on the user enabling 7-9day dishnet
++    // EIT events
++    Table[EVENTS]->AddPid(0x300,0x00,0x00,true);
+ }
+ 
+ /** \fn SIParser::GetLanguagePriority(const QString&)
+@@ -1967,6 +1992,7 @@
+ {
+     uint    descriptorTag    = data[0];
+     uint    descriptorLength = data[1];
++    int tnum;
+ 
+     switch (descriptorTag)
+     {
+@@ -2022,6 +2048,28 @@
+             ProcessContentDescriptor(data, descriptorLength + 2, event);
+             break;
+ 
++        case DescriptorID::dish_ename:
++            if (event.TableID > 0x80)
++                tnum = 2;
++            else
++                tnum = 1;
++
++            Huffman2ToQString((uint8_t *)data+3, data[1]-1, tnum, event.Event_Name);
++            break;
++
++        case DescriptorID::dish_edescription:
++            if (event.TableID > 0x80)
++                tnum = 2;
++            else
++                tnum = 1;
++
++            if ((data[3]&0xf8) == 0x80)
++                Huffman2ToQString((uint8_t *)data+4, data[1]-2, tnum, event.Description);
++            else
++                Huffman2ToQString((uint8_t *)data+3, data[1]-1, tnum, event.Description);
++            //VERBOSE(VB_EIT, LOC + QString("Descr : %1").arg(event.Description));
++            break;
++
+         default:
+             ProcessUnusedDescriptor(pid, data, descriptorLength + 2);
+             break;

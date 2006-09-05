@@ -1,0 +1,137 @@
+Index: libs/libmythtv/videosource.cpp
+===================================================================
+--- libs/libmythtv/videosource.cpp	(revision 8614)
++++ libs/libmythtv/videosource.cpp	(working copy)
+@@ -1242,6 +1242,8 @@
+         addSelection("DiSEqC v1.2 Positioner","6");
+         addSelection("DiSEqC v1.3 Positioner (Goto X)","7");
+         addSelection("DiSEqC v1.1 or 2.1 (10-way method2)","8");
++        addSelection("SW21 Switch","98");
++        addSelection("SW64 Switch","99");
+         setHelpText(QObject::tr("Select the input type for DVB-S cards. "
+                     "Leave as Single LNB/Input for DVB-C or DVB-T. "
+                     "The inputs are mapped from Input Connections option "
+@@ -2404,6 +2406,8 @@
+     QString stxt = "DiSEqC Switch Input %1";
+     QString mtxt = "DiSEqC v1.2 Motor Position %1";
+     QString itxt = "DiSEqC v1.3 Input %1";
++    QString l21txt = "SW21 Input %1";
++    QString l64txt = "SW64 Input %1";
+ 
+     uint i;
+     switch (dvb_diseqc_type)
+@@ -2433,6 +2437,16 @@
+                 list.append(DVBDiSEqCInputList(
+                                 stxt.arg(i+1,2), QString::number(i), ""));
+             break;
++        case 98:
++            for (i = 0; i < 2; ++i)
++                list.append(DVBDiSEqCInputList(
++                                l21txt.arg(i+1,2), QString::number(i), ""));
++            break;
++        case 99:
++            for (i = 0; i < 3; ++i)
++                list.append(DVBDiSEqCInputList(
++                                l64txt.arg(i+1,2), QString::number(i), ""));
++            break;
+         default:
+             list.append(DVBDiSEqCInputList(
+                             QString("DVBInput"), QString(""), QString("")));
+Index: libs/libmythtv/dvbdiseqc.h
+===================================================================
+--- libs/libmythtv/dvbdiseqc.h	(revision 8614)
++++ libs/libmythtv/dvbdiseqc.h	(working copy)
+@@ -37,6 +37,7 @@
+     
+     bool ToneVoltageLnb(DVBTuning& tuning, bool reset, bool& havetuned);
+     bool ToneSwitch(DVBTuning& tuning, bool reset, bool& havetuned);
++    bool LegacyDishSwitch(DVBTuning& tuning, bool reset, bool& havetuned);
+     bool Diseqc1xSwitch(DVBTuning& tuning, bool reset, bool& havetuned,
+                         uint ports);
+     bool PositionerGoto(DVBTuning& tuning, bool reset, bool& havetuned);
+Index: libs/libmythtv/dvbdiseqc.cpp
+===================================================================
+--- libs/libmythtv/dvbdiseqc.cpp	(revision 8614)
++++ libs/libmythtv/dvbdiseqc.cpp	(working copy)
+@@ -94,6 +94,11 @@
+             if (!Diseqc1xSwitch(tuning, reset, havetuned, 10))
+                 return false;
+             break;
++        case 98: // SW21
++        case 99: // SW64
++            if (!LegacyDishSwitch(tuning, reset, havetuned))
++                return false;
++            break;
+  
+         default:
+             VERBOSE(VB_IMPORTANT, LOC_ERR + "Unsupported DiSEqC type("
+@@ -103,6 +108,69 @@
+     return true;
+ }
+ 
++bool DVBDiSEqC::LegacyDishSwitch(DVBTuning& tuning, bool reset,
++             bool& havetuned)
++{
++    if (reset)
++    {
++      //Do legacy switches need to be reset?
++    }
++    GENERAL(QString("Legacy Dish Switch - Port %1").arg(tuning.diseqc_port));
++    if ((prev_tuning.diseqc_port != tuning.diseqc_port ||
++   prev_tuning.tone != tuning.tone ||
++   prev_tuning.voltage != tuning.voltage) || reset)
++    {
++
++   uint8_t cmd = 0x00;
++
++   switch(tuning.diseqc_type) {
++       //is there a pattern here?
++       case 98: //SW21
++      if(! tuning.diseqc_port)
++          cmd=0x34;
++      else
++          cmd=0x65;
++      break;
++       case 99: //SW64
++      if(tuning.diseqc_port == 0)
++          if(tuning.voltage == SEC_VOLTAGE_13)
++         cmd=0x39;
++          else
++         cmd=0x1A;
++      else if(tuning.diseqc_port == 1)
++          if(tuning.voltage == SEC_VOLTAGE_13)
++         cmd=0x4B;
++          else
++         cmd=0x5C;
++      else
++          if(tuning.voltage == SEC_VOLTAGE_13)
++         cmd=0x0D;
++          else
++         cmd=0x2E;
++      break;
++   }
++   if(tuning.voltage == SEC_VOLTAGE_18)
++       cmd|=0x80;
++
++#ifdef FE_DISHNETWORK_SEND_LEGACY_CMD
++   if (ioctl(fd_frontend, FE_DISHNETWORK_SEND_LEGACY_CMD, cmd) <0)
++   {
++       ERRNO("Setup: Sending init command failed.");
++       return false;
++   }
++#else
++    VERBOSE(VB_IMPORTANT, "Kernel does not support Legacy Dish Switch!");
++#endif
++   usleep(DISEQC_SHORT_WAIT);
++
++   prev_tuning.diseqc_port = tuning.diseqc_port;
++   prev_tuning.tone = tuning.tone;
++   prev_tuning.voltage = tuning.voltage;
++   havetuned = true;
++    }
++    return true;
++}
++
+ /*****************************************************************************
+                         Backward Compatible Methods
+  ****************************************************************************/

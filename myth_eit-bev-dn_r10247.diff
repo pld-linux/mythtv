@@ -1,0 +1,320 @@
+Index: libs/libmythtv/siparser.cpp
+===================================================================
+--- libs/libmythtv/siparser.cpp.orig	2006-01-21 08:09:02.000000000 -0800
++++ libs/libmythtv/siparser.cpp	2006-01-21 08:09:09.000000000 -0800
+@@ -297,6 +297,21 @@
+                     VERBOSE(VB_SIPARSER, LOC + "Forcing Guide Present");
+                 }
+             }
++            if (QString(query.value(0).toString()) == "guide_on_single_tid")
++            {
++                if (query.value(1).toString() == "yes")
++                {
++                    PrivateTypes.GuideOnSingleTransport = true;
++                    VERBOSE(VB_SIPARSER, LOC + "Guide is on single transport");
++                }
++            }
++            if (QString(query.value(0).toString()) == "extended_guide_tid")
++            {
++                PrivateTypes.ExtendedGuideOnTransport = query.value(1).toInt();
++                VERBOSE(VB_SIPARSER, LOC +
++                        QString("Dish Network Extended Guide Present on Transport %1")
++                        .arg(PrivateTypes.ExtendedGuideOnTransport));
++            }
+             if (QString(query.value(0).toString()) == "guide_fixup")
+             {
+                 PrivateTypes.EITFixUp = query.value(1).toInt();
+@@ -590,10 +605,17 @@
+ #ifdef USING_DVB_EIT
+         case 0x4E ... 0x4F:
+             /* Standard Now/Next Event Information Table(s) */
+-        case 0x50 ... 0xFF:
+-            /* Standard Future Event Information Table(s) */
+             ParseDVBEIT(pid, &head, buffer, size);
+             break;
++        case 0x50 ... 0x6F:
++            /* Standard Future Event Information Table(s) */
++            ParseDVBEIT(pid, &head, buffer, size); 
++            break;
++        case 0x70 ... 0xFF:
++            /* Extended Event Information Table */
++            if (PrivateTypes.ForceExtendedGuidePresent)
++                ParseDVBEIT(pid, &head, buffer, size);
++            break;
+ #endif
+         default:
+             VERBOSE(VB_SIPARSER, LOC + 
+@@ -1195,17 +1217,26 @@
+ 
+     int CurrentTransport = 0;
+ 
+-    bool get_epg=false;
++    PrivateTypes.ForceExtendedGuidePresent = false;
++
+     uint16_t network_id = buffer[0] << 8 | buffer[1];
+     // TODO: Handle Network Specifics here if they aren't set
+ 
+-    PrivateTypes.ForceGuidePresent = true;
+-    PrivateTypes.GuideTransportID = 229;
+-    PrivateTypes.GuideOnSingleTransport = true;
+-
+     if (PrivateTypesLoaded == false)
+         LoadPrivateTypes(network_id);
+ 
++    if (PrivateTypes.GuideOnSingleTransport)
++        PrivateTypes.GuideTransportID = PrivateTypes.CurrentTransportID;
++
++    if (PrivateTypes.CurrentTransportID == PrivateTypes.ExtendedGuideOnTransport)
++    {
++        PrivateTypes.ForceExtendedGuidePresent = true;
++
++        VERBOSE(VB_SIPARSER, LOC +
++            QString("SDT: Extended guide present on this TID: %1")
++            .arg(head->table_id_ext));
++    }
++
+     if (PrivateTypes.SDTMapping)
+     {
+         if (PrivateTypes.CurrentTransportID == head->table_id_ext)
+@@ -1218,8 +1249,8 @@
+     }
+ 
+     VERBOSE(VB_SIPARSER, LOC +
+-            QString("SDT: This TID: %1 is %2the CurrentTransport")
+-                  .arg(head->table_id_ext).arg(CurrentTransport ? "" : "not "));
++            QString("SDT: This TID: %1 (nid=%2) is %3the CurrentTransport")
++                  .arg(head->table_id_ext).arg(network_id).arg(CurrentTransport ? "" : "not "));
+     ProcessUnusedDescriptor(pid, (uint8_t *)head, sizeof(tablehead_t));
+     ProcessUnusedDescriptor(pid, (uint8_t *)buffer, size);
+ 
+@@ -1227,8 +1258,6 @@
+     {
+         if (Table[SERVICES]->AddSection(head,0,0))
+             return;
+-        if(head->table_id_ext == PrivateTypes.GuideTransportID)
+-            get_epg=true;
+     }
+     else
+     {
+@@ -1321,9 +1350,18 @@
+ 
+     // TODO: This is temp
+     Table[EVENTS]->DependencyMet(SERVICES);
+-    //Table[EVENTS]->AddPid(0x12,0x00,0x00,true); // see ticket #755
+-//    Table[EVENTS]->AddPid(0x12,0x7F,0x80,0x12); // see ticket #755
+-    Table[EVENTS]->AddPid(0x300,0x00,0x00,true); // Dish 9-day
++
++    // TODO: Handle BEV extended guide
++    if (PrivateTypes.ForceExtendedGuidePresent)
++    {
++        Table[EVENTS]->AddPid(0x300,0x00,0x00,true); // Dish 9-day
++    }
++    else
++    {
++        // Handle everything else..
++        Table[EVENTS]->AddPid(0x12,0x00,0x00,true); // see ticket #755
++        Table[EVENTS]->AddPid(0x12,0x7F,0x80,0x12); // see ticket #755
++    }
+ }
+ 
+ // CRC32 lookup table for polynomial 0x04c11db7
+Index: libs/libmythtv/sitypes.h
+===================================================================
+--- libs/libmythtv/sitypes.h.orig	2006-01-21 08:08:49.000000000 -0800
++++ libs/libmythtv/sitypes.h	2006-01-21 08:09:09.000000000 -0800
+@@ -121,6 +121,8 @@
+     bool          CustomGuidePID;
+     uint16_t      GuidePID;
+     bool          GuideOnSingleTransport;
++    bool          ForceExtendedGuidePresent;
++    uint16_t      ExtendedGuideOnTransport;
+     uint16_t      GuideTransportID;
+     /* List of ServiceID:s for which to parse out subtitle from the description.
+        Used in EITFixUpStyle4() */
+Index: libs/libmythtv/dbcheck.cpp
+===================================================================
+--- libs/libmythtv/dbcheck.cpp.orig	2006-01-21 08:05:23.000000000 -0800
++++ libs/libmythtv/dbcheck.cpp	2006-01-21 08:09:09.000000000 -0800
+@@ -12,11 +12,18 @@
+ /// This is the DB schema version expected by the running MythTV instance.
+ const QString currentDatabaseVersion = "1122";
+ 
++/// This is the DB schema minor version used by supplementary patches
++const QString currentDatabaseVersionMinor = "1";
++
+ static bool UpdateDBVersionNumber(const QString &newnumber);
++static bool UpdateDBVersionMinor( const QString &newminor);
+ static bool performActualUpdate(const QString updates[], QString version,
+                                 QString &dbver);
++static bool performMinorUpdate(const QString updates[], QString minor,
++                                QString &dbminor);
+ static bool InitializeDatabase(void);
+ static bool doUpgradeTVDatabaseSchema(void);
++static bool dbMinorUpdate(void);
+ 
+ /** \defgroup db_schema MythTV Database Schema
+ 
+@@ -353,6 +360,48 @@
+     return true;
+ }
+ 
++static bool UpdateDBVersionMinor(const QString &newminor)
++{
++    // delete old schema version
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    QString thequery = "DELETE FROM settings WHERE value='DBSchemaVerMinor';";
++    query.prepare(thequery);
++    query.exec();
++
++    if (query.lastError().type() != QSqlError::None)
++    {
++        QString msg =
++            QString("DB Error (Deleting old DB minor version number): \n"
++                    "Query was: %1 \nError was: %2 \nnew version: %3")
++            .arg(thequery)
++            .arg(MythContext::DBErrorMessage(query.lastError()))
++            .arg(newminor);
++        VERBOSE(VB_IMPORTANT, msg);
++        return false;
++    }
++
++    // set new schema minor
++    thequery = QString("INSERT INTO settings (value, data, hostname) "
++                       "VALUES ('DBSchemaVerMinor', %1, NULL);").arg(newminor);
++    query.prepare(thequery);
++    query.exec();
++
++    if (query.lastError().type() != QSqlError::None)
++    {
++        QString msg =
++            QString("DB Error (Setting new DB minor version number): \n"
++                    "Query was: %1 \nError was: %2 \nnew minor version: %3")
++            .arg(thequery)
++            .arg(MythContext::DBErrorMessage(query.lastError()))
++            .arg(newminor);
++        VERBOSE(VB_IMPORTANT, msg);
++        return false;
++    }
++
++    return true;
++}
++
+ /** \fn performActualUpdate(const QString[], QString, QString&)
+  *  \brief Runs a number of SQL commands, and updates the schema version.
+  *
+@@ -400,6 +449,44 @@
+     return true;
+ }
+ 
++static bool performMinorUpdate(const QString updates[], QString minor,
++                                QString &dbminor)
++{
++    MSqlQuery query(MSqlQuery::InitCon());
++
++    VERBOSE(VB_IMPORTANT, QString("Upgrading to schema minor ") + minor);
++
++    int counter = 0;
++    QString thequery = updates[counter];
++
++    while (thequery != "")
++    {
++        query.prepare(thequery);
++        query.exec();
++
++        if (query.lastError().type() != QSqlError::None)
++        {
++            QString msg =
++                QString("DB Error (Performing database upgrade): \n"
++                        "Query was: %1 \nError was: %2 \nnew minor: %3")
++                .arg(thequery)
++                .arg(MythContext::DBErrorMessage(query.lastError()))
++                .arg(minor);
++            VERBOSE(VB_IMPORTANT, msg);
++            return false;
++        }
++
++        counter++;
++        thequery = updates[counter];
++    }
++
++    if (!UpdateDBVersionMinor(minor))
++        return false;
++
++    dbminor = minor;
++    return true;
++}
++
+ /** \fn UpgradeTVDatabaseSchema(void)
+  *  \brief This is the function called from outside dbcheck.cpp to update the schema.
+  *
+@@ -416,14 +503,18 @@
+ bool UpgradeTVDatabaseSchema(void)
+ {
+     QString dbver = gContext->GetSetting("DBSchemaVer");
++    QString dbminor = gContext->GetSetting("DBSchemaVerMinor");
+ 
+-    VERBOSE(VB_IMPORTANT, QString("Current Schema Version: %1").arg(dbver));
++    VERBOSE(VB_IMPORTANT, QString("Current Schema Version: %1.%2").arg(dbver)
++                                                                  .arg(dbminor));
+ 
+-    if (dbver == currentDatabaseVersion)
++    if ((dbver == currentDatabaseVersion) &&
++        (dbminor == currentDatabaseVersionMinor))
+         return true;
+ 
+-    VERBOSE(VB_IMPORTANT, QString("Newest Schema Version : %1")
+-                                  .arg(currentDatabaseVersion));
++    VERBOSE(VB_IMPORTANT, QString("Newest Schema Version : %1.%2")
++                                  .arg(currentDatabaseVersion)
++                                  .arg(currentDatabaseVersionMinor));
+ 
+     MSqlQuery lockquery(MSqlQuery::InitCon());
+ 
+@@ -455,6 +546,10 @@
+ 
+     bool ret = doUpgradeTVDatabaseSchema();
+ 
++    // Database version minor updates
++    if (ret)
++        ret = dbMinorUpdate();
++
+     if (ret)
+         VERBOSE(VB_IMPORTANT, "Database Schema upgrade complete, unlocking.");
+     else
+@@ -1996,6 +2091,35 @@
+     return true;
+ }
+ 
++static bool dbMinorUpdate(void)
++{
++    QString dbminor = gContext->GetSetting("DBSchemaVerMinor");
++    if (dbminor == currentDatabaseVersionMinor)
++        return true;
++    if ((dbminor == "") || (dbminor == "0"))
++    {
++        const QString updates[] = {
++// Dish Network
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 4102, 'force_guide_present', 'yes');",
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 4102, 'extended_guide_tid', '229');",
++// Bell ExpressVu
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 256, 'force_guide_present', 'yes');",
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 256, 'guide_on_single_tid', 'yes');",
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 257, 'force_guide_present', 'yes');",
++"INSERT INTO dtv_privatetypes (sitype, networkid, private_type, private_value)"
++" VALUES('dvb', 257, 'guide_on_single_tid', 'yes');",
++""
++        };
++        if (!performMinorUpdate(updates, "1", dbminor))
++            return false;
++    }
++    return true;
++}
+ 
+ 
+ bool InitializeDatabase(void)

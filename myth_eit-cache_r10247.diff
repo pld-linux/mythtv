@@ -1,0 +1,285 @@
+Index: libs/libmythtv/siparser.cpp
+===================================================================
+--- libs/libmythtv/siparser.cpp.orig	2006-06-20 17:36:06.000000000 -0400
++++ libs/libmythtv/siparser.cpp	2006-06-20 17:37:17.000000000 -0400
+@@ -80,6 +80,8 @@
+ 
+     Reset();
+ 
++    FillEITMaps();
++
+     // Get a list of wanted languages and set up their priorities
+     // (Lowest number wins)
+     QStringList langPref = iso639_get_language_list();
+@@ -145,6 +147,60 @@
+     VERBOSE(VB_SIPARSER, LOC + "SIParser Reset due to channel change");
+ }
+ 
++// Fill in our maps of channels/serviceID's we actually want EIT data for
++void SIParser::FillEITMaps(void)
++{   
++    MSqlQuery query(MSqlQuery::InitCon());
++    
++    //TODO:  Clean this.. maybe a couple defines? 
++    // Should this be sourceid specific?
++    VERBOSE(VB_GENERAL, LOC + "FillEITMaps()");
++    query.prepare("SELECT atscsrcid, mplexid, chanid FROM channel "
++                  "WHERE useonairguide = 1");
++
++    if (!query.exec() || !query.isActive())
++        MythContext::DBError("FillMaps ATSC ", query);
++
++    while (query.next())
++    {   
++        int ServiceID = query.value(0).toInt();
++        int mplexid   = query.value(1).toInt();
++    
++        eitATSCMap[mplexid][ServiceID] = query.value(2).toInt();
++    }
++    
++    query.prepare("SELECT serviceid,networkid,transportid,chanid "
++                  "FROM dtv_multiplex,channel WHERE "
++                  "useonairguide = 1 AND "
++                  "channel.mplexid = dtv_multiplex.mplexid;");
++
++    if (!query.exec() || !query.isActive())
++        MythContext::DBError("FillMaps DVB ", query);
++    
++    // Check to see if we are interseted in this channel
++    while (query.next())
++    {   
++        int ServiceID   = query.value(0).toInt();
++        int NetworkID   = query.value(1).toInt();
++        int TransportID = query.value(2).toInt();
++
++        eitDVBMap[TransportID][NetworkID][ServiceID] = query.value(3).toInt();
++    }
++}
++
++/* Return true if we want EIT data for this channel, otherwise false */
++bool SIParser::WantEIT(Event *e)
++{
++
++// TODO: premap fill in a mplexid map for use here
++//    if (e.ATSC)
++//    {
++//        return (eitATSCMap[mplexid][e.ServiceID] > 0)
++//    }
++//    else 
++        return (eitDVBMap[e->TransportID][e->NetworkID][e->ServiceID] > 0);
++}
++
+ void SIParser::CheckTrackers()
+ {
+ 
+@@ -1439,82 +1495,98 @@
+     {
+         // Event to use temporarily to fill in data
+         Event event;
++        event.TableID     = head->table_id;
+         event.ServiceID   = head->table_id_ext;
+         event.TransportID = buffer[0] << 8 | buffer[1];
+         event.NetworkID   = buffer[2] << 8 | buffer[3];
+         event.EventID     = buffer[pos] << 8 | buffer[pos+1];
+-        event.StartTime   = ConvertDVBDate(&buffer[pos+2]);
+ 
+-        uint lenInSeconds = ((bcdtoint(buffer[pos+7] & 0xFF) * 3600) +
+-                             (bcdtoint(buffer[pos+8] & 0xFF) * 60) +
+-                             (bcdtoint(buffer[pos+9] & 0xFF)));
++        if (WantEIT(&event) && 
++           !(eitEventMap[head->table_id_ext][event.EventID] == event.EventID)) 
++        {
++            VERBOSE(VB_EIT, QString(" WantEIT : %1 Event %2 ")
++                                   .arg(event.ServiceID).arg(event.EventID));
+ 
+-        event.EndTime     = event.StartTime.addSecs(lenInSeconds);
+ 
+-#ifdef EIT_DEBUG_SID
+-        if (event.ServiceID == EIT_DEBUG_SID)
+-        {
+-            VERBOSE(VB_EIT, "SIParser: DVB Events: " +
+-                    QString("ServiceID %1 EventID: %2   Time: %3 - %4")
+-                    .arg(event.ServiceID).arg(event.EventID)
+-                    .arg(event.StartTime.toString(QString("MM/dd hh:mm")))
+-                    .arg(event.EndTime.toString(QString("hh:mm"))));
+-        }
+-#endif
++            event.StartTime   = ConvertDVBDate(&buffer[pos+2]);
+ 
+-        // Hold short & extended event information from descriptors.
+-        const unsigned char *bestDescriptorSE = NULL;
+-        vector<const unsigned char*> bestDescriptorsEE;
+-
+-        // Parse descriptors
+-        descriptors_length = ((buffer[pos+10] & 0x0F) << 8) | buffer[pos+11];
+-        pos += 12;
+-        des_pos = pos;
++            uint lenInSeconds = ((bcdtoint(buffer[pos+7] & 0xFF) * 3600) +
++                                 (bcdtoint(buffer[pos+8] & 0xFF) * 60) +
++                                 (bcdtoint(buffer[pos+9] & 0xFF)));
+ 
+-        // Pick out EIT descriptors for later parsing, and parse others.
+-        while ((des_pos < (pos + descriptors_length)) && (des_pos <= size)) 
+-        { 
+-            des_pos += ProcessDVBEventDescriptors(
+-                pid,
+-                &buffer[des_pos],
+-                bestPrioritySE, bestDescriptorSE,
+-                bestPriorityEE, bestDescriptorsEE, event);
+-        }
++            event.EndTime     = event.StartTime.addSecs(lenInSeconds);
+ 
+-        // Parse extended event descriptions for the most preferred language
+-        for (uint i = 0; i < bestDescriptorsEE.size(); ++i)
+-        {
+-            if (!bestDescriptorsEE[i])
+-                continue;
++#ifdef EIT_DEBUG_SID
++            if (event.ServiceID == EIT_DEBUG_SID)
++            {
++                VERBOSE(VB_EIT, "SIParser: DVB Events: " +
++                        QString("ServiceID %1 EventID: %2   Time: %3 - %4")
++                        .arg(event.ServiceID).arg(event.EventID)
++                        .arg(event.StartTime.toString(QString("MM/dd hh:mm")))
++                        .arg(event.EndTime.toString(QString("hh:mm"))));
++            }
++#endif
+ 
+-            uint8_t *desc    = (uint8_t*) bestDescriptorsEE[i];
+-            uint     descLen = desc[1];
+-            ProcessExtendedEventDescriptor(desc, descLen + 2, event);
+-        }
++            // Hold short & extended event information from descriptors.
++            const unsigned char *bestDescriptorSE = NULL;
++            vector<const unsigned char*> bestDescriptorsEE;
++
++            // Parse descriptors
++            descriptors_length = ((buffer[pos+10] & 0x0F) << 8) | buffer[pos+11];
++            pos += 12;
++            des_pos = pos;
++
++            // Pick out EIT descriptors for later parsing, and parse others.
++            while ((des_pos < (pos + descriptors_length)) && (des_pos <= size)) 
++            { 
++                des_pos += ProcessDVBEventDescriptors(
++                    pid,
++                    &buffer[des_pos],
++                    bestPrioritySE, bestDescriptorSE,
++                    bestPriorityEE, bestDescriptorsEE, event);
++            }
+ 
+-        // Parse short event descriptor for the most preferred language
+-        if (bestDescriptorSE)
+-        {
+-            uint8_t *desc    = (uint8_t*) bestDescriptorSE;
+-            uint     descLen = desc[1];
+-            ProcessShortEventDescriptor(desc, descLen + 2, event);
+-        }
++            // Parse extended event descriptions for the most preferred language
++            for (uint i = 0; i < bestDescriptorsEE.size(); ++i)
++            {
++                if (!bestDescriptorsEE[i])
++                    continue;
+ 
+-        EITFixUp(event);
++                uint8_t *desc    = (uint8_t*) bestDescriptorsEE[i];
++                uint     descLen = desc[1];
++                ProcessExtendedEventDescriptor(desc, descLen + 2, event);
++            }
++
++            // Parse short event descriptor for the most preferred language
++            if (bestDescriptorSE)
++            {
++                uint8_t *desc    = (uint8_t*) bestDescriptorSE;
++                uint     descLen = desc[1];
++                ProcessShortEventDescriptor(desc, descLen + 2, event);
++            }
++    
++            EITFixUp(event);
+ 
+ #ifdef EIT_DEBUG_SID
+-        if (event.ServiceID == EIT_DEBUG_SID)
+-        {
+-            VERBOSE(VB_EIT, "SIParser: DVB Events: " +
+-                    QString("LanguageCode='%1' "
+-                            "\n\t\t\tEvent_Name='%2' Description='%3'")
+-                    .arg(event.LanguageCode).arg(event.Event_Name)
+-                    .arg(event.Description));
+-        }
++            if (event.ServiceID == EIT_DEBUG_SID)
++            {
++                VERBOSE(VB_EIT, "SIParser: DVB Events: " +
++                        QString("LanguageCode='%1' "
++                                "\n\t\t\tEvent_Name='%2' Description='%3'")
++                        .arg(event.LanguageCode).arg(event.Event_Name)
++                        .arg(event.Description));
++            }
+ #endif
+ 
+-        QMap2D_Events &events = ((EventHandler*) Table[EVENTS])->Events;
+-        events[head->table_id_ext][event.EventID] = event;
++            QMap2D_Events &events = ((EventHandler*) Table[EVENTS])->Events;
++            events[head->table_id_ext][event.EventID] = event;
++
++        } // WantEIT
++        else
++        { 
++            descriptors_length = ((buffer[pos+10] & 0x0F) << 8) | buffer[pos+11];
++            pos += 12;
++         }
+         pos += descriptors_length;
+     }
+ }
+Index: libs/libmythtv/sitypes.h
+===================================================================
+--- libs/libmythtv/sitypes.h.orig	2006-06-20 17:31:10.000000000 -0400
++++ libs/libmythtv/sitypes.h	2006-06-20 17:36:06.000000000 -0400
+@@ -78,6 +78,10 @@
+ typedef QMap<uint16_t,QMap_Events>         QMap2D_Events;
+ typedef QMap<uint16_t,pidHandler>          QMap_pidHandler;
+ 
++typedef QMap<uint16_t,int>                 QMap_intObject;
++typedef QMap<uint16_t,QMap_intObject>      QMap2D_intObject;
++typedef QMap<uint16_t,QMap2D_intObject>    QMap3D_intObject;
++
+ class pidHandler
+ {
+ public:
+@@ -350,6 +354,7 @@
+     uint    SourcePID;
+     uint    TransportID;
+     uint    NetworkID;
++    uint    TableID;
+     uint    ServiceID;    ///< NOT the Virtual Channel Number used by ATSC
+     uint    EventID;
+     bool    Stereo;
+Index: libs/libmythtv/siparser.h
+===================================================================
+--- libs/libmythtv/siparser.h.orig	2006-06-20 17:31:10.000000000 -0400
++++ libs/libmythtv/siparser.h	2006-06-20 17:37:17.000000000 -0400
+@@ -87,6 +87,11 @@
+ 
+     bool ReinitSIParser(const QString &si_std, uint service_id);
+ 
++    // Functions to prepare and use a  map of serviceid/transports we 
++    // want EIT data from
++    void FillEITMaps(void);
++    bool WantEIT(Event *e);
++
+     // Stops all collection of data and clears all values (on a channel change for example)
+     void Reset(void);
+ 
+@@ -279,6 +284,13 @@
+     // statistics
+     QMap<uint,uint>     descCount;
+     mutable QMutex      descLock;
++
++    // EIT Service Maps
++    QMap2D_intObject eitATSCMap;
++    QMap3D_intObject eitDVBMap;
++
++    // Previously Seen EIT event Maps
++    QMap2D_intObject eitEventMap;
+ };
+ 
+ #endif // SIPARSER_H

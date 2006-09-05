@@ -1,9 +1,0 @@
-/var/log/mythtv/mythbackend.log {
-	notifempty
-	missingok
-	sharedscripts
-	create 664 root mythtv
-	postrotate
-		/etc/rc.d/init.d/mythbackend flush-logs > /dev/null
-	endscript
-}

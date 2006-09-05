@@ -24,7 +24,8 @@
 %bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
-%bcond_with	mmx			# enable mmx
+%bcond_with	mmx		# enable mmx
+%bcond_with	sc		# softCAM support(requires/is_from sasc package)
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -55,6 +56,17 @@ Patch5:		%{name}-sbinpath.patch
 Patch6:		%{name}-ticket-1310.patch
 Patch7:		%{name}-optflags.patch
 Patch8:		%{name}-branch.diff
+#Patch9-18 are from sasc.spec
+Patch9:		myth_sasc-base_r10247.diff
+Patch10:	myth_softcsa_r10247.diff
+Patch11:	myth_legacy-switch_r10247.diff
+Patch12:	myth_datadirect-dn_r10247.diff
+Patch13:	myth_dn-eit_r10247.diff
+Patch14:	myth_eit-cache_r10247.diff
+Patch15:	myth_eit-ratelimit_r10247.diff
+Patch16:	myth_eit-fasthuff_r10247.diff
+Patch17:	myth_eit-bev-dn_r10247.diff
+Patch18:	myth_patpmt_r10247.diff
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -275,6 +287,18 @@ Statyczna biblioteka libmyth.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p1
+%if %{with sc}
+%patch9 -p0
+#%patch10 -p0
+%patch11 -p0
+%patch12 -p0
+#%patch13 -p0
+%patch14 -p0
+%patch15 -p0
+%patch16 -p0
+#%patch17 -p0
+%patch18 -p0
+%endif
 filterdiff -i 'mythtv/*' %{PATCH8} | %{__patch} -p1 -s
 
 rm -rf database/old # not supported in PLD
@@ -338,7 +362,6 @@ export CXX="%{__cxx}"
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \
-	--enable-dvd \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \

@@ -35,7 +35,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.1
+%define _rel 0.2
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -204,7 +204,8 @@ Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 %package themes
 Summary:	Base themes for mythtv's frontend
 Summary(pl):	Podstawowe motywy dla frontendu mythtv
-Group:		Applications/Multimedia
+Requires:	%{name}-frontend = %{version}-%{release}
+Group:		Themes
 
 %description themes
 MythTV provides a unified graphical interface for recording and
@@ -469,6 +470,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythtvosd
 %attr(755,root,root) %{_bindir}/mythwelcome
 %dir %{_datadir}/mythtv
+%dir %{_datadir}/mythtv/themes
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
 %dir %{_libdir}/mythtv/filters
@@ -485,7 +487,7 @@ fi
 
 %files themes
 %defattr(644,root,root,755)
-%{_datadir}/mythtv/themes
+%{_datadir}/mythtv/themes/*
 
 %files -n libmyth
 %defattr(644,root,root,755)

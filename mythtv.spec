@@ -33,19 +33,19 @@
 %endif
 %endif
 
-%define _snap 20060905
-%define _rev 11046
+#define _snap 20060905
+#define _rev 11046
 %define _rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.20.0
+Version:	0.20
 Release:	0.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
-# Source0-md5:	dd5efb98bc52052b5de3c30e228b5785
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	52bec1e0fadf7d24d6dcac3f773ddf74
+#Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate

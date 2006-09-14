@@ -40,7 +40,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.20
-Release:	0.%{_snap}.%{_rev}.%{_rel}
+Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -51,7 +51,7 @@ Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
 Patch0:		%{name}-lib64.patch
-
+Patch1:		mythtv-configure.patch
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 #Patch4:		%{name}-pl.patch
@@ -272,7 +272,7 @@ Statyczna biblioteka libmyth.
 %if %{_lib} != "lib"
 #%patch0 -p1
 %endif
-
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 #%patch4 -p1 REDIFF and submit
@@ -452,6 +452,7 @@ fi
 %attr(755,root,root) %{_sbindir}/mythjobqueue
 %attr(755,root,root) %{_sbindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
+%attr(755,root,root) %{_bindir}/mythreplex
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv

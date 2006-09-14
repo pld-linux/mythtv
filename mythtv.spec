@@ -19,13 +19,12 @@
 %bcond_without	jack		# jack audio connection kit
 %bcond_with	oggvorbis	# ogg vorbis (gone?!)
 %bcond_without	opengl		# opengl vsync
-%bcond_without	dvb		# DVB support
+%bcond_with	dvb		# DVB support # invalid option
 %bcond_without	xrandr		# disable X11 resolution switching
 %bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
-%bcond_with	mmx		# enable mmx
-%bcond_with	sc		# softCAM support(requires/is_from sasc package)
+%bcond_with	mmx			# enable mmx
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -34,39 +33,32 @@
 %endif
 %endif
 
+%define _snap 20060905
+%define _rev 11046
+%define _rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.19
-Release:	3
+Release:	3.%{_snap}.%{_rev}.%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	ebba5829d264bb4de2f75cae936141f4
+#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
+# Source0-md5:	dd5efb98bc52052b5de3c30e228b5785
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
 Patch0:		%{name}-lib64.patch
-Patch1:		%{name}-x86_64-configure.patch
+
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
-Patch4:		%{name}-pl.patch
+#Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
-Patch6:		%{name}-ticket-1310.patch
+
 Patch7:		%{name}-optflags.patch
-Patch8:		%{name}-branch.diff
-#Patch9-18 are from sasc.spec
-Patch9:		myth_sasc-base_r10247.diff
-Patch10:	myth_softcsa_r10247.diff
-Patch11:	myth_legacy-switch_r10247.diff
-Patch12:	myth_datadirect-dn_r10247.diff
-Patch13:	myth_dn-eit_r10247.diff
-Patch14:	myth_eit-cache_r10247.diff
-Patch15:	myth_eit-ratelimit_r10247.diff
-Patch16:	myth_eit-fasthuff_r10247.diff
-Patch17:	myth_eit-bev-dn_r10247.diff
-Patch18:	myth_patpmt_r10247.diff
+#Patch8:		%{name}-branch.diff
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -278,28 +270,15 @@ Statyczna biblioteka libmyth.
 %prep
 %setup -q %{?_rev:-n %{name}}
 %if %{_lib} != "lib"
-%patch0 -p1
+#%patch0 -p1
 %endif
-%patch1 -p1
+
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+#%patch4 -p1 REDIFF and submit
 %patch5 -p1
-%patch6 -p0
+
 %patch7 -p1
-%if %{with sc}
-%patch9 -p0
-#%patch10 -p0
-%patch11 -p0
-%patch12 -p0
-#%patch13 -p0
-%patch14 -p0
-%patch15 -p0
-%patch16 -p0
-#%patch17 -p0
-%patch18 -p0
-%endif
-filterdiff -i 'mythtv/*' %{PATCH8} | %{__patch} -p1 -s
 
 rm -rf database/old # not supported in PLD
 
@@ -362,6 +341,7 @@ export CXX="%{__cxx}"
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \
+	%{?with_new:--enable-dvd} \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \

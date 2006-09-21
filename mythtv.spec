@@ -35,7 +35,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.2
+%define _rel 0.3
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -294,6 +294,39 @@ xargs grep -l /lib . | xargs sed -i -e '
 exit 1
 %endif
 
+# Assigning null to QMAKE_LIBDIR_QT will prevent makefiles contain
+# -L$(QTDIR)/%{_lib} and -Wl,-rpath,$(QTDIR)/%{_lib}. And that will
+# prevent compiler finding libs from system when they should be looked
+# from current buildtree.
+# but that made it link with -lqt which doesn't exist, instead of -lqt-mt
+# so we make QMAKE wrapper which will do sed subst after calling
+# qmake. this is the wrapper.
+cat > qmake-wrapper.sh <<'EOF'
+#!/bin/sh
+getmakefile() {
+	while [ $# -gt 0 ]; do
+		case "$1" in
+		-o)
+			shift
+			makefile="$1"
+			return
+			;;
+		esac
+		shift
+	done
+}
+
+qmake "$@"
+getmakefile "$@"
+if [ "$makefile" ]; then
+	%{__sed} -i -e '
+		s;-Wl,-rpath,$(QTDIR)/%{_lib};;
+		s;-L$(QTDIR)/%{_lib};;
+	' $makefile
+fi
+EOF
+chmod +x qmake-wrapper.sh
+
 %build
 %if %{with cpu_autodetect}
 # Make sure we have /proc mounted
@@ -358,7 +391,8 @@ export CXX="%{__cxx}"
 #	--enable-directx	enable DirectX  (Microsoft video)
 
 qmake mythtv.pro
-%{__make}
+%{__make} \
+	QMAKE=$(pwd)/qmake-wrapper.sh
 
 %install
 rm -rf $RPM_BUILD_ROOT

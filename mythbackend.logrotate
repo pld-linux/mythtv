@@ -4,6 +4,6 @@
 	sharedscripts
 	create 664 root mythtv
 	postrotate
-		/etc/rc.d/init.d/mythbackend flush-logs > /dev/null
+		/sbin/service mythbackend flush-logs > /dev/null
 	endscript
 }

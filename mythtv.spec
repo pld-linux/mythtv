@@ -17,7 +17,6 @@
 %bcond_without	oss		# oss support
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
-%bcond_with	oggvorbis	# ogg vorbis (gone?!)
 %bcond_without	opengl		# opengl vsync
 %bcond_with	dvb		# DVB support # invalid option
 %bcond_without	xrandr		# disable X11 resolution switching
@@ -35,7 +34,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.3
+%define _rel 0.5
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -50,15 +49,15 @@ Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
+#Patch100:		%{name}-branch.diff
 Patch0:		%{name}-lib64.patch
 Patch1:		mythtv-configure.patch
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 #Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
-
 Patch7:		%{name}-optflags.patch
-#Patch8:		%{name}-branch.diff
+Patch8:		mythtv-dvdnav-shared.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 BuildRequires:	XFree86-devel
@@ -73,7 +72,6 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	libdvdnav-devel
 %{?with_firewire:BuildRequires:	libiec61883-devel}
 %{?with_firewire:BuildRequires:	libraw1394-devel}
-%{?with_oggvorbis:BuildRequires:	libvorbis-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
@@ -280,6 +278,7 @@ Statyczna biblioteka libmyth.
 %patch5 -p1
 
 %patch7 -p1
+%patch8 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -375,7 +374,6 @@ export CXX="%{__cxx}"
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \
-	%{?with_new:--enable-dvd} \
 	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
@@ -383,12 +381,6 @@ export CXX="%{__cxx}"
 	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
 	--enable-xv \
 	--enable-x11 \
-
-#	--%{?with_oggvorbis:en}%{!?with_oggvorbis:dis}able-vorbis \
-#	--disable-joystick-menu \
-#	--disable-ivtv \
-#	--enable-directfb	enable DirectFB (Linux non-X11 video)
-#	--enable-directx	enable DirectX  (Microsoft video)
 
 qmake mythtv.pro
 %{__make} \
@@ -535,4 +527,3 @@ fi
 
 %files -n libmyth-static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a

@@ -1,0 +1,11 @@
+--- mythtv-0.20/libs/libmythdvdnav/libmythdvdnav.pro~	2006-02-17 12:27:03.000000000 +0200
++++ mythtv-0.20/libs/libmythdvdnav/libmythdvdnav.pro	2006-09-22 00:10:45.000000000 +0300
+@@ -3,7 +3,7 @@
+ 
+ TEMPLATE = lib
+ TARGET = mythdvdnav-$$LIBVERSION
+-CONFIG += thread staticlib warn_off
++CONFIG += thread warn_off
+ target.path = $${LIBDIR}
+ 
+ INCLUDEPATH += ../../

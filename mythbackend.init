@@ -22,10 +22,7 @@ fi
 
 OPTIONS="$OPTIONS --daemon --logfile /var/log/mythtv/mythbackend.log --pidfile /var/run/mythtv/mythbackend.pid"
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-start)
+start() {
 	# Start daemons.
 	if [ ! -f /var/lock/subsys/mythbackend ]; then
 		msg_starting "Mythbackend"
@@ -35,8 +32,9 @@ start)
 	else
 		msg_already_running "Mythbackend"
 	fi
-;;
-stop)
+}
+
+stop() {
 	# Stop daemons.
 	if [ -f /var/lock/subsys/mythbackend ]; then
 		msg_stopping "Mythbackend"
@@ -45,12 +43,21 @@ stop)
 	else
 		msg_not_running "Mythbackend"
 	fi
-;;
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
 restart)
-	$0 stop
-	$0 start
-	exit $?
-;;
+	stop
+	start
+	;;
 flush-logs)
 	if [ -f /var/lock/subsys/mythbackend ]; then
 		show "Rotating %s logs" "Mythbackend"

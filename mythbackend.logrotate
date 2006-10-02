@@ -1,0 +1,9 @@
+/var/log/mythtv/mythbackend.log {
+	notifempty
+	missingok
+	sharedscripts
+	create 664 root mythtv
+	postrotate
+		/sbin/service mythbackend flush-logs > /dev/null
+	endscript
+}

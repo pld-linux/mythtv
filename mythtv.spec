@@ -34,7 +34,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.5
+%define _rel 0.6
 Summary:	A personal video recorder (PVR) application
 Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
@@ -42,8 +42,9 @@ Version:	0.20
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	52bec1e0fadf7d24d6dcac3f773ddf74
+#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{version}-fix.tar.bz2
+# Source0-md5:	8901d3962eb58d1dd9ec2cd3bdbdfb76
 #Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
@@ -60,13 +61,13 @@ Patch7:		%{name}-optflags.patch
 Patch8:		mythtv-dvdnav-shared.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
-BuildRequires:	XFree86-devel
+#BuildRequires:	XFree86-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
-%{?with_xvmc:BuildRequires:	libXvMCW-devel}
+%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 %{?with_firewire:BuildRequires:	libavc1394-devel}
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
@@ -75,7 +76,7 @@ BuildRequires:	libdvdnav-devel
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-BuildRequires:	patchutils
+#BuildRequires:	patchutils
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -267,7 +268,7 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %prep
-%setup -q %{?_rev:-n %{name}}
+%setup -q %{?_rev:-n %{name}} %{?_rel: -n %{name}-%{version}-fix}
 %if %{_lib} != "lib"
 #%patch0 -p1
 %endif

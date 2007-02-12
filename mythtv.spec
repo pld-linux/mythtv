@@ -36,7 +36,7 @@
 #define _rev 11046
 %define _rel 0.6
 Summary:	A personal video recorder (PVR) application
-Summary(pl):	Osobista aplikacja do nagrywania obrazu (PVR)
+Summary(pl.UTF-8):   Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.20
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
@@ -101,22 +101,22 @@ graphical interface:
 - Resolution of conflicts between scheduled recordings
 - Basic video editing
 
-%description -l pl
-MythTV implementuje nastêpuj±ce mo¿liwo¶ci PVR, a nawet wiêcej, wraz z
+%description -l pl.UTF-8
+MythTV implementuje nastÄ™pujÄ…ce moÅ¼liwoÅ›ci PVR, a nawet wiÄ™cej, wraz z
 ujednoliconym interfejsem graficznym:
-- podstawowa funkcjonalno¶æ "live-tv"; pauza, szybkie przewijanie,
-  przewijanie "¿ywej" telewizji
-- kompresja obrazu przy u¿yciu RTjpeg lub MPEG-4
-- odczyt listy programów przy u¿yciu XMLTV
-- pseudoprzezroczyste wy¶wietlanie na obrazie (OSD) z obs³ug± motywów
+- podstawowa funkcjonalnoÅ›Ä‡ "live-tv"; pauza, szybkie przewijanie,
+  przewijanie "Å¼ywej" telewizji
+- kompresja obrazu przy uÅ¼yciu RTjpeg lub MPEG-4
+- odczyt listy programÃ³w przy uÅ¼yciu XMLTV
+- pseudoprzezroczyste wyÅ›wietlanie na obrazie (OSD) z obsÅ‚ugÄ… motywÃ³w
 - elektroniczny przewodnik po programie
-- planowane nagrywanie programów telewizyjnych
-- rozwi±zywanie konfliktów miêdzy planowanymi nagraniami
+- planowane nagrywanie programÃ³w telewizyjnych
+- rozwiÄ…zywanie konfliktÃ³w miÄ™dzy planowanymi nagraniami
 - podstawowa edycja obrazu
 
 %package backend
 Summary:	Server component of mythtv (a PVR)
-Summary(pl):	Czê¶æ serwerowa mythtv (PVR)
+Summary(pl.UTF-8):   CzÄ™Å›Ä‡ serwerowa mythtv (PVR)
 Group:		Applications/Multimedia
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
@@ -140,19 +140,19 @@ and audio capture and encoding services. In order to be useful, it
 requires a mythtv-frontend installation, either on the same system or
 one reachable via the network.
 
-%description backend -l pl
+%description backend -l pl.UTF-8
 MythTV dostarcza ujednolicony interfejs graficzny do nagrywania i
-ogl±dania programów telewizyjnych. Wiêcej informacji w pakiecie
+oglÄ…dania programÃ³w telewizyjnych. WiÄ™cej informacji w pakiecie
 mythtv.
 
-Ten pakiet zawiera tylko oprogramowanie serwerowe, udostêpniaj±ce
-us³ugi przechwytywania i kodowania obrazu i d¼wiêku. Aby by³o
+Ten pakiet zawiera tylko oprogramowanie serwerowe, udostÄ™pniajÄ…ce
+usÅ‚ugi przechwytywania i kodowania obrazu i dÅºwiÄ™ku. Aby byÅ‚o
 przydatne, wymaga instalacji mythtv-frontend - na tym samym systemie,
-albo innym osi±galnym po sieci.
+albo innym osiÄ…galnym po sieci.
 
 %package frontend
 Summary:	Client component of mythtv (a PVR)
-Summary(pl):	Czê¶æ kliencka mythtv (PVR)
+Summary(pl.UTF-8):   CzÄ™Å›Ä‡ kliencka mythtv (PVR)
 Group:		Applications/Multimedia
 Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
@@ -169,19 +169,19 @@ front-end for playback and configuration. It requires access to a
 mythtv-backend installation, either on the same system or one
 reachable via the network.
 
-%description frontend -l pl
+%description frontend -l pl.UTF-8
 MythTV dostarcza ujednolicony interfejs graficzny do nagrywania i
-ogl±dania programów telewizyjnych. Wiêcej informacji w pakiecie
+oglÄ…dania programÃ³w telewizyjnych. WiÄ™cej informacji w pakiecie
 mythtv.
 
-Ten pakiet zawiera tylko oprogramowanie klienckie, dostarczaj±ce
-frontend do odtwarzania i konfiguracji. Wymaga dostêpu do instalacji
-mythtv-backend - na tym samym systemie, albo innym osi±galnym po
+Ten pakiet zawiera tylko oprogramowanie klienckie, dostarczajÄ…ce
+frontend do odtwarzania i konfiguracji. Wymaga dostÄ™pu do instalacji
+mythtv-backend - na tym samym systemie, albo innym osiÄ…galnym po
 sieci.
 
 %package setup
 Summary:	Setup the mythtv backend
-Summary(pl):	Konfigurator backendu mythtv
+Summary(pl.UTF-8):   Konfigurator backendu mythtv
 Group:		Applications/Multimedia
 Requires:	libmyth = %{version}-%{release}
 
@@ -193,16 +193,16 @@ information.
 This package contains only the setup software for configuring the
 mythtv backend.
 
-%description setup -l pl
+%description setup -l pl.UTF-8
 MythTV dostarcza ujednolicony interfejs graficzny do nagrywania i
-ogl±dania programów telewizyjnych. Wiêcej informacji w pakiecie
+oglÄ…dania programÃ³w telewizyjnych. WiÄ™cej informacji w pakiecie
 mythtv.
 
 Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 
 %package themes
 Summary:	Base themes for mythtv's frontend
-Summary(pl):	Podstawowe motywy dla frontendu mythtv
+Summary(pl.UTF-8):   Podstawowe motywy dla frontendu mythtv
 Requires:	%{name}-frontend = %{version}-%{release}
 Group:		Themes
 
@@ -214,17 +214,17 @@ information.
 This package contains only the base themes used by the frontend and
 mythtvsetup.
 
-%description themes -l pl
+%description themes -l pl.UTF-8
 MythTV dostarcza ujednolicony interfejs graficzny do nagrywania i
-ogl±dania programów telewizyjnych. Wiêcej informacji w pakiecie
+oglÄ…dania programÃ³w telewizyjnych. WiÄ™cej informacji w pakiecie
 mythtv.
 
-Ten pakiet zawiera tylko podstawowe motywy u¿ywane przez frontend oraz
+Ten pakiet zawiera tylko podstawowe motywy uÅ¼ywane przez frontend oraz
 mythtvsetup.
 
 %package -n libmyth
 Summary:	Library providing mythtv support
-Summary(pl):	Biblioteka udostêpniaj±ca obs³ugê mythtv
+Summary(pl.UTF-8):   Biblioteka udostÄ™pniajÄ…ca obsÅ‚ugÄ™ mythtv
 Group:		Libraries
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
@@ -236,15 +236,15 @@ Common library code for MythTV and add-on modules (development) MythTV
 provides a unified graphical interface for recording and viewing
 television programs. Refer to the mythtv package for more information.
 
-%description -n libmyth -l pl
-Wspólny kod biblioteki dla MythTV i dodatkowych modu³ów MythTV
-dostarczaj±cy ujednolicony interfejs graficzny do nagrywania i
-ogl±dania programów telewizyjnych. Wiêcej informacji w pakiecie
+%description -n libmyth -l pl.UTF-8
+WspÃ³lny kod biblioteki dla MythTV i dodatkowych moduÅ‚Ã³w MythTV
+dostarczajÄ…cy ujednolicony interfejs graficzny do nagrywania i
+oglÄ…dania programÃ³w telewizyjnych. WiÄ™cej informacji w pakiecie
 mythtv.
 
 %package -n libmyth-devel
 Summary:	Development files for libmyth
-Summary(pl):	Pliki nag³ówkowe libmyth
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe libmyth
 Group:		Development/Libraries
 Requires:	libmyth = %{version}-%{release}
 
@@ -252,19 +252,19 @@ Requires:	libmyth = %{version}-%{release}
 This package contains the header files for developing add-ons for
 mythtv.
 
-%description -n libmyth-devel -l pl
-Ten pakiet zawiera pliki nag³ówkowe do tworzenia dodatków dla mythtv.
+%description -n libmyth-devel -l pl.UTF-8
+Ten pakiet zawiera pliki nagÅ‚Ã³wkowe do tworzenia dodatkÃ³w dla mythtv.
 
 %package -n libmyth-static
 Summary:	Static libmyth library
-Summary(pl):	Statyczna biblioteka libmyth
+Summary(pl.UTF-8):   Statyczna biblioteka libmyth
 Group:		Development/Libraries
 Requires:	libmyth-devel = %{version}-%{release}
 
 %description -n libmyth-static
 Static libmyth library.
 
-%description -n libmyth-static -l pl
+%description -n libmyth-static -l pl.UTF-8
 Statyczna biblioteka libmyth.
 
 %prep

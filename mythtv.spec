@@ -36,7 +36,7 @@
 #define _rev 11046
 %define _rel 0.6
 Summary:	A personal video recorder (PVR) application
-Summary(pl.UTF-8):   Osobista aplikacja do nagrywania obrazu (PVR)
+Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.20
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
@@ -116,7 +116,7 @@ ujednoliconym interfejsem graficznym:
 
 %package backend
 Summary:	Server component of mythtv (a PVR)
-Summary(pl.UTF-8):   Część serwerowa mythtv (PVR)
+Summary(pl.UTF-8):	Część serwerowa mythtv (PVR)
 Group:		Applications/Multimedia
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
@@ -152,7 +152,7 @@ albo innym osiągalnym po sieci.
 
 %package frontend
 Summary:	Client component of mythtv (a PVR)
-Summary(pl.UTF-8):   Część kliencka mythtv (PVR)
+Summary(pl.UTF-8):	Część kliencka mythtv (PVR)
 Group:		Applications/Multimedia
 Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
@@ -181,7 +181,7 @@ sieci.
 
 %package setup
 Summary:	Setup the mythtv backend
-Summary(pl.UTF-8):   Konfigurator backendu mythtv
+Summary(pl.UTF-8):	Konfigurator backendu mythtv
 Group:		Applications/Multimedia
 Requires:	libmyth = %{version}-%{release}
 
@@ -202,7 +202,7 @@ Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 
 %package themes
 Summary:	Base themes for mythtv's frontend
-Summary(pl.UTF-8):   Podstawowe motywy dla frontendu mythtv
+Summary(pl.UTF-8):	Podstawowe motywy dla frontendu mythtv
 Requires:	%{name}-frontend = %{version}-%{release}
 Group:		Themes
 
@@ -224,7 +224,7 @@ mythtvsetup.
 
 %package -n libmyth
 Summary:	Library providing mythtv support
-Summary(pl.UTF-8):   Biblioteka udostępniająca obsługę mythtv
+Summary(pl.UTF-8):	Biblioteka udostępniająca obsługę mythtv
 Group:		Libraries
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
@@ -244,7 +244,7 @@ mythtv.
 
 %package -n libmyth-devel
 Summary:	Development files for libmyth
-Summary(pl.UTF-8):   Pliki nagłówkowe libmyth
+Summary(pl.UTF-8):	Pliki nagłówkowe libmyth
 Group:		Development/Libraries
 Requires:	libmyth = %{version}-%{release}
 
@@ -257,7 +257,7 @@ Ten pakiet zawiera pliki nagłówkowe do tworzenia dodatków dla mythtv.
 
 %package -n libmyth-static
 Summary:	Static libmyth library
-Summary(pl.UTF-8):   Statyczna biblioteka libmyth
+Summary(pl.UTF-8):	Statyczna biblioteka libmyth
 Group:		Development/Libraries
 Requires:	libmyth-devel = %{version}-%{release}
 

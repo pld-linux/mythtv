@@ -34,7 +34,7 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 0.6
+%define _rel 1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv

@@ -34,17 +34,17 @@
 
 #define _snap 20060905
 #define _rev 11046
-%define _rel 1
+%define _rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.20
+Version:	0.20.2
 Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
 License:	GPL v2
 Group:		Applications/Multimedia
-#Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{version}-fix.tar.bz2
-# Source0-md5:	8901d3962eb58d1dd9ec2cd3bdbdfb76
+Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
+# Source0-md5:	db7ab2049e716349e43edf8e67458218
+#Source0:	%{name}-%{version}-fix.tar.bz2
 #Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
@@ -59,6 +59,7 @@ Patch3:		%{name}-ldconfig.patch
 Patch5:		%{name}-sbinpath.patch
 Patch7:		%{name}-optflags.patch
 Patch8:		mythtv-dvdnav-shared.patch
+Patch9:		%{name}-libs.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 #BuildRequires:	XFree86-devel
@@ -268,7 +269,7 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %prep
-%setup -q %{?_rev:-n %{name}} %{?_rel: -n %{name}-%{version}-fix}
+%setup -q %{?_rev:-n %{name}}
 %if %{_lib} != "lib"
 #%patch0 -p1
 %endif
@@ -280,6 +281,7 @@ Statyczna biblioteka libmyth.
 
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -335,17 +337,12 @@ if [ ! -r /proc/cpuinfo ]; then
 	exit 1
 fi
 %endif
-export QTDIR="%{_prefix}"
-
-%if "%{_lib}" != "lib"
-export QMAKE_LIBDIR_X11=%{_prefix}/X11R6/%{_lib}
-# help configure::has_library() to locate libs
-export LD_LIBRARY_PATH=%{_libdir}
-%endif
 
 # NB: not autoconf configure
-export CC="%{__cc}"
-export CXX="%{__cxx}"
+# help configure::has_library() to locate libs
+LD_LIBRARY_PATH=%{_libdir} \
+CC="%{__cc}" \
+CXX="%{__cxx}" \
 ./configure \
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
@@ -383,7 +380,10 @@ export CXX="%{__cxx}"
 	--enable-xv \
 	--enable-x11 \
 
-qmake mythtv.pro
+qmake mythtv.pro \
+QTDIR="%{_prefix}" \
+QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
+
 %{__make} \
 	QMAKE=$(pwd)/qmake-wrapper.sh
 

@@ -338,6 +338,8 @@ if [ ! -r /proc/cpuinfo ]; then
 fi
 %endif
 
+export QTDIR="%{_prefix}"
+
 # NB: not autoconf configure
 # help configure::has_library() to locate libs
 LD_LIBRARY_PATH=%{_libdir} \

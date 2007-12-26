@@ -1,8 +1,7 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=MythTV frontend
 Comment=Record, playback and watch TV.
-Icon=mythfrontend.png
+Icon=mythfrontend
 Exec=mythfrontend
 Terminal=false
 Type=Application

@@ -1,0 +1,36 @@
+diff -Nru mythtv-0.21/libs/libmythfreesurround/libmythfreesurround.pro mythtv-0.21-shd/libs/libmythfreesurround/libmythfreesurround.pro
+--- mythtv-0.21/libs/libmythfreesurround/libmythfreesurround.pro        2008-02-13 23:47:17.000000000 +0000
++++ mythtv-0.21-shd/libs/libmythfreesurround/libmythfreesurround.pro    2008-10-07 08:06:13.709383250 +0000
+@@ -5,7 +5,7 @@
+ TARGET = mythfreesurround-$$LIBVERSION
+ CONFIG += thread staticlib warn_off
+
+-INCLUDEPATH += ../libavcodec ../libmyth
++INCLUDEPATH += ../libavcodec ../libmyth /usr/include/qt
+
+ #build position independent code since the library is linked into a shared library
+ QMAKE_CXXFLAGS += -fPIC -DPIC
+diff -Nru mythtv-0.21/libs/libmythtv/libmythtv.pro mythtv-0.21-shd/libs/libmythtv/libmythtv.pro
+--- mythtv-0.21/libs/libmythtv/libmythtv.pro    2008-02-18 22:59:32.000000000 +0000
++++ mythtv-0.21-shd/libs/libmythtv/libmythtv.pro        2008-10-07 08:32:49.417108750 +0000
+@@ -43,7 +43,7 @@
+ TARGETDEPS += ../libavcodec/libmythavcodec-$${MYTH_SHLIB_EXT}
+ TARGETDEPS += ../libavformat/libmythavformat-$${MYTH_SHLIB_EXT}
+ TARGETDEPS += ../libmythmpeg2/libmythmpeg2-$${MYTH_LIB_EXT}
+-TARGETDEPS += ../libmythdvdnav/libmythdvdnav-$${MYTH_LIB_EXT}
++TARGETDEPS += ../libmythdvdnav/libmythdvdnav-$${MYTH_SHLIB_EXT}
+ TARGETDEPS += ../libmythfreemheg/libmythfreemheg-$${MYTH_SHLIB_EXT}
+ using_live: TARGETDEPS += ../libmythlivemedia/libmythlivemedia-$${MYTH_SHLIB_EXT}
+
+diff -Nru mythtv-0.21/libs/libmythupnp/libmythupnp.pro mythtv-0.21-shd/libs/libmythupnp/libmythupnp.pro
+--- mythtv-0.21/libs/libmythupnp/libmythupnp.pro        2008-01-23 06:02:16.000000000 +0000
++++ mythtv-0.21-shd/libs/libmythupnp/libmythupnp.pro    2008-10-07 08:07:54.703695000 +0000
+@@ -32,7 +32,7 @@
+ SOURCES += configuration.cpp soapclient.cpp mythxmlclient.cpp
+
+ INCLUDEPATH += ../libmyth
+-INCLUDEPATH += ../..
++INCLUDEPATH += ../.. /usr/include/qt
+ DEPENDPATH += ../libmyth
+
+ # There is a circular dependency here, and this lib may not be built yet:

@@ -36,7 +36,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.21
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -55,6 +55,7 @@ Patch5:		%{name}-sbinpath.patch
 Patch6:		mythtv-dvdnav-shared.patch
 Patch7:		%{name}-libs.patch
 Patch8:		%{name}-fixes.patch
+Patch9:		%{name}-ffmpeg-API.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 #BuildRequires:	XFree86-devel
@@ -62,6 +63,7 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-GLU-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
+BuildRequires:	ffmpeg-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
@@ -279,6 +281,7 @@ Statyczna biblioteka libmyth.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 rm -rf database/old # not supported in PLD
 

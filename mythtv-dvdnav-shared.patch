@@ -10,18 +10,6 @@ diff -urN mythtv-0.20/libs/libmythdvdnav/libmythdvdnav.pro mythtv-0.20.new/libs/
  target.path = $${LIBDIR}
  
  INCLUDEPATH += ../../
-diff -urN mythtv-0.20/libs/libmythtv/libmythtv.pro mythtv-0.20.new/libs/libmythtv/libmythtv.pro
---- mythtv-0.20/libs/libmythtv/libmythtv.pro	2006-07-18 14:35:04.000000000 +0200
-+++ mythtv-0.20.new/libs/libmythtv/libmythtv.pro	2006-10-06 09:13:19.000000000 +0200
-@@ -45,7 +45,7 @@
- TARGETDEPS += ../libavcodec/libmythavcodec-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../libavformat/libmythavformat-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../libmythmpeg2/libmythmpeg2-$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
--TARGETDEPS += ../libmythdvdnav/libmythdvdnav-$${LIBVERSION}.$${QMAKE_EXTENSION_LIB}
-+TARGETDEPS += ../libmythdvdnav/libmythdvdnav-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- 
- 
- DEFINES += _LARGEFILE_SOURCE
 diff -urN mythtv-0.20/programs/programs-libs.pro mythtv-0.20.new/programs/programs-libs.pro
 --- mythtv-0.20/programs/programs-libs.pro	2006-07-09 01:44:07.000000000 +0200
 +++ mythtv-0.20.new/programs/programs-libs.pro	2006-10-06 10:03:45.000000000 +0200
@@ -45,14 +33,6 @@ diff -urN mythtv-0.20/programs/programs-libs.pro mythtv-0.20.new/programs/progra
  LIBS += -lmythavutil-$$LIBVERSION -lmythavcodec-$$LIBVERSION 
  LIBS += -lmythfreemheg-$$LIBVERSION
  LIBS += -lmythupnp-$$LIBVERSION 
-@@ -25,6 +25,7 @@
- }
- TARGETDEPS += ../../libs/libmythui/libmythui-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../../libs/libmyth/libmyth-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
-+TARGETDEPS += ../../libs/libmythdvdnav/libmythdvdnav-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../../libs/libmythtv/libmythtv-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../../libs/libavutil/libmythavutil-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
- TARGETDEPS += ../../libs/libavcodec/libmythavcodec-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
 @@ -32,7 +33,7 @@
  TARGETDEPS += ../../libs/libmythupnp/libmythupnp-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}
  TARGETDEPS += ../../libs/libmythlivemedia/libmythlivemedia-$${LIBVERSION}.$${QMAKE_EXTENSION_SHLIB}

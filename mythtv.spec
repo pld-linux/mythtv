@@ -32,37 +32,34 @@
 %endif
 %endif
 
+%define		qtver	4.3
+%define		snap	20081007
+
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.21
-Release:	5
+Version:	0.22
+Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	49fc135e1cde90cd935c1229467fa37e
+Source0:	%{name}-%{version}-%{snap}.tar.gz
+# Source0-md5:	5a10a4752a950c246859c2a2710d2f47
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
-#Patch100:		%{name}-branch.diff
-Patch0:		%{name}-lib64.patch
-Patch1:		mythtv-configure.patch
-Patch2:		%{name}-mythstream.patch
-Patch3:		%{name}-ldconfig.patch
-#Patch4:		%{name}-pl.patch
-Patch5:		%{name}-sbinpath.patch
-Patch6:		mythtv-dvdnav-shared.patch
-Patch7:		%{name}-libs.patch
-Patch8:		%{name}-fixes.patch
-Patch9:		%{name}-ffmpeg-API.patch
+Patch0:		%{name}-configure.patch
 URL:		http://www.mythtv.org/
-#BuildRequires:	DirectFB-devel
-#BuildRequires:	XFree86-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-GLU-devel
+BuildRequires:	QtCore-devel >= %{qtver}
+BuildRequires:	QtGui-devel >= %{qtver}
+BuildRequires:	QtNetwork-devel >= %{qtver}
+BuildRequires:	QtOpenGL-devel >= %{qtver}
+BuildRequires:	QtSql-devel >= %{qtver}
+BuildRequires:	QtWebKit-devel >= %{qtver}
+BuildRequires:	QtXml-devel >= %{qtver}
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
-%{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 BuildRequires:	ffmpeg-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
@@ -76,13 +73,10 @@ BuildRequires:	libdvdnav-devel
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-BuildRequires:	qmake >= 6:3.2.1-4
-BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 # for bundled libavcodec
 BuildRequires:	libdts-devel
-#BuildConflicts:	libmyth-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
@@ -269,19 +263,8 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %prep
-%setup -q %{?_rev:-n %{name}}
-%if %{_lib} != "lib"
-#%patch0 -p1
-%endif
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-#%patch4 -p1 REDIFF and submit
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
+%setup -q -n %{name}-%{version}-%{snap}
+%patch0 -p0
 
 rm -rf database/old # not supported in PLD
 
@@ -295,39 +278,6 @@ xargs grep -l /lib . | xargs sed -i -e '
 '
 exit 1
 %endif
-
-# Assigning null to QMAKE_LIBDIR_QT will prevent makefiles contain
-# -L$(QTDIR)/%{_lib} and -Wl,-rpath,$(QTDIR)/%{_lib}. And that will
-# prevent compiler finding libs from system when they should be looked
-# from current buildtree.
-# but that made it link with -lqt which doesn't exist, instead of -lqt-mt
-# so we make QMAKE wrapper which will do sed subst after calling
-# qmake. this is the wrapper.
-cat > qmake-wrapper.sh <<'EOF'
-#!/bin/sh
-getmakefile() {
-	while [ $# -gt 0 ]; do
-		case "$1" in
-		-o)
-			shift
-			makefile="$1"
-			return
-			;;
-		esac
-		shift
-	done
-}
-
-qmake "$@"
-getmakefile "$@"
-if [ "$makefile" ]; then
-	%{__sed} -i -e '
-		s;-Wl,-rpath,$(QTDIR)/%{_lib};;
-		s;-L$(QTDIR)/%{_lib};;
-	' $makefile
-fi
-EOF
-chmod +x qmake-wrapper.sh
 
 %build
 %if %{with cpu_autodetect}
@@ -379,13 +329,7 @@ CXX="%{__cxx}" \
 	--enable-xv \
 	--enable-x11 \
 
-qmake mythtv.pro \
-QTDIR="%{_prefix}" \
-QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
-
-%{__make} \
-	QTDIR="%{_prefix}" \
-	QMAKE=$(pwd)/qmake-wrapper.sh
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -394,7 +338,6 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
 
-export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
@@ -474,11 +417,11 @@ fi
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/mythbackend
-%attr(755,root,root) %{_sbindir}/mythcommflag
+%attr(755,root,root) %{_bindir}/mythbackend
+%attr(755,root,root) %{_bindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_sbindir}/mythjobqueue
-%attr(755,root,root) %{_sbindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythjobqueue
+%attr(755,root,root) %{_bindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
 %attr(775,root,mythtv) %dir /var/lib/mythtv

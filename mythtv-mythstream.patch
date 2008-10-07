@@ -1,0 +1,28 @@
+--- mythtv-0.18.1/programs/mythfrontend/library.xml.fix	2006-01-31 14:33:25.867459000 +0100
++++ mythtv-0.18.1/programs/mythfrontend/library.xml	2006-01-31 14:33:39.987459000 +0100
+@@ -106,4 +106,11 @@
+      <depends>mythgame</depends>
+    </button>
+ 
++   <button>
++      <type>STREAM</type>
++      <text>Play Internet streams</text>
++      <action>PLUGIN mythstream</action>
++      <depends>mythstream</depends>
++   </button>
++
+ </mythmenu>
+--- mythtv-0.18.1/programs/mythfrontend/media_settings.xml.fix	2006-01-31 14:34:05.447459000 +0100
++++ mythtv-0.18.1/programs/mythfrontend/media_settings.xml	2006-01-31 14:34:16.337459000 +0100
+@@ -100,4 +100,11 @@
+      <depends>mythfm</depends>
+    </button>
+ 
++   <button>
++      <type>STREAM</type>
++      <text>Stream settings</text>
++      <action>CONFIGPLUGIN mythstream</action>
++      <depends>mythstream</depends>
++   </button>
++
+ </mythmenu>

@@ -1,0 +1,11 @@
+--- mythtv-0.20/configure	2006-09-14 15:58:26.000000000 +0300
++++ mythtv/configure	2006-09-05 05:09:59.000000000 +0300
+@@ -452,7 +452,7 @@
+             x"$processor" = x"unknown" -o x"$processor" = x"powerpc" ; then 
+         processor=`/usr/bin/hostinfo | grep "Processor type:"` 
+         processor=${processor#Processor type: *} 
+-        processor=${processor% (*} 
++        processor="${processor% \(*}"
+         if test x"`echo $processor | cut -c1-3`" = x"ppc" ; then
+             tune=$processor 
+         else 

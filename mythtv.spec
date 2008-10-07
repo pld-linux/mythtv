@@ -36,7 +36,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.21
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
@@ -58,6 +58,8 @@ Patch8:		%{name}-fixes.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 #BuildRequires:	XFree86-devel
+BuildRequires:	OpenGL-GL-devel
+BuildRequires:	OpenGL-GLU-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 BuildRequires:	freetype-devel >= 1:2.0.0
@@ -79,6 +81,7 @@ BuildRequires:	sed >= 4.0
 # for bundled libavcodec
 BuildRequires:	libdts-devel
 #BuildConflicts:	libmyth-devel
+BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)

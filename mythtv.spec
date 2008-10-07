@@ -18,7 +18,7 @@
 %bcond_without	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without	opengl		# opengl vsync
-%bcond_with	dvb		# DVB support # invalid option
+%bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
 %bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_with	firewire	# ieee1394 (NFY)
@@ -36,7 +36,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.21
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2

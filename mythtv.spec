@@ -32,20 +32,15 @@
 %endif
 %endif
 
-#define _snap 20060905
-#define _rev 11046
-%define _rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.20.2
-Release:	%{?_snap:0.%{_snap}.%{_rev}.}%{_rel}
+Version:	0.21
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	db7ab2049e716349e43edf8e67458218
-#Source0:	%{name}-%{version}-fix.tar.bz2
-#Source0:	%{name}-%{_snap}.%{_rev}.tar.bz2
+# Source0-md5:	49fc135e1cde90cd935c1229467fa37e
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -57,9 +52,9 @@ Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 #Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
-Patch7:		%{name}-optflags.patch
-Patch8:		mythtv-dvdnav-shared.patch
-Patch9:		%{name}-libs.patch
+Patch6:		mythtv-dvdnav-shared.patch
+Patch7:		%{name}-libs.patch
+Patch8:		%{name}-fixes.patch
 URL:		http://www.mythtv.org/
 #BuildRequires:	DirectFB-devel
 #BuildRequires:	XFree86-devel
@@ -77,7 +72,6 @@ BuildRequires:	libdvdnav-devel
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-#BuildRequires:	patchutils
 BuildRequires:	qmake >= 6:3.2.1-4
 BuildRequires:	qt-devel >= 6:3.2.1-4
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -278,10 +272,9 @@ Statyczna biblioteka libmyth.
 %patch3 -p1
 #%patch4 -p1 REDIFF and submit
 %patch5 -p1
-
+%patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
 
 rm -rf database/old # not supported in PLD
 
@@ -338,8 +331,6 @@ if [ ! -r /proc/cpuinfo ]; then
 fi
 %endif
 
-export QTDIR="%{_prefix}"
-
 # NB: not autoconf configure
 # help configure::has_library() to locate libs
 LD_LIBRARY_PATH=%{_libdir} \
@@ -349,7 +340,6 @@ CXX="%{__cxx}" \
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
-	--disable-opts \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
@@ -369,7 +359,7 @@ CXX="%{__cxx}" \
 	%endif
 	%{?with_mmx:--enable-mmx} \
 %endif
-	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir} --enable-dvb-eit} \
+	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir}} \
 	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
@@ -387,6 +377,7 @@ QTDIR="%{_prefix}" \
 QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
 
 %{__make} \
+	QTDIR="%{_prefix}" \
 	QMAKE=$(pwd)/qmake-wrapper.sh
 
 %install
@@ -471,7 +462,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
-%doc docs contrib configfiles
+#%doc docs contrib configfiles
 %doc keys.txt mythtvosd mythwelcome mythlcdserver
 
 %files backend

@@ -23,7 +23,7 @@
 %bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
-%bcond_with	mmx			# enable mmx
+%bcond_with	mmx		# enable MMX
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -47,18 +47,16 @@ Source3:	mythbackend.logrotate
 Source5:	mythfrontend.desktop
 #Patch100:		%{name}-branch.diff
 Patch0:		%{name}-lib64.patch
-Patch1:		mythtv-configure.patch
+Patch1:		%{name}-configure.patch
 Patch2:		%{name}-mythstream.patch
 Patch3:		%{name}-ldconfig.patch
 #Patch4:		%{name}-pl.patch
 Patch5:		%{name}-sbinpath.patch
-Patch6:		mythtv-dvdnav-shared.patch
+Patch6:		%{name}-dvdnav-shared.patch
 Patch7:		%{name}-libs.patch
 Patch8:		%{name}-fixes.patch
 Patch9:		%{name}-ffmpeg-API.patch
 URL:		http://www.mythtv.org/
-#BuildRequires:	DirectFB-devel
-#BuildRequires:	XFree86-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	OpenGL-GLU-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -82,7 +80,6 @@ BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 # for bundled libavcodec
 BuildRequires:	libdts-devel
-#BuildConflicts:	libmyth-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 ExclusiveArch:	%{ix86} %{x8664} ppc
@@ -380,8 +377,8 @@ CXX="%{__cxx}" \
 	--enable-x11 \
 
 qmake mythtv.pro \
-QTDIR="%{_prefix}" \
-QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
+	QTDIR="%{_prefix}" \
+	QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
 
 %{__make} \
 	QTDIR="%{_prefix}" \
@@ -474,13 +471,13 @@ fi
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/mythbackend
-%attr(755,root,root) %{_sbindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_sbindir}/mythjobqueue
-%attr(755,root,root) %{_sbindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
+%attr(755,root,root) %{_sbindir}/mythbackend
+%attr(755,root,root) %{_sbindir}/mythcommflag
+%attr(755,root,root) %{_sbindir}/mythjobqueue
+%attr(755,root,root) %{_sbindir}/mythlcdserver
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv

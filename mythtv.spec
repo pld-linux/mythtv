@@ -4,6 +4,7 @@
 # - icons for desktop entries
 # - alpha, sparc, ppc arches?
 # - make it build with ffmpeg-devel installed
+# - perl bindings
 #
 # Specfile for MythTV
 #
@@ -267,6 +268,18 @@ Static libmyth library.
 %description -n libmyth-static -l pl.UTF-8
 Statyczna biblioteka libmyth.
 
+%package -n python-MythTV
+Summary:	MythTV Python bindings
+Summary(pl.UTF-8):	Interfejs Pythona dla MythTV	
+Group:		Libraries/Python
+Requires:	libmyth = %{version}-%{release}
+
+%description -n python-MythTV
+This package contains the Python modules for developing add-ons for mythtv.
+
+%description -n python-MythTV -l pl.UTF-8
+Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
+
 %prep
 %setup -q %{?_rev:-n %{name}}
 %if %{_lib} != "lib"
@@ -430,6 +443,9 @@ cp -a programs/mythtvosd/{README,*.xml} mythtvosd
 cp -a programs/mythwelcome/README mythwelcome
 cp -a programs/mythlcdserver/README mythlcdserver
 
+rm $RPM_BUILD_ROOT%{_libdir}/lib*.so.[0-9]{,.[0-9][0-9]}
+%py_postclean
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -527,3 +543,8 @@ fi
 
 %files -n libmyth-static
 %defattr(644,root,root,755)
+
+%files -n python-MythTV
+%defattr(644,root,root,755)
+%{py_sitescriptdir}/MythTV
+%{py_sitescriptdir}/*.egg-info

@@ -48,7 +48,7 @@ Version:	0.22
 Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	%{name}-%{version}-%{?snap:%{snap}}.tar.bz2
+Source0:	%{name}-%{version}-%{snap}.tar.bz2
 # Source0-md5:	2bb24a1d0bbe7b78dc29e94c219d0c5c
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init

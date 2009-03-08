@@ -57,17 +57,15 @@ Source5:	pld-mythfrontend.desktop
 # Source5-md5:  f37a903ac97463683bebacdf29406951
 Source6:        pld-mythfrontend.png
 # Source6-md5:  bf76bd1463a022e174e4af976a03e678
-%if %{with dshowserver}
-Source20: dshowcodecs
+Source20: 	dshowcodecs
 # Source20-md5: 48327772b9e150f69e1ab8ff44b9a76c
-%endif
 #Patch100:		%{name}-branch.diff
 Patch0:			%{name}-configure.patch
 #Patch1:		%{name}-mythstream.patch
 #Patch2:		%{name}-pl.patch
 Patch3:			%{name}-sbinpath.patch
 #Patch4:		mythtv-dvdnav-shared.patch
-%{?with_dshowserver:Patch20: %{name}-dshowserver_trunk.patch}
+Patch20: 		%{name}-dshowserver_trunk.patch}
 URL:		http://www.mythtv.org/
 BuildRequires: OpenGL-devel
 BuildRequires: OpenGL-GLU-devel

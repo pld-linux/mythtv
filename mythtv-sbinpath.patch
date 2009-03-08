@@ -1,28 +1,43 @@
---- mythtv/libs/libmythtv/jobqueue.cpp~	2005-12-21 00:35:51.000000000 +0200
-+++ mythtv/libs/libmythtv/jobqueue.cpp	2006-02-05 16:17:49.000000000 +0200
-@@ -2008,7 +2008,7 @@
-     gContext->LogEntry("commflag", LP_NOTICE, msg, logDesc);
+diff -urN mythtv-0.22.orig/libs/libmythdb/lcddevice.cpp mythtv-0.22/libs/libmythdb/lcddevice.cpp
+--- mythtv-0.22.orig/libs/libmythdb/lcddevice.cpp	2009-01-03 19:19:01.000000000 +0100
++++ mythtv-0.22/libs/libmythdb/lcddevice.cpp	2009-02-11 23:13:42.000000000 +0100
+@@ -139,7 +139,7 @@
+     {
+         // we need to start the mythlcdserver
+         VERBOSE(VB_GENERAL, "Starting mythlcdserver");
+-        system(qPrintable(GetInstallPrefix() + "/bin/mythlcdserver -v none&"));
++        system(qPrintable(GetInstallPrefix() + "/sbin/mythlcdserver -v none&"));
+         usleep(500000);
+     }
  
-     int breaksFound = 0;
--    QString path = gContext->GetInstallPrefix() + "/bin/mythcommflag";
-+    QString path = gContext->GetInstallPrefix() + "/sbin/mythcommflag";
-     QString cmd = QString("%1 -j %2 -V %3")
+diff -urN mythtv-0.22.orig/libs/libmythtv/jobqueue.cpp mythtv-0.22/libs/libmythtv/jobqueue.cpp
+--- mythtv-0.22.orig/libs/libmythtv/jobqueue.cpp	2009-02-11 19:21:54.000000000 +0100
++++ mythtv-0.22/libs/libmythtv/jobqueue.cpp	2009-02-11 23:09:50.000000000 +0100
+@@ -2130,7 +2130,7 @@
+ 
+     if (runningJobCommands[key] == "mythcommflag")
+     {
+-        path = GetInstallPrefix() + "/bin/mythcommflag";
++        path = GetInstallPrefix() + "/sbin/mythcommflag";
+         command = QString("%1 -j %2 -V %3")
                            .arg(path).arg(jobID).arg(print_verbose_messages);
- 
---- mythtv/programs/mythcommflag/mythcommflag.pro~	2005-10-18 02:33:37.000000000 +0300
-+++ mythtv/programs/mythcommflag/mythcommflag.pro	2006-02-05 16:20:01.000000000 +0200
-@@ -4,7 +4,7 @@
- 
- TEMPLATE = app
- CONFIG += thread
--target.path = $${PREFIX}/bin
-+target.path = $${PREFIX}/sbin
- INSTALLS = target
- 
- QMAKE_CLEAN += $(TARGET)
---- mythtv/programs/mythbackend/mythbackend.pro~	2006-01-29 18:32:00.000000000 +0200
-+++ mythtv/programs/mythbackend/mythbackend.pro	2006-02-05 16:20:52.000000000 +0200
-@@ -6,7 +6,7 @@
+     }
+diff -urN mythtv-0.22.orig/libs/libmythtv/previewgenerator.cpp mythtv-0.22/libs/libmythtv/previewgenerator.cpp
+--- mythtv-0.22.orig/libs/libmythtv/previewgenerator.cpp	2009-02-11 19:21:54.000000000 +0100
++++ mythtv-0.22/libs/libmythtv/previewgenerator.cpp	2009-02-11 23:10:59.000000000 +0100
+@@ -220,7 +220,7 @@
+     {
+         // This is where we fork and run mythbackend to actually make preview
+         QString command = GetInstallPrefix() +
+-                                    "/bin/mythbackend --generate-preview ";
++                                    "/sbin/mythbackend --generate-preview ";
+         command += QString("%1x%2")
+             .arg(outSize.width()).arg(outSize.height());
+         if (captureTime >= 0)
+diff -urN mythtv-0.22.orig/programs/mythbackend/mythbackend.pro mythtv-0.22/programs/mythbackend/mythbackend.pro
+--- mythtv-0.22.orig/programs/mythbackend/mythbackend.pro	2008-11-03 21:50:59.000000000 +0100
++++ mythtv-0.22/programs/mythbackend/mythbackend.pro	2009-02-11 23:09:50.000000000 +0100
+@@ -8,7 +8,7 @@
  TEMPLATE = app
  CONFIG += thread
  TARGET = mythbackend
@@ -30,9 +45,10 @@
 +target.path = $${PREFIX}/sbin
  INSTALLS = target
  
- QMAKE_CLEAN += $(TARGET)
---- mythtv/programs/mythjobqueue/mythjobqueue.pro~	2005-10-18 02:33:36.000000000 +0300
-+++ mythtv/programs/mythjobqueue/mythjobqueue.pro	2006-02-05 16:21:08.000000000 +0200
+ setting.path = $${PREFIX}/share/mythtv/
+diff -urN mythtv-0.22.orig/programs/mythcommflag/mythcommflag.pro mythtv-0.22/programs/mythcommflag/mythcommflag.pro
+--- mythtv-0.22.orig/programs/mythcommflag/mythcommflag.pro	2008-11-03 21:50:56.000000000 +0100
++++ mythtv-0.22/programs/mythcommflag/mythcommflag.pro	2009-02-11 23:09:50.000000000 +0100
 @@ -4,7 +4,7 @@
  
  TEMPLATE = app
@@ -42,8 +58,21 @@
  INSTALLS = target
  
  QMAKE_CLEAN += $(TARGET)
---- mythtv/programs/mythlcdserver/mythlcdserver.pro~	2005-10-18 02:33:38.000000000 +0300
-+++ mythtv/programs/mythlcdserver/mythlcdserver.pro	2006-02-05 16:21:25.000000000 +0200
+diff -urN mythtv-0.22.orig/programs/mythjobqueue/mythjobqueue.pro mythtv-0.22/programs/mythjobqueue/mythjobqueue.pro
+--- mythtv-0.22.orig/programs/mythjobqueue/mythjobqueue.pro	2008-11-03 21:50:53.000000000 +0100
++++ mythtv-0.22/programs/mythjobqueue/mythjobqueue.pro	2009-02-11 23:09:50.000000000 +0100
+@@ -7,7 +7,7 @@
+ 
+ TEMPLATE = app
+ CONFIG += thread
+-target.path = $${PREFIX}/bin
++target.path = $${PREFIX}/sbin
+ INSTALLS = target
+ 
+ QMAKE_CLEAN += $(TARGET)
+diff -urN mythtv-0.22.orig/programs/mythlcdserver/mythlcdserver.pro mythtv-0.22/programs/mythlcdserver/mythlcdserver.pro
+--- mythtv-0.22.orig/programs/mythlcdserver/mythlcdserver.pro	2008-11-03 21:50:59.000000000 +0100
++++ mythtv-0.22/programs/mythlcdserver/mythlcdserver.pro	2009-02-11 23:09:50.000000000 +0100
 @@ -5,7 +5,7 @@
  TEMPLATE = app
  CONFIG += thread

@@ -1,31 +1,13 @@
---- configure	2008-10-07 13:51:54.000000000 +0000
-+++ configure.new	2008-10-07 14:46:59.012120750 +0000
-@@ -1123,28 +1123,6 @@
-     processor_flags=`cat /proc/cpuinfo | grep "flags" | head -n 1`
- fi
- 
--# Mac OS X equivalent
--if test -f /usr/bin/hostinfo ; then
--    if test x"$processor" = x"" -o x"$processor" = x"$arch_raw" -o \
--            x"$processor" = x"unknown" -o x"$processor" = x"powerpc" ; then
--        processor=`/usr/bin/hostinfo | grep "Processor type:"`
+--- configure.orig	2008-11-01 18:37:08.000000000 +0100
++++ configure	2008-11-01 18:42:53.000000000 +0100
+@@ -1279,8 +1279,8 @@
+     arch=`arch`
+     if test x"$arch" = x"ppc" -o x"$arch" = x"ppc64" ; then
+         processor=`/usr/bin/hostinfo | grep "Processor type:"`
 -        processor=${processor#Processor type: *}
 -        processor=${processor% (*}
--        if test x"`echo $processor | cut -c1-3`" = x"ppc" ; then
--            tune=$processor
--        else
--            # 10.4 only:
--            processor=`/usr/sbin/sysctl -n machdep.cpu.model_string 2>/dev/null`
--            if test x"$processor" = x"" ; then
--                # On 10.5, this contains the type of CPU also:
--                processor=`/usr/sbin/sysctl -n machdep.cpu.brand_string`
--            fi
--            processor_flags=`/usr/sbin/sysctl -n machdep.cpu.features`
--            processor_flags=`echo $processor_flags | tr "[A-Z]" "[a-z]"`
--        fi
--    fi
--fi
--
- # OS
- targetos=$(tolower $(uname -s))
- 
++        processor="${processor#Processor type:\ *}"
++        processor="${processor% \(*}"
+         tune=$processor
+     else
+             # 10.4 only:

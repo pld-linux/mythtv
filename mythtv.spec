@@ -101,7 +101,6 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
-# for bundled libavcodec
 BuildRequires:	Mesa-libGLU-devel
 BuildRequires:	libdts-devel
 BuildRequires:	xorg-lib-libXext-devel

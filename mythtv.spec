@@ -65,7 +65,7 @@ Patch0:		%{name}-configure.patch
 #Patch2: %{name}-pl.patch
 Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
-Patch20:	%{name}-dshowserver_trunk.patch}
+Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel

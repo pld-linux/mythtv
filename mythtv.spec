@@ -107,7 +107,6 @@ BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker
-
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -599,6 +598,7 @@ fi
 
 %files -n python-MythTV
 %defattr(644,root,root,755)
-%dir %{py_sitescriptdir}/MythTV/
+%dir %{py_sitescriptdir}/MythTV
+# XXX: package .py[co] only
 %{py_sitescriptdir}/MythTV/*
 %{py_sitescriptdir}/*.egg-info

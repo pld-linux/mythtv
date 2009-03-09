@@ -600,5 +600,6 @@ fi
 
 %files -n python-MythTV
 %defattr(644,root,root,755)
-%dir %{py_sitedir}/MythTV/
-%{py_sitedir}/MythTV/*
+%dir %{py_sitescriptdir}/MythTV/
+%{py_sitescriptdir}/MythTV/*
+%{py_sitescriptdir}/*.egg-info

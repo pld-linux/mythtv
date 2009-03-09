@@ -55,27 +55,34 @@ Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	pld-mythfrontend.desktop
 # Source5-md5:  f37a903ac97463683bebacdf29406951
-Source6:        pld-mythfrontend.png
+Source6:	pld-mythfrontend.png
 # Source6-md5:  bf76bd1463a022e174e4af976a03e678
-Source20: 	dshowcodecs
+Source20:	dshowcodecs
 # Source20-md5: 48327772b9e150f69e1ab8ff44b9a76c
-#Patch100:		%{name}-branch.diff
-Patch0:			%{name}-configure.patch
-#Patch1:		%{name}-mythstream.patch
-#Patch2:		%{name}-pl.patch
-Patch3:			%{name}-sbinpath.patch
-#Patch4:		mythtv-dvdnav-shared.patch
-Patch20: 		%{name}-dshowserver_trunk.patch}
+#Patch100: %{name}-branch.diff
+Patch0:		%{name}-configure.patch
+#Patch1: %{name}-mythstream.patch
+#Patch2: %{name}-pl.patch
+Patch3:		%{name}-sbinpath.patch
+#Patch4: %{name}-dvdnav-shared.patch
+Patch20:	%{name}-dshowserver_trunk.patch}
 URL:		http://www.mythtv.org/
-BuildRequires: OpenGL-devel
-BuildRequires: OpenGL-GLU-devel
+BuildRequires:	OpenGL-GLU-devel
+BuildRequires:	OpenGL-devel
+BuildRequires:	Qt3Support-devel
+BuildRequires:	QtCore-devel
+BuildRequires:	QtGui-devel
+BuildRequires:	QtNetwork-devel
+BuildRequires:	QtOpenGL-devel
+BuildRequires:	QtSql-devel
+BuildRequires:	QtWebKit-devel
+BuildRequires:	QtXml-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 BuildRequires:	ffmpeg-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
-%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 %{?with_firewire:BuildRequires:	libavc1394-devel}
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
@@ -85,27 +92,20 @@ BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
 #BuildRequires:	patchutils
-BuildRequires:	qt4-qmake
-BuildRequires:	python-devel
-BuildRequires:  rpm-pythonprov
 BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
-BuildRequires:	Qt3Support-devel
-BuildRequires:	QtOpenGL-devel
-BuildRequires:	QtXml-devel
+BuildRequires:	python-devel
 BuildRequires:	qt4-build
-BuildRequires:	QtNetwork-devel
-BuildRequires:	QtGui-devel
-BuildRequires:	QtSql-devel
-BuildRequires:	QtCore-devel
-BuildRequires:  QtWebKit-devel
+BuildRequires:	qt4-qmake
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
+%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 # for bundled libavcodec
+BuildRequires:	Mesa-libGLU-devel
 BuildRequires:	libdts-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
-BuildRequires:	Mesa-libGLU-devel
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker
 
@@ -228,8 +228,8 @@ Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 %package themes
 Summary:	Base themes for mythtv's frontend
 Summary(pl.UTF-8):	Podstawowe motywy dla frontendu mythtv
-Requires:	%{name}-frontend = %{version}-%{release}
 Group:		Themes
+Requires:	%{name}-frontend = %{version}-%{release}
 
 %description themes
 MythTV provides a unified graphical interface for recording and
@@ -251,9 +251,9 @@ mythtvsetup.
 Summary:	Library providing mythtv support
 Summary(pl.UTF-8):	Biblioteka udostępniająca obsługę mythtv
 Group:		Libraries
+Requires:	QtSql-mysql
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
-Requires:	QtSql-mysql
 
 %description -n libmyth
 Common library code for MythTV and add-on modules (development) MythTV
@@ -292,9 +292,9 @@ Static libmyth library.
 Statyczna biblioteka libmyth.
 
 %package -n perl-MythTV
-Summary: MythTV Perl bindings
+Summary:	MythTV Perl bindings
 Summary(pl.UTF-8):	Interfejs Perla dla MythTV
-Group: System Environment/Libraries
+Group:		Libraries
 
 %description -n perl-MythTV
 MythTV Perl bindings.
@@ -303,10 +303,10 @@ MythTV Perl bindings.
 Ten pakiet zawiera moduły Perla do tworzenia dodatków dla mythtv.
 
 %package -n python-MythTV
-Summary: MythTV Python bindings
+Summary:	MythTV Python bindings
 Summary(pl.UTF-8):	Interfejs Pythona dla MythTV
-Group: System Environment/Libraries
-Requires: MySQL-python
+Group:		Libraries
+Requires:	MySQL-python
 
 %description -n python-MythTV
 MythTV Python bindings.
@@ -561,7 +561,7 @@ fi
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
 %if %{with dshowserver}
-%attr(644,root,root) %{_datadir}/mythtv/dshowcodecs
+%{_datadir}/mythtv/dshowcodecs
 %endif
 %{_desktopdir}/*.desktop
 %{_pixmapsdir}/*.png
@@ -579,7 +579,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/lib*.a
-%attr(644,root,root) %{_datadir}/mythtv/*.pl
+%{_datadir}/mythtv/*.pl
 
 %files -n libmyth-devel
 %defattr(644,root,root,755)
@@ -592,13 +592,13 @@ fi
 
 %files -n perl-MythTV
 %defattr(644,root,root,755)
-%attr(644,root,root) %{perl_vendorlib}/MythTV.pm
-%attr(755,root,root) %dir %{perl_vendorlib}/MythTV
-%attr(644,root,root) %{perl_vendorlib}/MythTV/*.pm
-%attr(644,root,root) %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
+%{perl_vendorlib}/MythTV.pm
+%dir %{perl_vendorlib}/MythTV
+%{perl_vendorlib}/MythTV/*.pm
+%{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
 
 %files -n python-MythTV
 %defattr(644,root,root,755)
-%attr(755,root,root) %dir %{python_sitelib}/MythTV/
-%attr(644,root,root) %{python_sitelib}/MythTV/*
+%dir %{py_sitedir}/MythTV/
+%{py_sitedir}/MythTV/*

@@ -36,7 +36,7 @@
 
 # dshowserver is exclusive arch for x86 x86_64 only
 %ifnarch %{ix86} %{x8664}
-%define with_dshowserver 0
+%undefine with_dshowserver
 %endif
 
 %define snap 20090302

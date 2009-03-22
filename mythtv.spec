@@ -39,7 +39,7 @@
 %undefine with_dshowserver
 %endif
 
-%define snap 20090302
+%define snap 20090322
 #%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
@@ -49,7 +49,7 @@ Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	2bb24a1d0bbe7b78dc29e94c219d0c5c
+# Source0-md5:	3e3b056e78e3646465603789e064032e
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -67,6 +67,7 @@ Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
+BuildRequires:	Mesa-libGLU-devel
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	Qt3Support-devel
@@ -74,6 +75,7 @@ BuildRequires:	QtCore-devel
 BuildRequires:	QtGui-devel
 BuildRequires:	QtNetwork-devel
 BuildRequires:	QtOpenGL-devel
+BuildRequires:	QtScript-devel
 BuildRequires:	QtSql-devel
 BuildRequires:	QtWebKit-devel
 BuildRequires:	QtXml-devel
@@ -84,6 +86,7 @@ BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
 %{?with_firewire:BuildRequires:	libavc1394-devel}
+BuildRequires:	libdts-devel
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
 %{?with_firewire:BuildRequires:	libiec61883-devel}
@@ -100,10 +103,8 @@ BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
-BuildRequires:	Mesa-libGLU-devel
-BuildRequires:	libdts-devel
 BuildRequires:	xorg-lib-libXext-devel
+%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker

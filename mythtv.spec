@@ -1,10 +1,7 @@
 # TODO
 # - bconds: altivec joystick lcd
 # - lcd? (app-misc/lcdproc)
-# - icons for desktop entries
 # - alpha, sparc, ppc arches?
-# - make it build with ffmpeg-devel installed
-# - perl bindings
 #
 # Specfile for MythTV
 #
@@ -17,15 +14,18 @@
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
 %bcond_without	oss		# oss support
-%bcond_without	arts		# arts support
+%bcond_with	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without	opengl		# opengl vsync
 %bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
-%bcond_with	ivtv		# ivtv support (PVR-250, PVR-350) NFY
+%bcond_without	ivtv		# ivtv support (PVR-250, PVR-350) NFY
+%bcond_without	iptv
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
 %bcond_with	mmx		# enable MMX
+%bcond_with     dshowserver	# enable directshow codecs server
+%bcond_with 	directfb
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -34,42 +34,59 @@
 %endif
 %endif
 
+# dshowserver is exclusive arch for x86 x86_64 only
+%ifnarch %{ix86} %{x8664}
+%undefine with_dshowserver
+%endif
+
+%define snap 20090518
+#%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.21
-Release:	6.1
+Version:	0.22
+Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	http://www.mythtv.org/mc/%{name}-%{version}.tar.bz2
-# Source0-md5:	49fc135e1cde90cd935c1229467fa37e
+Source0:	%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	22f837c4cf0ebb4410d97d2cc1d29546
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
-Source5:	mythfrontend.desktop
-#Patch100:		%{name}-branch.diff
-Patch0:		%{name}-lib64.patch
-Patch1:		%{name}-configure.patch
-Patch2:		%{name}-mythstream.patch
-Patch3:		%{name}-ldconfig.patch
-#Patch4:		%{name}-pl.patch
-Patch5:		%{name}-sbinpath.patch
-Patch6:		%{name}-dvdnav-shared.patch
-Patch7:		%{name}-libs.patch
-Patch8:		%{name}-fixes.patch
-# this is just some random changes from development snapshots, not compatible with this version
-Patch9:		%{name}-ffmpeg-API.patch
+Source5:	pld-mythfrontend.desktop
+# Source5-md5:  f37a903ac97463683bebacdf29406951
+Source6:	pld-mythfrontend.png
+# Source6-md5:  bf76bd1463a022e174e4af976a03e678
+Source20:	dshowcodecs
+# Source20-md5: 48327772b9e150f69e1ab8ff44b9a76c
+#Patch100: %{name}-branch.diff
+Patch0:		%{name}-configure.patch
+#Patch1: %{name}-mythstream.patch
+#Patch2: %{name}-pl.patch
+Patch3:		%{name}-sbinpath.patch
+#Patch4: %{name}-dvdnav-shared.patch
+Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
-BuildRequires:	OpenGL-devel
+BuildRequires:	Mesa-libGLU-devel
 BuildRequires:	OpenGL-GLU-devel
+BuildRequires:	OpenGL-devel
+BuildRequires:	Qt3Support-devel
+BuildRequires:	QtCore-devel
+BuildRequires:	QtGui-devel
+BuildRequires:	QtNetwork-devel
+BuildRequires:	QtOpenGL-devel
+BuildRequires:	QtScript-devel
+BuildRequires:	QtSql-devel
+BuildRequires:	QtWebKit-devel
+BuildRequires:	QtXml-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
-BuildConflicts:	ffmpeg-devel
+BuildRequires:	ffmpeg-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
-%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 %{?with_firewire:BuildRequires:	libavc1394-devel}
+BuildRequires:	libdts-devel
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
 %{?with_firewire:BuildRequires:	libiec61883-devel}
@@ -77,14 +94,20 @@ BuildRequires:	libdvdnav-devel
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-BuildRequires:	qmake >= 6:3.2.1-4
-BuildRequires:	qt-devel >= 6:3.2.1-4
+#BuildRequires:	patchutils
+BuildRequires:	perl-devel
+BuildRequires:	perl-tools-pod
+BuildRequires:	python-devel
+BuildRequires:	qt4-build
+BuildRequires:	qt4-qmake
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-# for bundled libavcodec
-BuildRequires:	libdts-devel
 BuildRequires:	xorg-lib-libXext-devel
+%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
+# for Perl bindings
+BuildRequires:	perl-ExtUtils-MakeMaker
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -204,8 +227,8 @@ Ten pakiet zawiera tylko program do konfigurowania backendu mythtv.
 %package themes
 Summary:	Base themes for mythtv's frontend
 Summary(pl.UTF-8):	Podstawowe motywy dla frontendu mythtv
-Requires:	%{name}-frontend = %{version}-%{release}
 Group:		Themes
+Requires:	%{name}-frontend = %{version}-%{release}
 
 %description themes
 MythTV provides a unified graphical interface for recording and
@@ -227,10 +250,9 @@ mythtvsetup.
 Summary:	Library providing mythtv support
 Summary(pl.UTF-8):	Biblioteka udostępniająca obsługę mythtv
 Group:		Libraries
+Requires:	QtSql-mysql
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
-Requires:	qt >= 6:3.2.1-4
-Requires:	qt-plugin-mysql >= 6:3.2.1-4
 
 %description -n libmyth
 Common library code for MythTV and add-on modules (development) MythTV
@@ -268,33 +290,41 @@ Static libmyth library.
 %description -n libmyth-static -l pl.UTF-8
 Statyczna biblioteka libmyth.
 
+%package -n perl-MythTV
+Summary:	MythTV Perl bindings
+Summary(pl.UTF-8):	Interfejs Perla dla MythTV
+Group:		Libraries
+
+%description -n perl-MythTV
+MythTV Perl bindings.
+
+%description -n perl-MythTV -l pl.UTF-8
+Ten pakiet zawiera moduły Perla do tworzenia dodatków dla mythtv.
+
 %package -n python-MythTV
 Summary:	MythTV Python bindings
-Summary(pl.UTF-8):	Interfejs Pythona dla MythTV	
-Group:		Libraries/Python
-Requires:	libmyth = %{version}-%{release}
+Summary(pl.UTF-8):	Interfejs Pythona dla MythTV
+Group:		Libraries
+Requires:	MySQL-python
 
 %description -n python-MythTV
-This package contains the Python modules for developing add-ons for mythtv.
+MythTV Python bindings.
 
 %description -n python-MythTV -l pl.UTF-8
 Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %prep
-%setup -q %{?_rev:-n %{name}}
-%if %{_lib} != "lib"
-#%patch0 -p1
-%endif
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-#%patch4 -p1 REDIFF and submit
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-#%patch9 -p1
 
+%setup -q %{SOURCE0}
+
+
+%patch0 -p0
+#%patch1 -p1
+#%patch2 -p1
+%patch3 -p1
+#%patch4 -p1
+
+%{?with_dshowserver:%patch20 -p1}
 rm -rf database/old # not supported in PLD
 
 # lib64 fix - enable to update patch
@@ -325,12 +355,12 @@ getmakefile() {
 			makefile="$1"
 			return
 			;;
-		esac
+	esac
 		shift
 	done
 }
 
-qmake "$@"
+qmake-qt4 "$@"
 getmakefile "$@"
 if [ "$makefile" ]; then
 	%{__sed} -i -e '
@@ -341,7 +371,12 @@ fi
 EOF
 chmod +x qmake-wrapper.sh
 
+# move perl bindings to vendor prefix
+sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
+   bindings/perl/perl.pro
+
 %build
+
 %if %{with cpu_autodetect}
 # Make sure we have /proc mounted
 if [ ! -r /proc/cpuinfo ]; then
@@ -350,14 +385,10 @@ if [ ! -r /proc/cpuinfo ]; then
 fi
 %endif
 
-# NB: not autoconf configure
-# help configure::has_library() to locate libs
-LD_LIBRARY_PATH=%{_libdir} \
-CC="%{__cc}" \
-CXX="%{__cxx}" \
 ./configure \
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
+	--libdir-name=`basename %{_libdir}` \
 	--mandir=%{_mandir} \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
@@ -388,35 +419,46 @@ CXX="%{__cxx}" \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
 	--%{?with_xrandr:en}%{!?with_xrandr:dis}able-xrandr \
 	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
+	--%{?with_ivtv:en}%{!?with_ivtv:dis}able-ivtv \
+	--%{?with_iptv:en}%{!?with_iptv:dis}able-iptv \
+	--%{?with_nellymoserdec:en}%{!?with_nellymoserdec:dis}able-decoder=nellymoser \
+	--%{?with_directfb:en}%{!?with_directfb:dis}able-directfb \
 	--enable-xv \
 	--enable-x11 \
 
-qmake mythtv.pro \
-	QTDIR="%{_prefix}" \
-	QMAKE_LIBDIR_X11=%{?_x_libraries}%{!?_x_libraries:%{_libdir}}
+%{_libdir}/qt4/bin/qmake mythtv.pro
+#sed -i -e 's/usr\/\/usr/usr/g' config.ep
 
-%{__make} \
-	QTDIR="%{_prefix}" \
-	QMAKE=$(pwd)/qmake-wrapper.sh
+
+%{__make}
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 		$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
 		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
-		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins
+		$RPM_BUILD_ROOT%{_libdir}/mythtv \
+		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
+		$RPM_BUILD_ROOT%{_pixmapsdir}
 
-export QTDIR="%{_prefix}"
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# required to build some plugins
+#	install libs/libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv \
+#		libs/libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv \
+#		libs/libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv
 
 # Install the files that we added on top of mythtv's own stuff
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
+%{?with_dshowserver:install %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/mythtv}
 
 # desktop entries
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 # Install settings.pro so people can see the build options we used
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build
@@ -443,16 +485,16 @@ cp -a programs/mythtvosd/{README,*.xml} mythtvosd
 cp -a programs/mythwelcome/README mythwelcome
 cp -a programs/mythlcdserver/README mythlcdserver
 
-rm $RPM_BUILD_ROOT%{_libdir}/lib*.so.[0-9]{,.[0-9][0-9]}
-%py_postclean
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+# Empty newline after %addusertogroup %{name} video below is intended.
+# Do not remove it until rpm stop joining lines with that macro.
 %pre backend
 %groupadd -g 149 %{name}
 %useradd -u 149 -d /var/lib/mythtv -g %{name} -c "MythTV User" %{name}
 %addusertogroup %{name} video
+
 %addusertogroup %{name} audio
 
 %post backend
@@ -484,18 +526,18 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
-#%doc docs contrib configfiles
+%doc docs contrib config
 %doc keys.txt mythtvosd mythwelcome mythlcdserver
 
 %files backend
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_bindir}/mythtranscode
-%attr(755,root,root) %{_bindir}/mythreplex
 %attr(755,root,root) %{_sbindir}/mythbackend
 %attr(755,root,root) %{_sbindir}/mythcommflag
+%attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_sbindir}/mythjobqueue
 %attr(755,root,root) %{_sbindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythtranscode
+%attr(755,root,root) %{_bindir}/mythreplex
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
@@ -520,7 +562,11 @@ fi
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/*.ttf
 %dir %{_datadir}/mythtv/i18n
+%if %{with dshowserver}
+%{_datadir}/mythtv/dshowcodecs
+%endif
 %{_desktopdir}/*.desktop
+%{_pixmapsdir}/*.png
 
 %files setup
 %defattr(644,root,root,755)
@@ -533,7 +579,9 @@ fi
 
 %files -n libmyth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/lib*.so*
+%attr(755,root,root) %{_libdir}/lib*.a
+%{_datadir}/mythtv/*.pl
 
 %files -n libmyth-devel
 %defattr(644,root,root,755)
@@ -544,7 +592,17 @@ fi
 %files -n libmyth-static
 %defattr(644,root,root,755)
 
+%files -n perl-MythTV
+%defattr(644,root,root,755)
+%{perl_vendorlib}/MythTV.pm
+%dir %{perl_vendorlib}/MythTV
+%{perl_vendorlib}/MythTV/*.pm
+%{perl_vendorlib}/IO/Socket/INET/MythTV.pm
+%exclude %{perl_vendorarch}/auto/MythTV/.packlist
+
 %files -n python-MythTV
 %defattr(644,root,root,755)
-%{py_sitescriptdir}/MythTV
+%dir %{py_sitescriptdir}/MythTV
+# XXX: package .py[co] only
+%{py_sitescriptdir}/MythTV/*
 %{py_sitescriptdir}/*.egg-info

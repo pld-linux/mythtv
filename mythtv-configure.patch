@@ -1,6 +1,7 @@
---- configure.orig	2008-11-01 18:37:08.000000000 +0100
-+++ configure	2008-11-01 18:42:53.000000000 +0100
-@@ -1279,8 +1279,8 @@
+diff -urN mythtv-0.22rc1.orig/configure mythtv-0.22rc1/configure
+--- mythtv-0.22rc1.orig/configure	2009-10-09 00:30:46.000000000 +0200
++++ mythtv-0.22rc1/configure	2009-10-17 23:10:29.000000000 +0200
+@@ -1564,8 +1564,8 @@
      arch=`arch`
      if test x"$arch" = x"ppc" -o x"$arch" = x"ppc64" ; then
          processor=`/usr/bin/hostinfo | grep "Processor type:"`

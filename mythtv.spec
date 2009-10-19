@@ -23,6 +23,7 @@
 %bcond_without	iptv
 %bcond_with	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
+%bcond_without  vdpau		# disable nvidia vdpau support
 %bcond_with	mmx		# enable MMX
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
@@ -39,17 +40,17 @@
 %undefine with_dshowserver
 %endif
 
-%define snap 20090518
+%define snap rc1
 #%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.22
-Release:	0.%{snap}.2
+Release:	0.%{snap}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	22f837c4cf0ebb4410d97d2cc1d29546
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
+# Source0-md5:	049e93d78d5370351539c9a23b47e1af
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -68,8 +69,8 @@ Patch3:		%{name}-sbinpath.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	Mesa-libGLU-devel
-BuildRequires:	OpenGL-GLU-devel
-BuildRequires:	OpenGL-devel
+#BuildRequires:	OpenGL-GLU-devel
+%{?without_vdpau:BuildRequires:	OpenGL-devel}
 BuildRequires:	Qt3Support-devel
 BuildRequires:	QtCore-devel
 BuildRequires:	QtGui-devel
@@ -97,12 +98,14 @@ BuildRequires:	mysql-devel
 #BuildRequires:	patchutils
 BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
+BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
+%{?with_vdpau:BuildRequires:	xorg-driver-video-nvidia-devel}
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
@@ -151,6 +154,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	libmyth = %{version}-%{release}
 Requires:	mythtv = %{version}-%{release}
+Suggests:	mysql
 Provides:	group(mythtv)
 Provides:	user(mythtv)
 
@@ -253,6 +257,7 @@ Group:		Libraries
 Requires:	QtSql-mysql
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
+%{?with_vdpau:Requires:		libvdpau.so.1}
 
 %description -n libmyth
 Common library code for MythTV and add-on modules (development) MythTV
@@ -315,10 +320,10 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %prep
 
-%setup -q %{SOURCE0}
+%setup -q -n %{name}-%{version}%{snap}
 
 
-%patch0 -p0
+%patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
 %patch3 -p1
@@ -422,6 +427,7 @@ fi
 	--%{?with_ivtv:en}%{!?with_ivtv:dis}able-ivtv \
 	--%{?with_iptv:en}%{!?with_iptv:dis}able-iptv \
 	--%{?with_nellymoserdec:en}%{!?with_nellymoserdec:dis}able-decoder=nellymoser \
+	--%{?with_vdpau:en}%{!?with_vdpau:dis}able-vdpau \
 	--%{?with_directfb:en}%{!?with_directfb:dis}able-directfb \
 	--enable-xv \
 	--enable-x11 \
@@ -494,7 +500,6 @@ rm -rf $RPM_BUILD_ROOT
 %groupadd -g 149 %{name}
 %useradd -u 149 -d /var/lib/mythtv -g %{name} -c "MythTV User" %{name}
 %addusertogroup %{name} video
-
 %addusertogroup %{name} audio
 
 %post backend
@@ -550,7 +555,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythshutdown
-%attr(755,root,root) %{_bindir}/mythtv
+%attr(755,root,root) %{_bindir}/mythavtest
 %attr(755,root,root) %{_bindir}/mythtvosd
 %attr(755,root,root) %{_bindir}/mythwelcome
 %dir %{_datadir}/mythtv

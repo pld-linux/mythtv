@@ -70,7 +70,7 @@ Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
 BuildRequires:	Mesa-libGLU-devel
 #BuildRequires:	OpenGL-GLU-devel
-%{?without_vdpau:BuildRequires:	OpenGL-devel}
+BuildRequires:	OpenGL-devel
 BuildRequires:	Qt3Support-devel
 BuildRequires:	QtCore-devel
 BuildRequires:	QtGui-devel
@@ -105,7 +105,7 @@ BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-%{?with_vdpau:BuildRequires:	xorg-driver-video-nvidia-devel}
+%{?with_vdpau:BuildRequires:	libvdpau-devel}
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
@@ -257,7 +257,6 @@ Group:		Libraries
 Requires:	QtSql-mysql
 Requires:	freetype >= 1:2.0.0
 Requires:	lame
-%{?with_vdpau:Requires:		libvdpau.so.1}
 
 %description -n libmyth
 Common library code for MythTV and add-on modules (development) MythTV

@@ -68,6 +68,8 @@ Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
+BuildConflicts:	xorg-driver-video-nvidia-libs
+BuildConflicts: xorg-driver-video-nvidia-devel
 BuildRequires:	Mesa-libGLU-devel
 #BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel

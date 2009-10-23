@@ -41,7 +41,7 @@
 %undefine with_dshowserver
 %endif
 
-%define snap 0
+%define snap rc1
 #%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)

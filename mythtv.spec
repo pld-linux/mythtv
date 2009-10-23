@@ -27,6 +27,7 @@
 %bcond_with	mmx		# enable MMX
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
+%bcond_with		nvidia_headers
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -40,7 +41,7 @@
 %undefine with_dshowserver
 %endif
 
-%define snap rc1
+%define snap 0
 #%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
@@ -68,8 +69,8 @@ Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
-BuildConflicts:	xorg-driver-video-nvidia-libs
-BuildConflicts: xorg-driver-video-nvidia-devel
+%{?without_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-libs}
+%{?without_nvidia_headers:BuildConflicts: xorg-driver-video-nvidia-devel}
 BuildRequires:	Mesa-libGLU-devel
 #BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel

@@ -13,21 +13,23 @@
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time (sets "-march", "-mcpu" compile flags really)
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
-%bcond_without	oss		# oss support
-%bcond_with	arts		# arts support
+%bcond_without	oss			# oss support
+%bcond_with	arts			# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without	opengl		# opengl vsync
-%bcond_without	dvb		# DVB support
+%bcond_without	dvb			# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
 %bcond_without	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_without	iptv
-%bcond_with	firewire	# ieee1394 (NFY)
+%bcond_with	firewire		# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
 %bcond_without  vdpau		# disable nvidia vdpau support
-%bcond_with	mmx		# enable MMX
+%bcond_without      fftw3   # disable fftw3 support
+%bcond_with	mmx				# enable MMX
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
-%bcond_with		nvidia_headers
+%bcond_with		nvidia_headers # build vdpau support with nvidia headers
+							   # instead of libvdpau	
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -47,7 +49,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.22
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
@@ -93,6 +95,7 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	libdts-devel
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
+%{?with_fftw3:BuildRequires: fftw3-devel}
 %{?with_firewire:BuildRequires:	libiec61883-devel}
 %{?with_firewire:BuildRequires:	libraw1394-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
@@ -431,6 +434,7 @@ fi
 	--%{?with_nellymoserdec:en}%{!?with_nellymoserdec:dis}able-decoder=nellymoser \
 	--%{?with_vdpau:en}%{!?with_vdpau:dis}able-vdpau \
 	--%{?with_directfb:en}%{!?with_directfb:dis}able-directfb \
+	--%{?with_fftw3:en}%{!?with_fftw3:dis}able-libfftw3 \
 	--enable-xv \
 	--enable-x11 \
 

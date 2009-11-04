@@ -41,7 +41,7 @@
 %undefine with_dshowserver
 %endif
 
-%define snap rc1
+%define snap rc2
 #%define rel 0.1
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
@@ -51,7 +51,7 @@ Release:	0.%{snap}.2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
-# Source0-md5:	049e93d78d5370351539c9a23b47e1af
+# Source0-md5:	1e4be634b137e5b944c94b418d8c3791
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate

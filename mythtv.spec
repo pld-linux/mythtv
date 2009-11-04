@@ -72,7 +72,8 @@ Patch3:		%{name}-sbinpath.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
 %{?without_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-libs}
-%{?without_nvidia_headers:BuildConflicts: xorg-driver-video-nvidia-devel}
+%{?without_nvidia_headers:BuildConflicts: 	xorg-driver-video-nvidia-devel}
+%{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	Mesa-libGLU-devel
 #BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
@@ -95,7 +96,7 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	libdts-devel
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
-%{?with_fftw3:BuildRequires: fftw3-devel}
+%{?with_fftw3:BuildRequires: fftw3-devel,fftw3-single-devel}
 %{?with_firewire:BuildRequires:	libiec61883-devel}
 %{?with_firewire:BuildRequires:	libraw1394-devel}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
@@ -111,7 +112,7 @@ BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-%{?with_vdpau:BuildRequires:	libvdpau-devel}
+%{?without_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel

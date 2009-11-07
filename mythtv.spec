@@ -13,23 +13,24 @@
 %bcond_with	cpu_autodetect	# enable CPU autodetection at compile time (sets "-march", "-mcpu" compile flags really)
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
-%bcond_without	oss			# oss support
-%bcond_with	arts			# arts support
+%bcond_without	oss		# oss support
+%bcond_with	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
+%bcond_without  pulseaudio	# pulseaudio support
 %bcond_without	opengl		# opengl vsync
-%bcond_without	dvb			# DVB support
+%bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
 %bcond_without	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_without	iptv
-%bcond_with	firewire		# ieee1394 (NFY)
+%bcond_without	firewire	# ieee1394 (NFY)
 %bcond_without	xvmc		# do not use XvMCW
 %bcond_without  vdpau		# disable nvidia vdpau support
-%bcond_without      fftw3   # disable fftw3 support
-%bcond_with	mmx				# enable MMX
+%bcond_without  fftw3		# disable fftw3 support
+%bcond_with	mmx		# enable MMX
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
-%bcond_with		nvidia_headers # build vdpau support with nvidia headers
-							   # instead of libvdpau	
+%bcond_with	nvidia_headers	# build vdpau support with nvidia headers 
+				# instead of libvdpau	
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -43,17 +44,16 @@
 %undefine with_dshowserver
 %endif
 
-%define snap rc2
-#%define rel 0.1
+#%define snap rc2
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.22
-Release:	0.%{snap}.2
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}%{snap}.tar.bz2
-# Source0-md5:	1e4be634b137e5b944c94b418d8c3791
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	e8f8b5b6a51cd7be700e215b2a1bf2c0
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -71,8 +71,8 @@ Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
 Patch20:	%{name}-dshowserver_trunk.patch
 URL:		http://www.mythtv.org/
-%{?without_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-libs}
-%{?without_nvidia_headers:BuildConflicts: 	xorg-driver-video-nvidia-devel}
+%{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-libs}
+%{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 %{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	Mesa-libGLU-devel
 #BuildRequires:	OpenGL-GLU-devel
@@ -107,12 +107,14 @@ BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
+%{?with_pulseaudio:BuildRequires: pulseaudio-devel}
+%{?without_pulseaudio:BuildConflicts: pulseaudio-devel}
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-%{?without_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
+%{!?with_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
@@ -326,7 +328,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %prep
 
-%setup -q -n %{name}-%{version}%{snap}
+%setup -q -n %{name}-%{version}
 
 
 %patch0 -p1

@@ -2,6 +2,7 @@
 # - bconds: altivec joystick lcd
 # - lcd? (app-misc/lcdproc)
 # - alpha, sparc, ppc arches?
+# - http://outflux.net/software/pkgs/mythtvfs-fuse/
 #
 # Specfile for MythTV
 #
@@ -401,7 +402,7 @@ fi
 ./configure \
  	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
-	--libdir-name=`basename %{_libdir}` \
+	--libdir-name=%{_lib} \
 	--mandir=%{_mandir} \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
@@ -442,11 +443,7 @@ fi
 	--enable-x11 \
 
 %{_libdir}/qt4/bin/qmake mythtv.pro
-#sed -i -e 's/usr\/\/usr/usr/g' config.ep
-
-
 %{__make}
-
 
 %install
 rm -rf $RPM_BUILD_ROOT

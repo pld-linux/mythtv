@@ -45,16 +45,16 @@
 %undefine with_dshowserver
 %endif
 
-#%define snap rc2
+%define fix 23095
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.22
-Release:	1
+Release:	fix%{fix}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	e8f8b5b6a51cd7be700e215b2a1bf2c0
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}_%{fix}.tar.bz2
+# Source0-md5:	3801e410792828c1a79a67744cb93ba9
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -70,9 +70,8 @@ Patch0:		%{name}-configure.patch
 #Patch2: %{name}-pl.patch
 Patch3:		%{name}-sbinpath.patch
 #Patch4: %{name}-dvdnav-shared.patch
-Patch20:	%{name}-dshowserver_trunk.patch
+Patch20:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
-%{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-libs}
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 %{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	Mesa-libGLU-devel
@@ -186,7 +185,7 @@ mythtv.
 Ten pakiet zawiera tylko oprogramowanie serwerowe, udostępniające
 usługi przechwytywania i kodowania obrazu i dźwięku. Aby było
 przydatne, wymaga instalacji mythtv-frontend - na tym samym systemie,
-albo innym osiągalnym po sieci.
+albo innym osiągalnym w sieci.
 
 %package frontend
 Summary:	Client component of mythtv (a PVR)
@@ -214,7 +213,7 @@ mythtv.
 
 Ten pakiet zawiera tylko oprogramowanie klienckie, dostarczające
 frontend do odtwarzania i konfiguracji. Wymaga dostępu do instalacji
-mythtv-backend - na tym samym systemie, albo innym osiągalnym po
+mythtv-backend - na tym samym systemie, albo innym osiągalnym w
 sieci.
 
 %package setup
@@ -319,7 +318,7 @@ Ten pakiet zawiera moduły Perla do tworzenia dodatków dla mythtv.
 Summary:	MythTV Python bindings
 Summary(pl.UTF-8):	Interfejs Pythona dla MythTV
 Group:		Libraries
-Requires:	MySQL-python
+Requires:	python-MySQLdb
 
 %description -n python-MythTV
 MythTV Python bindings.
@@ -329,7 +328,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %prep
 
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}_%{fix}
 
 
 %patch0 -p1
@@ -338,7 +337,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 %patch3 -p1
 #%patch4 -p1
 
-%{?with_dshowserver:%patch20 -p1}
+%{?with_dshowserver:%patch20 -p0}
 rm -rf database/old # not supported in PLD
 
 # lib64 fix - enable to update patch

@@ -53,7 +53,7 @@ Version:	0.22
 Release:	fix%{fix}.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}_%{fix}.tar.bz2
+Source0:	%{name}-%{version}_%{fix}.tar.bz2
 # Source0-md5:	3801e410792828c1a79a67744cb93ba9
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init

@@ -108,7 +108,7 @@ BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}
-%{?without_pulseaudio:BuildConflicts: pulseaudio-devel}
+%{!?with_pulseaudio:BuildConflicts: pulseaudio-devel}
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov

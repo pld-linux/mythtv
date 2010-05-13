@@ -27,7 +27,7 @@
 %bcond_without	xvmc		# do not use XvMCW
 %bcond_without  vdpau		# disable nvidia vdpau support
 %bcond_without  fftw3		# disable fftw3 support
-%bcond_without	mmx		# disable MMX
+%bcond_with	mmx		# enable MMX
 %bcond_without	nellymoserdec
 %bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
@@ -414,8 +414,11 @@ fi
 		%ifarch athlon
 			--arch=athlon \
 		%else
-			--cpu=i386 --tune=pentium4 \
+			--cpu=%{_target_cpu} --tune=pentium4 \
 		%endif
+	%endif
+	%ifarch i386 i486 i586
+	--enable-disable-mmx-for-debugging \
 	%endif
 	%ifarch %{x8664}
 	--arch=x86_64 \

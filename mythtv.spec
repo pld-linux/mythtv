@@ -27,7 +27,7 @@
 %bcond_without  vdpau		# disable nvidia vdpau support
 %bcond_without  fftw3		# disable fftw3 support
 %bcond_without	mmx		# enable MMX
-%bcond_without	nellymoser
+%bcond_without	nellymoserdec
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers 

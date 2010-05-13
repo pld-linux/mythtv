@@ -15,7 +15,6 @@
 %bcond_without	lirc		# lirc support
 %bcond_without	alsa		# alsa support
 %bcond_without	oss		# oss support
-%bcond_with	arts		# arts support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without  pulseaudio	# pulseaudio support
 %bcond_without	opengl		# opengl vsync
@@ -45,25 +44,24 @@
 %undefine with_dshowserver
 %endif
 
-%define fix 23095
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.22
-Release:	fix%{fix}.1
+Version:	0.23
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	%{name}-%{version}_%{fix}.tar.bz2
-# Source0-md5:	3801e410792828c1a79a67744cb93ba9
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	3c58f4f45a550b60fbddfb8726d7fc38
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
 Source5:	pld-mythfrontend.desktop
-# Source5-md5:  f37a903ac97463683bebacdf29406951
+# Source5-md5:	f37a903ac97463683bebacdf29406951
 Source6:	pld-mythfrontend.png
-# Source6-md5:  bf76bd1463a022e174e4af976a03e678
+# Source6-md5:	bf76bd1463a022e174e4af976a03e678
 Source20:	dshowcodecs
-# Source20-md5: 48327772b9e150f69e1ab8ff44b9a76c
+# Source20-md5:	48327772b9e150f69e1ab8ff44b9a76c
 #Patch100: %{name}-branch.diff
 Patch0:		%{name}-configure.patch
 #Patch1: %{name}-mythstream.patch
@@ -87,7 +85,6 @@ BuildRequires:	QtSql-devel
 BuildRequires:	QtWebKit-devel
 BuildRequires:	QtXml-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
-%{?with_arts:BuildRequires:	arts-devel >= 13:0.9.5}
 BuildRequires:	ffmpeg-devel
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
@@ -328,7 +325,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %prep
 
-%setup -q -n %{name}-%{version}_%{fix}
+%setup -q
 
 
 %patch0 -p1
@@ -423,7 +420,6 @@ fi
 	%{?with_mmx:--enable-mmx} \
 %endif
 	%{?with_dvb:--enable-dvb --dvb-path=%{_includedir}} \
-	--%{?with_arts:en}%{!?with_arts:dis}able-audio-arts \
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \

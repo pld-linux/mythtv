@@ -3,6 +3,7 @@
 # - lcd? (app-misc/lcdproc)
 # - alpha, sparc, ppc arches?
 # - http://outflux.net/software/pkgs/mythtvfs-fuse/
+# - vaapi support - check for compatible versions of libva?
 #
 # Specfile for MythTV
 #
@@ -26,8 +27,9 @@
 %bcond_without	xvmc		# do not use XvMCW
 %bcond_without  vdpau		# disable nvidia vdpau support
 %bcond_without  fftw3		# disable fftw3 support
-%bcond_without	mmx		# enable MMX
+%bcond_without	mmx		# disable MMX
 %bcond_without	nellymoserdec
+%bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers 
@@ -432,6 +434,7 @@ fi
 	--%{?with_ivtv:en}%{!?with_ivtv:dis}able-ivtv \
 	--%{?with_iptv:en}%{!?with_iptv:dis}able-iptv \
 	--%{?with_nellymoserdec:en}%{!?with_nellymoserdec:dis}able-decoder=nellymoser \
+	--%{?with_vaapi:en}%{!?with_vaapi:dis}able-vaapi \
 	--%{?with_vdpau:en}%{!?with_vdpau:dis}able-vdpau \
 	--%{?with_directfb:en}%{!?with_directfb:dis}able-directfb \
 	--%{?with_fftw3:en}%{!?with_fftw3:dis}able-libfftw3 \

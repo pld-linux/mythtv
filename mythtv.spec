@@ -99,6 +99,7 @@ BuildRequires:	libdvdnav-devel
 %{?with_fftw3:BuildRequires: fftw3-devel,fftw3-single-devel}
 %{?with_firewire:BuildRequires:	libiec61883-devel}
 %{?with_firewire:BuildRequires:	libraw1394-devel}
+%{!?with_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
@@ -114,7 +115,7 @@ BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
-%{!?with_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
+BuildRequires:	which
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel

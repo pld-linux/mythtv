@@ -50,12 +50,12 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.23
-Release:	2
+Version:	0.23.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	3c58f4f45a550b60fbddfb8726d7fc38
+# Source0-md5:	3379a5fd12ae866cd10c5b5d23439898
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -70,7 +70,7 @@ Patch0:		%{name}-configure.patch
 #Patch1: %{name}-mythstream.patch
 #Patch2: %{name}-pl.patch
 Patch3:		%{name}-sbinpath.patch
-#Patch4: %{name}-dvdnav-shared.patch
+Patch4: 	%{name}-compile_fixes_for_qt_4_7.patch
 Patch20:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
@@ -336,7 +336,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 #%patch1 -p1
 #%patch2 -p1
 %patch3 -p1
-#%patch4 -p1
+%patch4 -p1
 
 %{?with_dshowserver:%patch20 -p0}
 rm -rf database/old # not supported in PLD
@@ -617,6 +617,7 @@ fi
 
 %files -n python-MythTV
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mythpython
 %dir %{py_sitescriptdir}/MythTV
 # XXX: package .py[co] only
 %{py_sitescriptdir}/MythTV/*

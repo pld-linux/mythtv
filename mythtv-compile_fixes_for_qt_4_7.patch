@@ -1,0 +1,68 @@
+---
+ libs/libmyth/mythdeque.h          |    2 	1 +	1 -	0 !
+ libs/libmythtv/recordingprofile.h |    2 	1 +	1 -	0 !
+ libs/libmythtv/tv_rec.h           |    2 	1 +	1 -	0 !
+ libs/libmythupnp/eventing.h       |    4 	2 +	2 -	0 !
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+Index: mythtv/libs/libmythupnp/eventing.h
+===================================================================
+--- mythtv.orig/libs/libmythupnp/eventing.h	2010-01-10 08:49:06.000000000 -0500
++++ mythtv/libs/libmythupnp/eventing.h	2010-07-01 22:34:54.000000000 -0400
+@@ -233,7 +233,7 @@
+         {
+             SVMap::iterator it = m_map.find(sName);
+             if (it == m_map.end())
+-                return T(0);
++                return T();
+ 
+             StateVariable< T > *pVariable =
+                 dynamic_cast< StateVariable< T > *>( *it );
+@@ -241,7 +241,7 @@
+             if (pVariable != NULL)
+                 return pVariable->GetValue();
+ 
+-            return T(0);
++            return T();
+         }
+ 
+         uint BuildNotifyBody(QTextStream &ts, TaskTime ttLastNotified) const;
+Index: mythtv/libs/libmyth/audiooutputbase.cpp
+===================================================================
+--- mythtv.orig/libs/libmyth/mythdeque.h	2009-09-11 15:07:19.000000000 -0400
++++ mythtv/libs/libmyth/mythdeque.h	2010-07-01 22:34:54.000000000 -0400
+@@ -19,7 +19,7 @@
+     T dequeue()
+     {
+         if (deque<T>::empty())
+-            return (T)(0);
++            return T();
+         T item = deque<T>::front();
+         deque<T>::pop_front();
+         return item;
+Index: mythtv/libs/libmythtv/recordingprofile.h
+===================================================================
+--- mythtv.orig/libs/libmythtv/recordingprofile.h	2010-05-16 14:58:08.000000000 -0400
++++ mythtv/libs/libmythtv/recordingprofile.h	2010-07-01 22:34:54.000000000 -0400
+@@ -84,7 +84,7 @@
+ 
+   public:
+     // initializers
+-    RecordingProfile(QString profName = NULL);
++    RecordingProfile(QString profName = QString());
+     virtual void loadByID(int id);
+     virtual bool loadByType(const QString &name, const QString &cardtype);
+     virtual bool loadByGroup(const QString &name, const QString &group);
+Index: mythtv/libs/libmythtv/tv_rec.h
+===================================================================
+--- mythtv.orig/libs/libmythtv/tv_rec.h	2010-05-16 14:58:08.000000000 -0400
++++ mythtv/libs/libmythtv/tv_rec.h	2010-07-01 22:34:54.000000000 -0400
+@@ -93,7 +93,7 @@
+ class TuningRequest
+ {
+   public:
+-    TuningRequest(uint f) :
++    TuningRequest(uint f = 0) :
+         flags(f), program(NULL), channel(QString::null),
+         input(QString::null), majorChan(0), minorChan(0), progNum(-1) {;}
+     TuningRequest(uint f, RecordingInfo *p) :

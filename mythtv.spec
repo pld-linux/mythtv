@@ -33,7 +33,7 @@
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers 
-				# instead of libvdpau	
+				# instead of libvdpau
 
 # enable mmx automatically on arches having it
 %ifarch %{ix86} %{x8664}
@@ -65,18 +65,12 @@ Source6:	pld-mythfrontend.png
 # Source6-md5:	bf76bd1463a022e174e4af976a03e678
 Source20:	dshowcodecs
 # Source20-md5:	48327772b9e150f69e1ab8ff44b9a76c
-#Patch100: %{name}-branch.diff
 Patch0:		%{name}-configure.patch
-#Patch1: %{name}-mythstream.patch
-#Patch2: %{name}-pl.patch
-Patch3:		%{name}-sbinpath.patch
-Patch4: 	%{name}-compile_fixes_for_qt_4_7.patch
-Patch20:	%{name}-dshowserver-0.22.patch
+Patch10:	%{name}-sbinpath.patch
+Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
+Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
-%{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
-%{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	Mesa-libGLU-devel
-#BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	Qt3Support-devel
 BuildRequires:	QtCore-devel
@@ -89,6 +83,7 @@ BuildRequires:	QtWebKit-devel
 BuildRequires:	QtXml-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	ffmpeg-devel
+%{?with_fftw3:BuildRequires: fftw3-devel,fftw3-single-devel}
 BuildRequires:	freetype-devel >= 1:2.0.0
 %{?with_jack:BuildRequires:	jack-audio-connection-kit-devel}
 BuildRequires:	lame-libs-devel
@@ -96,29 +91,29 @@ BuildRequires:	lame-libs-devel
 BuildRequires:	libdts-devel
 %{?with_dvb:BuildRequires:	libdvb-devel}
 BuildRequires:	libdvdnav-devel
-%{?with_fftw3:BuildRequires: fftw3-devel,fftw3-single-devel}
 %{?with_firewire:BuildRequires:	libiec61883-devel}
 %{?with_firewire:BuildRequires:	libraw1394-devel}
 %{!?with_nvidia_headers:%{?with_vdpau:BuildRequires:	libvdpau-devel}}
 BuildRequires:	linux-libc-headers >= 7:2.6.10
 %{?with_lirc:BuildRequires:	lirc-devel}
 BuildRequires:	mysql-devel
-#BuildRequires:	patchutils
 BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}
-%{!?with_pulseaudio:BuildConflicts: pulseaudio-devel}
+BuildRequires:	python-devel
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0
 BuildRequires:	which
+%{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	xorg-lib-libXext-devel
 %{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
+%{!?with_pulseaudio:BuildConflicts: pulseaudio-devel}
+%{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker
 ExclusiveArch:	%{ix86} %{x8664} ppc
@@ -214,8 +209,7 @@ mythtv.
 
 Ten pakiet zawiera tylko oprogramowanie klienckie, dostarczające
 frontend do odtwarzania i konfiguracji. Wymaga dostępu do instalacji
-mythtv-backend - na tym samym systemie, albo innym osiągalnym w
-sieci.
+mythtv-backend - na tym samym systemie, albo innym osiągalnym w sieci.
 
 %package setup
 Summary:	Setup the mythtv backend
@@ -332,11 +326,10 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 %setup -q
 
 
-%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%patch0  -p1
+%patch10 -p1
+%patch20 -p1
+#%patch30 -p1
 
 %{?with_dshowserver:%patch20 -p0}
 rm -rf database/old # not supported in PLD
@@ -460,11 +453,6 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
-# required to build some plugins
-#	install libs/libavcodec/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv \
-#		libs/libavformat/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv \
-#		libs/libavutil/*.h $RPM_BUILD_ROOT%{_includedir}/mythtv
-
 # Install the files that we added on top of mythtv's own stuff
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
@@ -503,8 +491,6 @@ cp -a programs/mythlcdserver/README mythlcdserver
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# Empty newline after %addusertogroup %{name} video below is intended.
-# Do not remove it until rpm stop joining lines with that macro.
 %pre backend
 %groupadd -g 149 %{name}
 %useradd -u 149 -d /var/lib/mythtv -g %{name} -c "MythTV User" %{name}
@@ -619,6 +605,5 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythpython
 %dir %{py_sitescriptdir}/MythTV
-# XXX: package .py[co] only
 %{py_sitescriptdir}/MythTV/*
 %{py_sitescriptdir}/*.egg-info

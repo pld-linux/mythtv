@@ -51,7 +51,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.23.1
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -326,7 +326,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 %setup -q
 
 %{__sed} -i -e 's,/var/log/mythfilldatabase.log,/var/log/mythtv/mythfilldatabase.log,' \
-	programs/mythbackend/{housekeeper.cpp programs/mythwelcome/welcomedialog.cpp
+	programs/mythbackend/housekeeper.cpp programs/mythwelcome/welcomedialog.cpp
 
 %patch0  -p1
 %patch10 -p1

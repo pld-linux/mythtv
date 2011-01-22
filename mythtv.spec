@@ -447,7 +447,8 @@ fi
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 		$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
-		$RPM_BUILD_ROOT/var/{cache,lib,log,run}/mythtv \
+		$RPM_BUILD_ROOT/var/{cache,log,run}/mythtv \
+		$RPM_BUILD_ROOT/var/lib/mythtv/tmp \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
 		$RPM_BUILD_ROOT%{_pixmapsdir}
@@ -541,6 +542,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
 %attr(775,root,mythtv) %dir /var/lib/mythtv
+%attr(700,root,mythtv) %dir /var/lib/mythtv/tmp
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend

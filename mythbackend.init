@@ -21,54 +21,62 @@ pidfile=/var/run/mythtv/mythbackend.pid
 
 start() {
 	# Start daemons.
-	if [ ! -f /var/lock/subsys/mythbackend ]; then
-		msg_starting "Mythbackend"
-		daemon /usr/sbin/mythbackend --daemon \
-			--user mythtv \
-			--logfile /var/log/mythtv/mythbackend.log \
-			--pidfile $pidfile \
-			$OPTIONS
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mythbackend
-	else
+	if [ -f /var/lock/subsys/mythbackend ]; then
 		msg_already_running "Mythbackend"
+		return
 	fi
+
+	msg_starting "Mythbackend"
+	daemon /usr/sbin/mythbackend --daemon \
+		--user mythtv \
+		--logfile /var/log/mythtv/mythbackend.log \
+		--pidfile $pidfile \
+		$OPTIONS
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/mythbackend
 }
 
 stop() {
 	# Stop daemons.
-	if [ -f /var/lock/subsys/mythbackend ]; then
-		msg_stopping "Mythbackend"
-		killproc --pidfile mythtv/mythbackend.pid mythbackend
-		rm -f /var/lock/subsys/mythbackend /var/run/mythtv/mythbackend.pid >/dev/null 2>&1
-	else
+	if [ ! -f /var/lock/subsys/mythbackend ]; then
 		msg_not_running "Mythbackend"
+		return
 	fi
+
+	msg_stopping "Mythbackend"
+	killproc --pidfile mythtv/mythbackend.pid mythbackend
+	rm -f /var/lock/subsys/mythbackend $pidfile >/dev/null 2>&1
+}
+
+flush-logs() {
+	if [ ! -f /var/lock/subsys/mythbackend ]; then
+		return
+	fi
+
+	show "Rotating %s logs" "Mythbackend"
+	killproc --pidfile $pidfile mythbackend -HUP
 }
 
 RETVAL=0
 # See how we were called.
 case "$1" in
-start)
+  start)
 	start
 	;;
-stop)
+  stop)
 	stop
 	;;
-restart)
+  restart)
 	stop
 	start
 	;;
-flush-logs)
-	if [ -f /var/lock/subsys/mythbackend ]; then
-		show "Rotating %s logs" "Mythbackend"
-		killproc --pidfile mythtv/mythbackend.pid mythbackend -HUP
-	fi
+  flush-logs)
+	flush-logs
 	;;
-status)
-	status mythbackend
-;;
-*)
+  status)
+	status --pidfile $pidfile mythbackend
+	;;
+  *)
 	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 3
 esac

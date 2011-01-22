@@ -48,6 +48,17 @@ stop() {
 	rm -f /var/lock/subsys/mythbackend $pidfile >/dev/null 2>&1
 }
 
+condrestart() {
+	if [ ! -f /var/lock/subsys/mythbackend ]; then
+		msg_not_running "Mythbackend"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
 flush-logs() {
 	if [ ! -f /var/lock/subsys/mythbackend ]; then
 		return
@@ -70,6 +81,12 @@ case "$1" in
 	stop
 	start
 	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
+	;;
   flush-logs)
 	flush-logs
 	;;
@@ -77,7 +94,7 @@ case "$1" in
 	status --pidfile $pidfile mythbackend
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|flush-logs|status}"
 	exit 3
 esac
 

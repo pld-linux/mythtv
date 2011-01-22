@@ -13,6 +13,9 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
+MYTHTV_USER=mythtv
+OPTIONS=
+
 if [ -f /etc/sysconfig/mythbackend ]; then
 	. /etc/sysconfig/mythbackend
 fi
@@ -28,7 +31,7 @@ start() {
 
 	msg_starting "Mythbackend"
 	daemon /usr/sbin/mythbackend --daemon \
-		--user mythtv \
+		--user $MYTHTV_USER \
 		--logfile /var/log/mythtv/mythbackend.log \
 		--pidfile $pidfile \
 		$OPTIONS

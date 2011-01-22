@@ -1,4 +1,7 @@
 # Customized settings for mythbackend
 
-#MYTHTV_HOME=/var/lib/mythtv
+# user the daemon runs, needs write access to /var/log/mythtv and it's $HOME
+#MYTHTV_USER=mythtv
+
+# additional options for mythbackend daemon, use mythbackend --help to see options
 #OPTIONS=

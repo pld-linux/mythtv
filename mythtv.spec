@@ -47,11 +47,12 @@
 %undefine with_dshowserver
 %endif
 
+%include	/usr/lib/rpm/macros.perl
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.23.1
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -104,6 +105,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	qt4-build
 BuildRequires:	qt4-qmake
+BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 BuildRequires:	sed >= 4.0

@@ -4,6 +4,11 @@
 # - alpha, sparc, ppc arches?
 # - http://outflux.net/software/pkgs/mythtvfs-fuse/
 # - vaapi support - check for compatible versions of libva?
+# - bindings:
+#   WARNING: disabling Python bindings; missing MySQLdb
+#   WARNING: disabling Perl bindings; missing Net::UPnP::QueryResponse
+#   WARNING: disabling Perl bindings; missing Net::UPnP::ControlPoint
+# - dozen of unpackaged files
 #
 # Specfile for MythTV
 #
@@ -32,6 +37,8 @@
 %bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with 	directfb
+%bcond_with 	perl
+%bcond_with 	python
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers 
 				# instead of libvdpau
 
@@ -51,12 +58,12 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.23.1
-Release:	5
+Version:	0.24.1
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	3379a5fd12ae866cd10c5b5d23439898
+# Source0-md5:	6870c679619ec58456e76839745411d8
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -122,6 +129,11 @@ ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	myth_api_version %(echo %{version} | cut -d. -f1,2)
+
+# libmythavdevice.so.52.2.1 missing -l???: sem_init sem_destroy sem_post sem_timedwait
+# libmythavcodec.so.52.86.1 missing -lpthread: pthread_create pthread_join
+%define		skip_post_check_so	libmythavdevice.so libmythavcodec.so
+%define		no_install_post_check_so 1
 
 %description
 MythTV implements the following PVR features, and more, with a unified
@@ -332,10 +344,9 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
 %patch0  -p1
 %patch10 -p1
-%patch20 -p1
+%{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
-%{?with_dshowserver:%patch20 -p0}
 rm -rf database/old # not supported in PLD
 
 # lib64 fix - enable to update patch
@@ -384,7 +395,7 @@ chmod +x qmake-wrapper.sh
 
 # move perl bindings to vendor prefix
 sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
-   bindings/perl/perl.pro
+  bindings/perl/Makefile
 
 %build
 
@@ -442,7 +453,7 @@ fi
 	--enable-xv \
 	--enable-x11 \
 
-%{_libdir}/qt4/bin/qmake mythtv.pro
+#%{_libdir}/qt4/bin/qmake mythtv.pro
 %{__make}
 
 %install
@@ -459,10 +470,10 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the files that we added on top of mythtv's own stuff
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
-%{?with_dshowserver:install %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/mythtv}
+install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
+cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
+%{?with_dshowserver:cp -p %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/mythtv}
 
 # desktop entries
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
@@ -566,7 +577,7 @@ fi
 %dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
-%{_datadir}/mythtv/*.ttf
+%{_datadir}/mythtv/fonts/*.ttf
 %dir %{_datadir}/mythtv/i18n
 %if %{with dshowserver}
 %{_datadir}/mythtv/dshowcodecs
@@ -598,6 +609,7 @@ fi
 %files -n libmyth-static
 %defattr(644,root,root,755)
 
+%if %{with perl}
 %files -n perl-MythTV
 %defattr(644,root,root,755)
 %{perl_vendorlib}/MythTV.pm
@@ -606,10 +618,13 @@ fi
 %dir %{perl_vendorlib}/IO/Socket/INET
 %{perl_vendorlib}/IO/Socket/INET/MythTV.pm
 %exclude %{perl_vendorarch}/auto/MythTV/.packlist
+%endif
 
+%if %{with python}
 %files -n python-MythTV
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythpython
 %dir %{py_sitescriptdir}/MythTV
 %{py_sitescriptdir}/MythTV/*
 %{py_sitescriptdir}/*.egg-info
+%endif

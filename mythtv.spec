@@ -125,6 +125,7 @@ BuildRequires:	xorg-lib-libXxf86vm-devel
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker
+Conflicts:	logrotate < 3.8.0
 ExclusiveArch:	%{ix86} %{x8664} ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 

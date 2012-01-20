@@ -1,4 +1,5 @@
 /var/log/mythtv/mythbackend.log {
+	su mythtv mythtv
 	notifempty
 	missingok
 	sharedscripts

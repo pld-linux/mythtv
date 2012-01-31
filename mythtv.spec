@@ -67,6 +67,7 @@ Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
+Source4:	%{name}.tmpfiles
 Source5:	pld-mythfrontend.desktop
 # Source5-md5:	f37a903ac97463683bebacdf29406951
 Source6:	pld-mythfrontend.png
@@ -465,7 +466,8 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 		$RPM_BUILD_ROOT/var/lib/mythtv/tmp \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv \
 		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
-		$RPM_BUILD_ROOT%{_pixmapsdir}
+		$RPM_BUILD_ROOT%{_pixmapsdir} \
+		$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -475,6 +477,8 @@ install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
 %{?with_dshowserver:cp -p %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/mythtv}
+
+install %{SOURCE4} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 # desktop entries
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
@@ -559,6 +563,7 @@ fi
 %attr(700,root,mythtv) %dir /var/lib/mythtv/tmp
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
+/usr/lib/tmpfiles.d/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/mythbackend

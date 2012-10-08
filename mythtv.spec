@@ -613,6 +613,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so*
 %attr(755,root,root) %{_libdir}/lib*.a
+%dir %{_datadir}/mythtv
 %{_datadir}/mythtv/*.pl
 
 %files -n libmyth-devel

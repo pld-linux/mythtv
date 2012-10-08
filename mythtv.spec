@@ -58,12 +58,12 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.24.1
+Version:	0.24.3
 Release:	0.2
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	6870c679619ec58456e76839745411d8
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/old_releases/%{name}-%{version}.tar.bz2
+# Source0-md5:	fe7b072df30f09940a1038268b9ca23e
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -494,6 +494,10 @@ for p in mythfrontend; do
 	done > $p.lang
 done
 
+for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/locales/*.xml; do
+	echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*/\(.*\).xml\),%%lang(\2) \1,"
+done > mythbackend.lang
+
 # glibc language codes. attempt was made to change it on libmyth side,
 # but that was just asking for trouble due large coverage of
 # language.lower() usage.
@@ -547,10 +551,10 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
-%doc docs contrib config
+%doc docs contrib
 %doc keys.txt mythtvosd mythwelcome mythlcdserver
 
-%files backend
+%files backend -f mythbackend.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/mythbackend
 %attr(755,root,root) %{_sbindir}/mythcommflag
@@ -559,6 +563,8 @@ fi
 %attr(755,root,root) %{_sbindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
+%attr(755,root,root) %{_bindir}/mythffmpeg
+%attr(755,root,root) %{_bindir}/mythpreviewgen
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(700,root,mythtv) %dir /var/lib/mythtv/tmp
 %attr(775,root,mythtv) %dir /var/cache/mythtv
@@ -576,8 +582,11 @@ fi
 %attr(755,root,root) %{_bindir}/mythavtest
 %attr(755,root,root) %{_bindir}/mythtvosd
 %attr(755,root,root) %{_bindir}/mythwelcome
+%attr(755,root,root) %{_bindir}/mythffplay
 %dir %{_datadir}/mythtv
 %dir %{_datadir}/mythtv/themes
+%{_datadir}/mythtv/internetcontent
+%{_datadir}/mythtv/metadata
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
 %dir %{_libdir}/mythtv/filters

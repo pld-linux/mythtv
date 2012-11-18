@@ -23,23 +23,20 @@
 %bcond_without	oss		# oss support
 %bcond_without	jack		# jack audio connection kit
 %bcond_without  pulseaudio	# pulseaudio support
-%bcond_without	opengl		# opengl vsync
 %bcond_without	dvb		# DVB support
 %bcond_without	xrandr		# disable X11 resolution switching
 %bcond_without	ivtv		# ivtv support (PVR-250, PVR-350) NFY
 %bcond_without	iptv
 %bcond_without	firewire	# ieee1394 (NFY)
-%bcond_without	xvmc		# do not use XvMCW
 %bcond_without  vdpau		# disable nvidia vdpau support
 %bcond_without  fftw3		# disable fftw3 support
 %bcond_with	mmx		# enable MMX
 %bcond_without	nellymoserdec
 %bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
-%bcond_with 	directfb
-%bcond_with 	perl
-%bcond_with 	python
-%bcond_with	nvidia_headers	# build vdpau support with nvidia headers 
+%bcond_with	perl
+%bcond_with	python
+%bcond_with	nvidia_headers	# build vdpau support with nvidia headers
 				# instead of libvdpau
 
 # enable mmx automatically on arches having it
@@ -58,12 +55,12 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.24.3
-Release:	0.2
+Version:	0.26.0
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Multimedia
-Source0:	ftp://ftp.osuosl.org/pub/mythtv/old_releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	fe7b072df30f09940a1038268b9ca23e
+Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
+# Source0-md5:	f57066bf75e6f14824c494d41639f4f9
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -75,7 +72,6 @@ Source6:	pld-mythfrontend.png
 Source20:	dshowcodecs
 # Source20-md5:	48327772b9e150f69e1ab8ff44b9a76c
 Patch0:		%{name}-configure.patch
-Patch10:	%{name}-sbinpath.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
@@ -120,7 +116,6 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	which
 %{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	xorg-lib-libXext-devel
-%{?with_xvmc:BuildRequires:	xorg-lib-libXvMC-devel}
 BuildRequires:	xorg-lib-libXxf86vm-devel
 %{!?with_pulseaudio:BuildConflicts: pulseaudio-devel}
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
@@ -345,7 +340,6 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 	programs/mythbackend/housekeeper.cpp programs/mythwelcome/welcomedialog.cpp
 
 %patch0  -p1
-%patch10 -p1
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
@@ -440,17 +434,14 @@ fi
 	--%{?with_alsa:en}%{!?with_alsa:dis}able-audio-alsa \
 	--%{?with_oss:en}%{!?with_oss:dis}able-audio-oss \
 	--%{?with_jack:en}%{!?with_jack:dis}able-audio-jack \
-	--%{?with_opengl:en}%{!?with_opengl:dis}able-opengl-vsync \
 	--%{?with_lirc:en}%{!?with_lirc:dis}able-lirc \
 	--%{?with_firewire:en}%{!?with_firewire:dis}able-firewire \
 	--%{?with_xrandr:en}%{!?with_xrandr:dis}able-xrandr \
-	--%{?with_xvmc:en}%{!?with_xvmc:dis}able-xvmc \
 	--%{?with_ivtv:en}%{!?with_ivtv:dis}able-ivtv \
 	--%{?with_iptv:en}%{!?with_iptv:dis}able-iptv \
 	--%{?with_nellymoserdec:en}%{!?with_nellymoserdec:dis}able-decoder=nellymoser \
 	--%{?with_vaapi:en}%{!?with_vaapi:dis}able-vaapi \
 	--%{?with_vdpau:en}%{!?with_vdpau:dis}able-vdpau \
-	--%{?with_directfb:en}%{!?with_directfb:dis}able-directfb \
 	--%{?with_fftw3:en}%{!?with_fftw3:dis}able-libfftw3 \
 	--enable-xv \
 	--enable-x11 \
@@ -507,9 +498,8 @@ s,%%lang(zh_tw),%%lang(zh_TW),
 s,%%lang(pt_br),%%lang(pt_BR),
 ' *.lang
 
-rm -rf mythtvosd mythwelcome mythlcdserver
-install -d mythtvosd mythwelcome
-cp -a programs/mythtvosd/{README,*.xml} mythtvosd
+rm -rf mythwelcome mythlcdserver
+install -d mythwelcome
 cp -a programs/mythwelcome/README mythwelcome
 cp -a programs/mythlcdserver/README mythlcdserver
 
@@ -552,15 +542,15 @@ fi
 %defattr(644,root,root,755)
 %doc README* UPGRADING AUTHORS FAQ
 %doc docs contrib
-%doc keys.txt mythtvosd mythwelcome mythlcdserver
+%doc keys.txt mythwelcome mythlcdserver
 
 %files backend -f mythbackend.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_sbindir}/mythbackend
-%attr(755,root,root) %{_sbindir}/mythcommflag
+%attr(755,root,root) %{_bindir}/mythbackend
+%attr(755,root,root) %{_bindir}/mythcommflag
 %attr(755,root,root) %{_bindir}/mythfilldatabase
-%attr(755,root,root) %{_sbindir}/mythjobqueue
-%attr(755,root,root) %{_sbindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythjobqueue
+%attr(755,root,root) %{_bindir}/mythlcdserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
 %attr(755,root,root) %{_bindir}/mythffmpeg
@@ -580,9 +570,7 @@ fi
 %attr(755,root,root) %{_bindir}/mythfrontend
 %attr(755,root,root) %{_bindir}/mythshutdown
 %attr(755,root,root) %{_bindir}/mythavtest
-%attr(755,root,root) %{_bindir}/mythtvosd
 %attr(755,root,root) %{_bindir}/mythwelcome
-%attr(755,root,root) %{_bindir}/mythffplay
 %dir %{_datadir}/mythtv
 %dir %{_datadir}/mythtv/themes
 %{_datadir}/mythtv/internetcontent
@@ -611,7 +599,7 @@ fi
 
 %files -n libmyth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so*
+%attr(755,root,root) %{_libdir}/lib*.so.*
 %attr(755,root,root) %{_libdir}/lib*.a
 %dir %{_datadir}/mythtv
 %{_datadir}/mythtv/*.pl

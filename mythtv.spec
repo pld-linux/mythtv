@@ -55,7 +55,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.0
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -510,9 +510,10 @@ for p in mythfrontend; do
 	done > $p.lang
 done
 
+echo "%dir %{_datadir}/mythtv/locales" > mythbackend.lang
 for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/locales/*.xml; do
 	echo $l | sed -e "s,^$RPM_BUILD_ROOT\(.*/\(.*\).xml\),%%lang(\2) \1,"
-done > mythbackend.lang
+done >> mythbackend.lang
 
 # glibc language codes. attempt was made to change it on libmyth side,
 # but that was just asking for trouble due large coverage of

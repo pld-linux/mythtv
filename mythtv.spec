@@ -5,10 +5,8 @@
 # - http://outflux.net/software/pkgs/mythtvfs-fuse/
 # - vaapi support - check for compatible versions of libva?
 # - bindings:
-#   WARNING: disabling Python bindings; missing MySQLdb
 #   WARNING: disabling Perl bindings; missing Net::UPnP::QueryResponse
 #   WARNING: disabling Perl bindings; missing Net::UPnP::ControlPoint
-# - dozen of unpackaged files
 #
 # Specfile for MythTV
 #
@@ -36,7 +34,7 @@
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with	perl
 %bcond_with	php
-%bcond_with	python
+%bcond_without	python
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers
 				# instead of libvdpau
 
@@ -57,7 +55,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.0
-Release:	2
+Release:	3
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -114,6 +112,9 @@ BuildRequires:	perl-libwww
 BuildRequires:	perl-Net-UPnP-QueryResponse
 BuildRequires:	perl-Net-UPnP-ControlPoint
 BuildRequires:	perl-IO-Socket-INET6
+%endif
+%if %{with python}
+BuildRequires:	python-MySQLdb
 %endif
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}

@@ -35,6 +35,7 @@
 %bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
 %bcond_with	perl
+%bcond_with	php
 %bcond_with	python
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers
 				# instead of libvdpau
@@ -56,7 +57,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.0
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -72,6 +73,7 @@ Source6:	pld-mythfrontend.png
 Source20:	dshowcodecs
 # Source20-md5:	48327772b9e150f69e1ab8ff44b9a76c
 Patch0:		%{name}-configure.patch
+Patch1:		system-zeromq.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
@@ -117,6 +119,7 @@ BuildRequires:	which
 %{?with_nvidia_headers:%{?with_vdpau:BuildRequires: xorg-driver-video-nvidia-devel}}
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
+BuildRequires:	zeromq-devel
 %{!?with_pulseaudio:BuildConflicts: pulseaudio-devel}
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 # for Perl bindings
@@ -332,6 +335,17 @@ MythTV Python bindings.
 %description -n python-MythTV -l pl.UTF-8
 Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 
+%package -n php-MythTV
+Summary:	MythTV PHP bindings
+Summary(pl.UTF-8):	Interfejs PHP dla MythTV
+Group:		Libraries
+
+%description -n php-MythTV
+MythTV PHP bindings.
+
+%description -n php-MythTV -l pl.UTF-8
+Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
+
 %prep
 
 %setup -q
@@ -340,6 +354,7 @@ Ten pakiet zawiera moduły Pythona do tworzenia dodatków dla mythtv.
 	programs/mythbackend/housekeeper.cpp programs/mythwelcome/welcomedialog.cpp
 
 %patch0  -p1
+%patch1  -p1
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
@@ -551,10 +566,16 @@ fi
 %attr(755,root,root) %{_bindir}/mythfilldatabase
 %attr(755,root,root) %{_bindir}/mythjobqueue
 %attr(755,root,root) %{_bindir}/mythlcdserver
+%attr(755,root,root) %{_bindir}/mythlogserver
+%attr(755,root,root) %{_bindir}/mythmediaserver
 %attr(755,root,root) %{_bindir}/mythtranscode
 %attr(755,root,root) %{_bindir}/mythreplex
 %attr(755,root,root) %{_bindir}/mythffmpeg
 %attr(755,root,root) %{_bindir}/mythpreviewgen
+%attr(755,root,root) %{_bindir}/mythccextractor
+%attr(755,root,root) %{_bindir}/mythmetadatalookup
+%attr(755,root,root) %{_bindir}/mythutil
+
 %attr(775,root,mythtv) %dir /var/lib/mythtv
 %attr(700,root,mythtv) %dir /var/lib/mythtv/tmp
 %attr(775,root,mythtv) %dir /var/cache/mythtv
@@ -564,6 +585,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/mythbackend
 %attr(775,root,mythtv) %dir %{_localstatedir}/log/mythtv
+%{_datadir}/mythtv/backend-config
+%{_datadir}/mythtv/html
 
 %files frontend -f mythfrontend.lang
 %defattr(644,root,root,755)
@@ -581,6 +604,7 @@ fi
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
 %{_datadir}/mythtv/fonts/*.ttf
+%{_datadir}/mythtv/fonts/*.otf
 %dir %{_datadir}/mythtv/i18n
 %if %{with dshowserver}
 %{_datadir}/mythtv/dshowcodecs
@@ -603,6 +627,7 @@ fi
 %attr(755,root,root) %{_libdir}/lib*.a
 %dir %{_datadir}/mythtv
 %{_datadir}/mythtv/*.pl
+%{_datadir}/mythtv/hardwareprofile
 
 %files -n libmyth-devel
 %defattr(644,root,root,755)
@@ -631,4 +656,9 @@ fi
 %dir %{py_sitescriptdir}/MythTV
 %{py_sitescriptdir}/MythTV/*
 %{py_sitescriptdir}/*.egg-info
+%endif
+
+%if %{with php}
+%files -n php-MythTV
+%defattr(644,root,root,755)
 %endif

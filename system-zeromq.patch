@@ -1,0 +1,52 @@
+--- mythtv-0.26.0/settings.pro~	2012-10-02 12:30:24.000000000 +0200
++++ mythtv-0.26.0/settings.pro	2013-05-17 14:39:54.880716558 +0200
+@@ -159,7 +159,7 @@
+ EXTRA_LIBS += $$LOCAL_LIBDIR_OGL
+ EXTRA_LIBS += $$LOCAL_LIBDIR_X11
+ EXTRA_LIBS += $$CONFIG_OPENGL_LIBS
+-EXTRA_LIBS += -L$$SRC_PATH_BARE/external/zeromq/src/.libs -lmythzmq
++EXTRA_LIBS += -L$$SRC_PATH_BARE/external/zeromq/src/.libs -lzmq
+ EXTRA_LIBS += -L$$SRC_PATH_BARE/external/nzmqt/src -lmythnzmqt
+ EXTRA_LIBS += -L$$SRC_PATH_BARE/external/qjson/lib -lmythqjson
+ 
+--- mythtv-0.26.0/external/Makefile~	2012-10-02 12:30:24.000000000 +0200
++++ mythtv-0.26.0/external/Makefile	2013-05-17 14:41:24.148265283 +0200
+@@ -1,6 +1,6 @@
+ include ../config.mak
+ 
+-SUBDIRS = FFmpeg zeromq nzmqt qjson
++SUBDIRS = FFmpeg nzmqt qjson
+ 
+ SUBDIRS_ALL = $(addsuffix -all, ${SUBDIRS})
+ SUBDIRS_INSTALL = $(addsuffix -install, ${SUBDIRS})
+@@ -19,18 +19,7 @@
+ FFmpeg-all FFmpeg-install FFmpeg-uninstall FFmpeg-clean FFmpeg-distclean:
+ 	${MAKE} -C FFmpeg ${@:FFmpeg-%=%} 
+ 
+-zeromq-all:	zeromq/Makefile
+-	${MAKE} -C zeromq all
+-
+-zeromq/Makefile:	zeromq/configure
+-	(cd zeromq ; \
+-	 ./configure --without-documentation --prefix=${PREFIX} \
+-	             --includedir=${PREFIX}/include/mythtv/zeromq)
+-
+-zeromq-install zeromq-uninstall zeromq-clean zeromq-distclean:
+-	${MAKE} -C zeromq ${@:zeromq-%=%} DESTDIR=${INSTALL_ROOT}
+-
+-nzmqt-all:	zeromq-all
++nzmqt-all:
+ 	(cd nzmqt/src ; ${QMAKE} -o Makefile)
+ 	${MAKE} -C nzmqt/src all
+ 
+--- mythtv-0.26.0/external/nzmqt/src/nzmqt.pro~	2012-10-02 12:30:24.000000000 +0200
++++ mythtv-0.26.0/external/nzmqt/src/nzmqt.pro	2013-05-17 14:42:17.035454300 +0200
+@@ -30,7 +30,7 @@
+     NzmqtApp.h \
+     common/Tools.h
+ 
+-LIBS += -lmythzmq
++LIBS += -lzmq
+ LIBS += $${LATE_LIBS}
+ 
+ INCLUDEPATH += \

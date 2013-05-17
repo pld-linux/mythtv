@@ -57,7 +57,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.0
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -106,6 +106,15 @@ BuildRequires:	linux-libc-headers >= 7:2.6.10
 BuildRequires:	mysql-devel
 BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
+%if %{with perl}
+BuildRequires:	perl-DBI
+BuildRequires:	perl-DBD-mysql
+BuildRequires:	perl-HTTP-Message
+BuildRequires:	perl-libwww
+BuildRequires:	perl-Net-UPnP-QueryResponse
+BuildRequires:	perl-Net-UPnP-ControlPoint
+BuildRequires:	perl-IO-Socket-INET6
+%endif
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}
 BuildRequires:	python-devel
@@ -597,12 +606,16 @@ fi
 %dir %{_datadir}/mythtv
 %dir %{_datadir}/mythtv/themes
 %{_datadir}/mythtv/internetcontent
+%if %{without perl}
+%exclude %{_datadir}/mythtv/internetcontent/nv_perl_libs
+%endif
 %{_datadir}/mythtv/metadata
 %dir %{_libdir}/mythtv
 %{_datadir}/mythtv/*.xml
 %dir %{_libdir}/mythtv/filters
 %dir %{_libdir}/mythtv/plugins
 %attr(755,root,root) %{_libdir}/mythtv/filters/*.so
+%dir %{_datadir}/mythtv/fonts
 %{_datadir}/mythtv/fonts/*.ttf
 %{_datadir}/mythtv/fonts/*.otf
 %dir %{_datadir}/mythtv/i18n

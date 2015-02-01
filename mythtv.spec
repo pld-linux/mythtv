@@ -51,12 +51,12 @@
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
-Version:	0.26.0
-Release:	6
+Version:	0.26.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
-# Source0-md5:	f57066bf75e6f14824c494d41639f4f9
+# Source0-md5:	ef25a9b86f4a23d6f07d83791a1e5c9e
 Source1:	mythbackend.sysconfig
 Source2:	mythbackend.init
 Source3:	mythbackend.logrotate
@@ -431,8 +431,8 @@ fi
 	--mandir=%{_mandir} \
 	--disable-distcc --disable-ccache \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
-	--extra-cflags="%{rpmcflags} -fomit-frame-pointer" \
-	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer" \
+	--extra-cflags="%{rpmcflags} -fomit-frame-pointer -fno-devirtualize" \
+	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer -fno-devirtualize" \
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else

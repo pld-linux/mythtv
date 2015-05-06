@@ -52,7 +52,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -111,6 +111,7 @@ BuildRequires:	perl-IO-Socket-INET6
 %endif
 %if %{with python}
 BuildRequires:	python-MySQLdb
+BuildRequires:	python-lxml
 %endif
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}
@@ -130,7 +131,7 @@ BuildRequires:	zeromq-devel
 %{!?with_nvidia_headers:BuildConflicts:	xorg-driver-video-nvidia-devel}
 # for Perl bindings
 BuildRequires:	perl-ExtUtils-MakeMaker
-ExclusiveArch:	%{ix86} %{x8664} ppc
+ExclusiveArch:	%{ix86} %{x8664} x32 ppc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	myth_api_version %(echo %{version} | cut -d. -f1,2)
@@ -448,6 +449,9 @@ fi
 	%endif
 	%ifarch %{x8664}
 	--arch=x86_64 \
+	%endif
+	%ifarch x32
+	--disable-asm \
 	%endif
 	%{?with_mmx:--enable-mmx} \
 %endif

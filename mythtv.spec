@@ -112,6 +112,7 @@ BuildRequires:	perl-IO-Socket-INET6
 %if %{with python}
 BuildRequires:	python-MySQLdb
 BuildRequires:	python-lxml
+BuildRequires:	python-urlgrabber
 %endif
 BuildRequires:	pkgconfig
 %{?with_pulseaudio:BuildRequires: pulseaudio-devel}

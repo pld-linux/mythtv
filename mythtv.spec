@@ -52,7 +52,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2

@@ -1,0 +1,24 @@
+--- mythtv-0.26.1/bindings/python/Makefile.orig	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/bindings/python/Makefile	2016-05-05 16:53:57.760298186 +0200
+@@ -5,11 +5,7 @@
+ endif
+ 
+ REAL_PREFIX = $(PREFIX)
+-ifneq ($(PREFIX:/=), /usr)
+-	ifneq ($(PREFIX:/=), /usr/local)
+-		PREFIX_FLAGS=--prefix="$(PREFIX)"
+-	endif
+-endif
++PREFIX_FLAGS=--prefix="$(PREFIX)"
+ 
+ all: python_build
+ 
+@@ -22,7 +18,7 @@
+ 	$(PYTHON) setup.py build --mythtv-prefix="$(REAL_PREFIX)"
+ 
+ install: setup.py
+-	$(PYTHON) setup.py install --skip-build $(ROOT_FLAGS) $(PREFIX_FLAGS)
++	$(PYTHON) setup.py install --skip-build $(ROOT_FLAGS) --install-purelib=$(py_sitescriptdir) --install-platlib=$(py_sitedir) $(PREFIX_FLAGS)
+ 
+ ifdef INSTALL_ROOT
+ uninstall:

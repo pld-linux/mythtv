@@ -1,7 +1,7 @@
 # TODO
+# - use more system libraries if possible
 # - bconds: altivec joystick lcd
 # - lcd? (app-misc/lcdproc)
-# - alpha, sparc, ppc arches?
 # - http://outflux.net/software/pkgs/mythtvfs-fuse/
 # - vaapi support - check for compatible versions of libva?
 #
@@ -29,17 +29,15 @@
 %bcond_without	nellymoserdec
 %bcond_with	vaapi		# enable vaapi
 %bcond_with     dshowserver	# enable directshow codecs server
-%bcond_without	perl
-%bcond_with	php
-%bcond_without	python
+%bcond_without	perl		# Perl bindings
+%bcond_with	php		# PHP bindings
+%bcond_without	python		# Python bindings
 %bcond_with	nvidia_headers	# build vdpau support with nvidia headers
 				# instead of libvdpau
 
 # enable mmx automatically on arches having it
-%ifarch %{ix86} %{x8664}
-%ifnarch i386 i486 i586 i686
+%ifarch pentium3 pentium4 athlon %{x8664} x32
 %define	with_mmx 1
-%endif
 %endif
 
 # dshowserver is exclusive arch for x86 x86_64 only
@@ -52,7 +50,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	6
+Release:	7
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -73,7 +71,7 @@ Patch2:		python-install.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
-BuildRequires:	Mesa-libGLU-devel
+BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	OpenGL-devel
 BuildRequires:	Qt3Support-devel
 BuildRequires:	QtCore-devel
@@ -301,6 +299,7 @@ Summary:	Development files for libmyth
 Summary(pl.UTF-8):	Pliki nagłówkowe libmyth
 Group:		Development/Libraries
 Requires:	libmyth = %{version}-%{release}
+Obsoletes:	libmyth-static
 
 %description -n libmyth-devel
 This package contains the header files for developing add-ons for
@@ -308,18 +307,6 @@ mythtv.
 
 %description -n libmyth-devel -l pl.UTF-8
 Ten pakiet zawiera pliki nagłówkowe do tworzenia dodatków dla mythtv.
-
-%package -n libmyth-static
-Summary:	Static libmyth library
-Summary(pl.UTF-8):	Statyczna biblioteka libmyth
-Group:		Development/Libraries
-Requires:	libmyth-devel = %{version}-%{release}
-
-%description -n libmyth-static
-Static libmyth library.
-
-%description -n libmyth-static -l pl.UTF-8
-Statyczna biblioteka libmyth.
 
 %package -n perl-MythTV
 Summary:	MythTV Perl bindings
@@ -356,7 +343,6 @@ MythTV PHP bindings.
 Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
 
 %prep
-
 %setup -q
 
 %{__sed} -i -e 's,/var/log/mythfilldatabase.log,/var/log/mythtv/mythfilldatabase.log,' \
@@ -368,7 +354,7 @@ Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
-rm -rf database/old # not supported in PLD
+%{__rm} -r database/old # not supported in PLD
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
@@ -415,11 +401,10 @@ EOF
 chmod +x qmake-wrapper.sh
 
 # move perl bindings to vendor prefix
-sed -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
-  bindings/perl/Makefile
+%{__sed} -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
+	bindings/perl/Makefile
 
 %build
-
 %if %{with cpu_autodetect}
 # Make sure we have /proc mounted
 if [ ! -r /proc/cpuinfo ]; then
@@ -433,7 +418,8 @@ fi
 	--libdir=%{_libdir} \
 	--libdir-name=%{_lib} \
 	--mandir=%{_mandir} \
-	--disable-distcc --disable-ccache \
+	--disable-ccache \
+	--disable-distcc \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
 	--extra-cflags="%{rpmcflags} -fomit-frame-pointer -fno-devirtualize" \
 	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer -fno-devirtualize" \
@@ -480,18 +466,22 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
-		$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
-		$RPM_BUILD_ROOT/var/{cache,log,run}/mythtv \
-		$RPM_BUILD_ROOT/var/lib/mythtv/tmp \
-		$RPM_BUILD_ROOT%{_libdir}/mythtv \
-		$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
-		$RPM_BUILD_ROOT%{_pixmapsdir} \
-		$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_desktopdir}} \
+	$RPM_BUILD_ROOT/var/{cache,log,run}/mythtv \
+	$RPM_BUILD_ROOT/var/lib/mythtv/tmp \
+	$RPM_BUILD_ROOT%{_libdir}/mythtv \
+	$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
+	$RPM_BUILD_ROOT%{_pixmapsdir} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install \
 	py_sitescriptdir=%{py_sitescriptdir} \
 	py_sitedir=%{py_sitedir} \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# omitted by make install
+%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
+#TODO: py_postclean if possible (or comment why not)
 
 # Install the files that we added on top of mythtv's own stuff
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/mythbackend
@@ -610,7 +600,6 @@ fi
 %attr(755,root,root) %{_bindir}/mythshutdown
 %attr(755,root,root) %{_bindir}/mythavtest
 %attr(755,root,root) %{_bindir}/mythwelcome
-%dir %{_datadir}/mythtv
 %dir %{_datadir}/mythtv/themes
 %{_datadir}/mythtv/internetcontent
 %if %{without perl}
@@ -629,8 +618,8 @@ fi
 %if %{with dshowserver}
 %{_datadir}/mythtv/dshowcodecs
 %endif
-%{_desktopdir}/*.desktop
-%{_pixmapsdir}/*.png
+%{_desktopdir}/pld-mythfrontend.desktop
+%{_pixmapsdir}/pld-mythfrontend.png
 
 %files setup
 %defattr(644,root,root,755)
@@ -639,24 +628,37 @@ fi
 
 %files themes
 %defattr(644,root,root,755)
-%{_datadir}/mythtv/themes/*
+%{_datadir}/mythtv/themes/DVR
+%{_datadir}/mythtv/themes/MythCenter
+%{_datadir}/mythtv/themes/MythCenter-wide
+%{_datadir}/mythtv/themes/Slave
+%{_datadir}/mythtv/themes/Terra
+%{_datadir}/mythtv/themes/classic
+%{_datadir}/mythtv/themes/default
+%{_datadir}/mythtv/themes/default-wide
+%{_datadir}/mythtv/themes/defaultmenu
+%{_datadir}/mythtv/themes/mediacentermenu
+%{_datadir}/mythtv/themes/mythuitheme.dtd
 
 %files -n libmyth
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*
-%attr(755,root,root) %{_libdir}/lib*.a
+%attr(755,root,root) %{_libdir}/libmyth*-%{myth_api_version}.so.*.*.*
+# additional symlinks - are they needed?
+%attr(755,root,root) %{_libdir}/libmyth*-%{myth_api_version}.so.%{myth_api_version}
+# soname symlinks
+%attr(755,root,root) %ghost %{_libdir}/libmyth*-%{myth_api_version}.so.0
 %dir %{_datadir}/mythtv
 %{_datadir}/mythtv/*.pl
 %{_datadir}/mythtv/hardwareprofile
 
 %files -n libmyth-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/*.so
-%{_includedir}/*
+%attr(755,root,root) %{_libdir}/libmyth*-%{myth_api_version}.so
+# XXX: why not shared???
+%{_libdir}/libmythbluray-%{myth_api_version}.a
+%{_libdir}/libmythdvdnav-%{myth_api_version}.a
+%{_includedir}/mythtv
 %{_datadir}/mythtv/build
-
-%files -n libmyth-static
-%defattr(644,root,root,755)
 
 %if %{with perl}
 %files -n perl-MythTV
@@ -673,12 +675,12 @@ fi
 %files -n python-MythTV
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythpython
-%dir %{py_sitescriptdir}/MythTV
-%{py_sitescriptdir}/MythTV/*
-%{py_sitescriptdir}/*.egg-info
+%{py_sitescriptdir}/MythTV
+%{py_sitescriptdir}/MythTV-0.26.0-py*.egg-info
 %endif
 
 %if %{with php}
 %files -n php-MythTV
 %defattr(644,root,root,755)
+%attr(755,root,root) %{php_extensiondir}/??? # TODO
 %endif

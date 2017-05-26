@@ -1,0 +1,24 @@
+diff -ur mythtv-0.26.1/libs/libmythtv/avformatwriter.cpp mythtv-0.26.1.fixed/libs/libmythtv/avformatwriter.cpp
+--- mythtv-0.26.1/libs/libmythtv/avformatwriter.cpp	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/libs/libmythtv/avformatwriter.cpp	2017-05-26 22:42:19.027125424 +0200
+@@ -461,7 +461,7 @@
+     {
+         LOG(VB_RECORD, LOG_ERR,
+             LOC + "AddVideoStream(): avcodec_find_encoder() failed");
+-        return false;
++        return NULL;
+     }
+ 
+     avcodec_get_context_defaults3(c, codec);
+diff -ur mythtv-0.26.1/libs/libmythtv/visualisations/videovisualcircles.cpp mythtv-0.26.1.fixed/libs/libmythtv/visualisations/videovisualcircles.cpp
+--- mythtv-0.26.1/libs/libmythtv/visualisations/videovisualcircles.cpp	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/libs/libmythtv/visualisations/videovisualcircles.cpp	2017-05-26 22:47:11.748574406 +0200
+@@ -23,7 +23,7 @@
+     painter->Begin(device);
+     for (int i = 0; i < count; i++, rad += m_range, red += incr, green -= incr)
+     {
+-        double mag = abs((m_magnitudes[i] + m_magnitudes[i + count]) / 2.0);
++        double mag = std::abs((m_magnitudes[i] + m_magnitudes[i + count]) / 2.0);
+         if (mag > 1.0)
+         {
+             pen.setWidth((int)mag);

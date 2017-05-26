@@ -1,0 +1,104 @@
+diff -ur mythtv-0.26.1/external/nzmqt/src/NzmqtApp.h mythtv-0.26.1.fixed/external/nzmqt/src/NzmqtApp.h
+--- mythtv-0.26.1/external/nzmqt/src/NzmqtApp.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/NzmqtApp.h	2017-05-26 22:34:48.272809942 +0200
+@@ -34,7 +34,9 @@
+ #include <QTextStream>
+ #include <QTimer>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ #include "pubsub/PubSubClient.h"
+ #include "pubsub/PubSubServer.h"
+diff -ur mythtv-0.26.1/external/nzmqt/src/pubsub/PubSubClient.h mythtv-0.26.1.fixed/external/nzmqt/src/pubsub/PubSubClient.h
+--- mythtv-0.26.1/external/nzmqt/src/pubsub/PubSubClient.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/pubsub/PubSubClient.h	2017-05-26 22:32:22.730693639 +0200
+@@ -33,7 +33,9 @@
+ #include <QList>
+ #include <QByteArray>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt
+diff -ur mythtv-0.26.1/external/nzmqt/src/pubsub/PubSubServer.h mythtv-0.26.1.fixed/external/nzmqt/src/pubsub/PubSubServer.h
+--- mythtv-0.26.1/external/nzmqt/src/pubsub/PubSubServer.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/pubsub/PubSubServer.h	2017-05-26 22:31:45.249193954 +0200
+@@ -35,7 +35,9 @@
+ #include <QTimer>
+ #include <QDateTime>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt
+diff -ur mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullSink.h mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullSink.h
+--- mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullSink.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullSink.h	2017-05-26 22:34:08.544709365 +0200
+@@ -35,7 +35,9 @@
+ #include <QList>
+ #include <QByteArray>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt
+diff -ur mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullVentilator.h mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullVentilator.h
+--- mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullVentilator.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullVentilator.h	2017-05-26 22:34:20.021794105 +0200
+@@ -37,7 +37,9 @@
+ #include <QDateTime>
+ #include <QTextStream>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt
+diff -ur mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullWorker.h mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullWorker.h
+--- mythtv-0.26.1/external/nzmqt/src/pushpull/PushPullWorker.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/pushpull/PushPullWorker.h	2017-05-26 22:34:28.138754541 +0200
+@@ -34,7 +34,9 @@
+ #include <QByteArray>
+ #include <QTimer>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ #include "common/Tools.h" // For sleep() function.
+ 
+diff -ur mythtv-0.26.1/external/nzmqt/src/reqrep/ReqRepClient.h mythtv-0.26.1.fixed/external/nzmqt/src/reqrep/ReqRepClient.h
+--- mythtv-0.26.1/external/nzmqt/src/reqrep/ReqRepClient.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/reqrep/ReqRepClient.h	2017-05-26 22:33:25.053095320 +0200
+@@ -36,7 +36,9 @@
+ #include <QDateTime>
+ 
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt
+diff -ur mythtv-0.26.1/external/nzmqt/src/reqrep/ReqRepServer.h mythtv-0.26.1.fixed/external/nzmqt/src/reqrep/ReqRepServer.h
+--- mythtv-0.26.1/external/nzmqt/src/reqrep/ReqRepServer.h	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1.fixed/external/nzmqt/src/reqrep/ReqRepServer.h	2017-05-26 22:33:39.950320297 +0200
+@@ -35,7 +35,9 @@
+ #include <QTimer>
+ #include <QDateTime>
+ 
++#ifndef Q_MOC_RUN
+ #include "nzmqt/nzmqt.hpp"
++#endif
+ 
+ 
+ namespace nzmqt

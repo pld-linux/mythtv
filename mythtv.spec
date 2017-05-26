@@ -50,7 +50,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	8
+Release:	9
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -68,6 +68,8 @@ Source20:	dshowcodecs
 Patch0:		%{name}-configure.patch
 Patch1:		system-zeromq.patch
 Patch2:		python-install.patch
+Patch3:		moc.patch
+Patch4:		cxx11.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
@@ -101,12 +103,12 @@ BuildRequires:	mysql-devel
 BuildRequires:	perl-devel
 BuildRequires:	perl-tools-pod
 %if %{with perl}
-BuildRequires:	perl-DBI
 BuildRequires:	perl-DBD-mysql
+BuildRequires:	perl-DBI
 BuildRequires:	perl-HTTP-Message
-BuildRequires:	perl-libwww
-BuildRequires:	perl-Net-UPnP
 BuildRequires:	perl-IO-Socket-INET6
+BuildRequires:	perl-Net-UPnP
+BuildRequires:	perl-libwww
 %endif
 %if %{with python}
 BuildRequires:	python-MySQLdb
@@ -351,10 +353,10 @@ Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
 %patch0  -p1
 %patch1  -p1
 %patch2  -p1
+%patch3  -p1
+%patch4  -p1
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
-
-%{__rm} -r database/old # not supported in PLD
 
 # lib64 fix - enable to update patch
 %if %{_lib} != "lib" && 0
@@ -401,7 +403,7 @@ EOF
 chmod +x qmake-wrapper.sh
 
 # move perl bindings to vendor prefix
-%{__sed} -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"#' \
+%{__sed} -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS -Wno-narrowing"#' \
 	bindings/perl/Makefile
 
 %build
@@ -414,15 +416,15 @@ fi
 %endif
 
 ./configure \
- 	--prefix=%{_prefix} \
+	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--libdir-name=%{_lib} \
 	--mandir=%{_mandir} \
 	--disable-ccache \
 	--disable-distcc \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
-	--extra-cflags="%{rpmcflags} -fomit-frame-pointer -fno-devirtualize" \
-	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer -fno-devirtualize" \
+	--extra-cflags="%{rpmcflags} -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
+	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else
@@ -472,7 +474,7 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_libdir}/mythtv \
 	$RPM_BUILD_ROOT%{_libdir}/mythtv/plugins \
 	$RPM_BUILD_ROOT%{_pixmapsdir} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install \
 	py_sitescriptdir=%{py_sitescriptdir} \
@@ -489,15 +491,15 @@ cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/logrotate.d/mythbackend
 cp -p %{SOURCE1} $RPM_BUILD_ROOT/etc/sysconfig/mythbackend
 %{?with_dshowserver:cp -p %{SOURCE20} $RPM_BUILD_ROOT%{_datadir}/mythtv}
 
-install %{SOURCE4} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 # desktop entries
-install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_pixmapsdir}
+cp -p %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
+cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_pixmapsdir}
 
 # Install settings.pro so people can see the build options we used
 install -d $RPM_BUILD_ROOT%{_datadir}/mythtv/build
-install config.mak settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build
+cp -p config.mak settings.pro $RPM_BUILD_ROOT%{_datadir}/mythtv/build
 
 for p in mythfrontend; do
 	for l in $RPM_BUILD_ROOT%{_datadir}/mythtv/i18n/${p}_*.qm; do
@@ -586,7 +588,7 @@ fi
 %attr(700,root,mythtv) %dir /var/lib/mythtv/tmp
 %attr(775,root,mythtv) %dir /var/cache/mythtv
 %attr(775,root,mythtv) %dir /var/run/mythtv
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %attr(754,root,root) /etc/rc.d/init.d/mythbackend
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/mythbackend
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/mythbackend
@@ -647,6 +649,26 @@ fi
 %attr(755,root,root) %{_libdir}/libmyth*-%{myth_api_version}.so.%{myth_api_version}
 # soname symlinks
 %attr(755,root,root) %ghost %{_libdir}/libmyth*-%{myth_api_version}.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmythavcodec.so.54
+%attr(755,root,root) %{_libdir}/libmythavcodec.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythavdevice.so.54
+%attr(755,root,root) %{_libdir}/libmythavdevice.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythavfilter.so.2
+%attr(755,root,root) %{_libdir}/libmythavfilter.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythavformat.so.54
+%attr(755,root,root) %{_libdir}/libmythavformat.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythavutil.so.51
+%attr(755,root,root) %{_libdir}/libmythavutil.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythnzmqt.so.0
+%attr(755,root,root) %{_libdir}/libmythnzmqt.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythpostproc.so.52
+%attr(755,root,root) %{_libdir}/libmythpostproc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythqjson.so.0
+%attr(755,root,root) %{_libdir}/libmythqjson.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythswresample.so.0
+%attr(755,root,root) %{_libdir}/libmythswresample.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmythswscale.so.2
+%attr(755,root,root) %{_libdir}/libmythswscale.so.*.*.*
 %dir %{_datadir}/mythtv
 %{_datadir}/mythtv/*.pl
 %{_datadir}/mythtv/hardwareprofile
@@ -654,6 +676,16 @@ fi
 %files -n libmyth-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libmyth*-%{myth_api_version}.so
+%attr(755,root,root) %{_libdir}/libmythavcodec.so
+%attr(755,root,root) %{_libdir}/libmythavdevice.so
+%attr(755,root,root) %{_libdir}/libmythavfilter.so
+%attr(755,root,root) %{_libdir}/libmythavformat.so
+%attr(755,root,root) %{_libdir}/libmythavutil.so
+%attr(755,root,root) %{_libdir}/libmythnzmqt.so
+%attr(755,root,root) %{_libdir}/libmythpostproc.so
+%attr(755,root,root) %{_libdir}/libmythqjson.so
+%attr(755,root,root) %{_libdir}/libmythswresample.so
+%attr(755,root,root) %{_libdir}/libmythswscale.so
 # XXX: why not shared???
 %{_libdir}/libmythbluray-%{myth_api_version}.a
 %{_libdir}/libmythdvdnav-%{myth_api_version}.a
@@ -675,8 +707,10 @@ fi
 %files -n python-MythTV
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mythpython
+%attr(755,root,root) %{_bindir}/mythwikiscripts
 %{py_sitescriptdir}/MythTV
 %{py_sitescriptdir}/MythTV-0.26.0-py*.egg-info
+%{py_sitedir}/MythTV
 %endif
 
 %if %{with php}

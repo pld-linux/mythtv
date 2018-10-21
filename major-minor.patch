@@ -1,0 +1,10 @@
+--- mythtv-0.26.1/libs/libmythtv/videosource.cpp~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/libs/libmythtv/videosource.cpp	2018-10-21 14:27:32.946282606 +0200
+@@ -5,6 +5,7 @@
+ #include <fcntl.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ 
+ // C++ headers
+ #include <algorithm>

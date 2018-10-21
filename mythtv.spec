@@ -50,7 +50,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	10
+Release:	11
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -70,6 +70,7 @@ Patch1:		system-zeromq.patch
 Patch2:		python-install.patch
 Patch3:		moc.patch
 Patch4:		cxx11.patch
+Patch5:		major-minor.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
@@ -355,6 +356,7 @@ Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
 %patch2  -p1
 %patch3  -p1
 %patch4  -p1
+%patch5  -p1
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
@@ -423,8 +425,8 @@ fi
 	--disable-ccache \
 	--disable-distcc \
 	--compile-type=%{?debug:debug}%{!?debug:release} \
-	--extra-cflags="%{rpmcflags} -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
-	--extra-cxxflags="%{rpmcxxflags} -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
+	--extra-cflags="%{rpmcflags} -fpermissive -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
+	--extra-cxxflags="%{rpmcxxflags} -fpermissive -fomit-frame-pointer -fno-devirtualize -Wno-narrowing" \
 %if %{with cpu_autodetect}
 	--enable-proc-opt \
 %else

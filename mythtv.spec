@@ -45,7 +45,6 @@
 %undefine with_dshowserver
 %endif
 
-%include	/usr/lib/rpm/macros.perl
 Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv

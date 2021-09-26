@@ -49,7 +49,7 @@ Summary:	A personal video recorder (PVR) application
 Summary(pl.UTF-8):	Osobista aplikacja do nagrywania obrazu (PVR)
 Name:		mythtv
 Version:	0.26.1
-Release:	11
+Release:	12
 License:	GPL v2
 Group:		Applications/Multimedia
 Source0:	ftp://ftp.osuosl.org/pub/mythtv/%{name}-%{version}.tar.bz2
@@ -70,6 +70,9 @@ Patch2:		python-install.patch
 Patch3:		moc.patch
 Patch4:		cxx11.patch
 Patch5:		major-minor.patch
+Patch6:		sys_siglist.patch
+Patch7:		gcc11.patch
+Patch8:		install.patch
 Patch20:	%{name}-compile_fixes_for_qt_4_7.patch
 Patch30:	%{name}-dshowserver-0.22.patch
 URL:		http://www.mythtv.org/
@@ -356,11 +359,14 @@ Ten pakiet zawiera moduły PHP do tworzenia dodatków dla mythtv.
 %patch3  -p1
 %patch4  -p1
 %patch5  -p1
+%patch6  -p1
+%patch7  -p1
+%patch8  -p1
 %{?with_dshowserver:%patch20 -p1}
 #%patch30 -p1
 
 # lib64 fix - enable to update patch
-%if %{_lib} != "lib" && 0
+%if "%{_lib}" != "lib" && 0
 find '(' -name '*.[ch]' -o -name '*.cpp' -o -name '*.pro' ')' | \
 xargs grep -l /lib . | xargs sed -i -e '
 	s,/''usr/lib/,/%{_libdir}/,g
@@ -406,6 +412,20 @@ chmod +x qmake-wrapper.sh
 # move perl bindings to vendor prefix
 %{__sed} -i -e 's#perl Makefile.PL#%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS -Wno-narrowing"#' \
 	bindings/perl/Makefile
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
+      programs/scripts/internetcontent/*.py \
+      programs/scripts/internetcontent/*/*.py \
+      programs/scripts/internetcontent/*/*/*.py \
+      programs/scripts/internetcontent/*/*/*/*.py \
+      programs/scripts/metadata/Movie/*.py \
+      programs/scripts/metadata/Television/*.py \
+      programs/scripts/hardwareprofile/*.py \
+      programs/scripts/hardwareprofile/*/*.py \
+      programs/scripts/hardwareprofile/*/*/*.py \
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+perl(\s|$),#!%{__perl}\1,' \
+      programs/scripts/internetcontent/*.pl
 
 %build
 %if %{with cpu_autodetect}
@@ -481,6 +501,10 @@ install -d $RPM_BUILD_ROOT/etc/{logrotate.d,sysconfig} \
 	py_sitescriptdir=%{py_sitescriptdir} \
 	py_sitedir=%{py_sitedir} \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
+
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
+      $RPM_BUILD_ROOT%{_bindir}/mythpython \
+      $RPM_BUILD_ROOT%{_bindir}/mythwikiscripts
 
 # omitted by make install
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}

@@ -1,0 +1,90 @@
+--- mythtv-0.26.1/programs/scripts/cpsvndir~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/programs/scripts/cpsvndir	2021-09-26 11:35:55.589813037 +0200
+@@ -37,12 +37,6 @@
+ 
+ IFS='
+ '
+-if [ ! -z ${MYTHPYTHON} ]; then
+-    if [ ! -f ${MYTHPYTHON} ]; then
+-        MYTHPYTHON="/usr/bin/env ${MYTHPYTHON}"
+-    fi
+-fi
+-
+ # Copy all files and directories except .svn
+ cd "$SRC"
+ for file in $(find . -name .svn -prune -or -print); do
+@@ -51,14 +45,6 @@
+         mkdir -p "$DEST/$file"
+     else
+         cp -pR "$file" "$DEST/$file"
+-        ext=${file##*.}
+-        if [ "x$ext" = "xpy" ]; then
+-            sed "1s%^#.*%#!${MYTHPYTHON}%" "$file" > "$DEST/$file"
+-#        elif [ "x$ext" = "xpl" ]; then
+-#            do some perly stuff
+-        fi
+-        chown -h $EUID:$EGID "$DEST/$file"
+-        chmod +r "$DEST/$file" &> /dev/null
+     fi
+ done
+ 
+--- mythtv-0.26.1/html/cpsvndir~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/html/cpsvndir	2021-09-26 11:36:41.033320614 +0200
+@@ -37,12 +37,6 @@
+ 
+ IFS='
+ '
+-if [ ! -z ${MYTHPYTHON} ]; then
+-    if [ ! -f ${MYTHPYTHON} ]; then
+-        MYTHPYTHON="/usr/bin/env ${MYTHPYTHON}"
+-    fi
+-fi
+-
+ # Copy all files and directories except .svn
+ cd "$SRC"
+ for file in $(find . -name .svn -prune -or -print); do
+@@ -51,14 +45,6 @@
+         mkdir -p "$DEST/$file"
+     else
+         cp -pR "$file" "$DEST/$file"
+-        ext=${file##*.}
+-        if [ "x$ext" = "xpy" ]; then
+-            sed "1s%^#.*%#!${MYTHPYTHON}%" "$file" > "$DEST/$file"
+-#        elif [ "x$ext" = "xpl" ]; then
+-#            do some perly stuff
+-        fi
+-        chown -h $EUID:$EGID "$DEST/$file"
+-        chmod +r "$DEST/$file" &> /dev/null
+     fi
+ done
+ 
+--- mythtv-0.26.1/themes/cpsvndir~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/themes/cpsvndir	2021-09-26 11:37:24.483482680 +0200
+@@ -37,12 +37,6 @@
+ 
+ IFS='
+ '
+-if [ ! -z ${MYTHPYTHON} ]; then
+-    if [ ! -f ${MYTHPYTHON} ]; then
+-        MYTHPYTHON="/usr/bin/env ${MYTHPYTHON}"
+-    fi
+-fi
+-
+ # Copy all files and directories except .svn
+ cd "$SRC"
+ for file in $(find . -name .svn -prune -or -print); do
+@@ -51,14 +45,6 @@
+         mkdir -p "$DEST/$file"
+     else
+         cp -pR "$file" "$DEST/$file"
+-        ext=${file##*.}
+-        if [ "x$ext" = "xpy" ]; then
+-            sed "1s%^#.*%#!${MYTHPYTHON}%" "$file" > "$DEST/$file"
+-#        elif [ "x$ext" = "xpl" ]; then
+-#            do some perly stuff
+-        fi
+-        chown -h $EUID:$EGID "$DEST/$file"
+-        chmod +r "$DEST/$file" &> /dev/null
+     fi
+ done
+ 

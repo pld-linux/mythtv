@@ -1,0 +1,11 @@
+--- mythtv-0.26.1/libs/libmythtv/util-xv.cpp~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/libs/libmythtv/util-xv.cpp	2021-09-26 10:55:55.896532947 +0200
+@@ -23,7 +23,7 @@
+ 
+ void close_all_xv_ports_signal_handler(int sig)
+ {
+-    LOG(VB_GENERAL, LOG_CRIT, QString("Signal: %1").arg(sys_siglist[sig]));
++    LOG(VB_GENERAL, LOG_CRIT, QString("Signal: %1").arg(strsignal(sig)));
+     QMap<int,port_info>::iterator it;
+     for (it = open_xv_ports.begin(); it != open_xv_ports.end(); ++it)
+     {

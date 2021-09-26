@@ -1,0 +1,35 @@
+--- mythtv-0.26.1/libs/libmythtv/videosource.cpp~	2021-09-26 10:48:30.000000000 +0200
++++ mythtv-0.26.1/libs/libmythtv/videosource.cpp	2021-09-26 10:52:24.567959263 +0200
+@@ -379,7 +379,7 @@
+ void DataDirect_config::Load()
+ {
+     VerticalConfigurationGroup::Load();
+-    bool is_sd_userid = userid->getValue().contains('@') > 0;
++    bool is_sd_userid = userid->getValue().contains('@') != 0;
+     bool match = ((is_sd_userid  && (source == DD_SCHEDULES_DIRECT)) ||
+                   (!is_sd_userid && (source == DD_ZAP2IT)));
+     if (((userid->getValue() != lastloadeduserid) ||
+--- mythtv-0.26.1/programs/mythlcdserver/lcdprocclient.cpp~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/programs/mythlcdserver/lcdprocclient.cpp	2021-09-26 11:05:59.118439631 +0200
+@@ -2104,7 +2104,7 @@
+ 
+     for (int x = 0; x < text.length(); x++)
+     {
+-        if (separators.contains(text[x]) > 0)
++        if (separators.contains(text[x]) != 0)
+             lastSplit = line.length();
+ 
+         line += text[x];
+--- mythtv-0.26.1/programs/mythbackend/httpstatus.cpp~	2013-08-15 16:44:02.000000000 +0200
++++ mythtv-0.26.1/programs/mythbackend/httpstatus.cpp	2021-09-26 11:09:22.088415336 +0200
+@@ -1478,8 +1478,8 @@
+ 
+             // Only include HTML line break if display value doesn't already
+             // contain breaks.
+-            if ((display.contains("<p>", Qt::CaseInsensitive) > 0) ||
+-                (display.contains("<br", Qt::CaseInsensitive) > 0))
++            if ((display.contains("<p>", Qt::CaseInsensitive) != 0) ||
++                (display.contains("<br", Qt::CaseInsensitive) != 0))
+             {
+                 // matches <BR> or <br /
+                 linebreak = "\r\n";
